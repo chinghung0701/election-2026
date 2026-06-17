@@ -136,6 +136,9 @@ nav{display:flex;gap:2px;}
 #toast.err{background:#da3633;color:#fff;}
 #toast.info{background:#1f6feb;color:#fff;}
 ::-webkit-scrollbar{width:6px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:#c8ccd0;border-radius:3px;}
+body.auth-locked header,
+body.auth-locked .page,
+body.auth-locked #toast { display:none !important; }
 </style>
 </head>
 <body>
@@ -153,9 +156,19 @@ nav{display:flex;gap:2px;}
     </div>
     <div id="serr" class="serr"></div>
     <button class="sbtn" id="sbtn" onclick="doConnect()">連線並載入資料</button>
-    <div style="margin-top:12px;text-align:center;">
-      <button onclick="useLocal()" style="background:none;border:none;color:var(--text3);font-size:12px;cursor:pointer;text-decoration:underline;">暫時使用本機模式</button>
-    </div>
+  </div>
+</div>
+
+<!-- 登入關卡：未登入或非授權帳號時顯示，蓋住整個畫面 -->
+<div id="loginGate" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:9000;align-items:center;justify-content:center;flex-direction:column;">
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:32px 36px;max-width:360px;text-align:center;">
+    <div style="font-size:18px;font-weight:700;margin-bottom:6px;">🗳 選舉民調追蹤系統</div>
+    <div id="loginMsg" style="font-size:13px;color:var(--text2);margin-bottom:20px;">請使用授權的 Google 帳號登入</div>
+    <button id="loginBtn" onclick="doGoogleLogin()" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:10px 16px;border:1px solid var(--border2);border-radius:var(--r);background:var(--bg2);cursor:pointer;font-size:14px;font-weight:600;">
+      <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84c-.21 1.13-.85 2.08-1.81 2.72v2.26h2.92c1.71-1.57 2.69-3.88 2.69-6.62z"/><path fill="#34A853" d="M9 18c2.43 0 4.47-.81 5.96-2.18l-2.92-2.26c-.81.54-1.84.87-3.04.87-2.34 0-4.32-1.58-5.03-3.71H.96v2.33C2.44 15.98 5.48 18 9 18z"/><path fill="#FBBC05" d="M3.97 10.72c-.18-.54-.28-1.12-.28-1.72s.1-1.18.28-1.72V4.95H.96C.35 6.18 0 7.55 0 9s.35 2.82.96 4.05l3.01-2.33z"/><path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.58C13.46.89 11.43 0 9 0 5.48 0 2.44 2.02.96 4.95l3.01 2.33C4.68 5.16 6.66 3.58 9 3.58z"/></svg>
+      使用 Google 帳號登入
+    </button>
+    <div id="loginErr" style="display:none;margin-top:14px;font-size:12px;color:var(--bad);"></div>
   </div>
 </div>
 
@@ -172,6 +185,7 @@ nav{display:flex;gap:2px;}
     <button class="nb" onclick="goPage('analysis',this)">選情分析</button>
     <button class="nb" onclick="goPage('input',this)">新增民調</button>
     <button class="nb" onclick="showSetup()" style="font-size:12px;color:var(--text3);">⚙ 重新設定</button>
+    <button class="nb" onclick="doLogout()" style="font-size:12px;color:var(--text3);">登出</button>
   </nav>
 </header>
 
@@ -526,11 +540,12 @@ function loadFB(cb){
   if(FB_LOADED){ cb(); return; }
   var loaded=0;
   ['https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js',
-   'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js'
+   'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js',
+   'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js'
   ].forEach(function(src){
     var s=document.createElement('script');
     s.src=src;
-    s.onload=function(){ if(++loaded===2){ FB_LOADED=true; cb(); } };
+    s.onload=function(){ if(++loaded===3){ FB_LOADED=true; cb(); } };
     document.head.appendChild(s);
   });
 }
@@ -640,8 +655,60 @@ function showSetup(){ document.getElementById('setup').style.display='flex'; }
 function pad(n){ return String(n).length<2?'0'+n:String(n); }
 
 // ════════════════════════════════════════
-//  Firebase 連線
+//  登入授權（僅限白名單帳號）
 // ════════════════════════════════════════
+var ALLOWED_EMAIL = 'eric.hung1976@gmail.com';
+var currentUser = null;
+
+function showLoginGate(msg, isErr){
+  document.getElementById('setup').style.display='none';
+  var gate=document.getElementById('loginGate');
+  gate.style.display='flex';
+  if(msg){
+    if(isErr){
+      document.getElementById('loginErr').style.display='block';
+      document.getElementById('loginErr').textContent=msg;
+    } else {
+      document.getElementById('loginMsg').textContent=msg;
+    }
+  }
+}
+function hideLoginGate(){ document.getElementById('loginGate').style.display='none'; }
+
+function doLogout(){
+  if(!confirm('確定要登出嗎？')) return;
+  firebase.auth().signOut().then(function(){
+    toast('已登出','info');
+  });
+}
+
+function doGoogleLogin(){
+  var btn=document.getElementById('loginBtn');
+  btn.disabled=true;
+  document.getElementById('loginErr').style.display='none';
+  loadFB(function(){
+    var provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithPopup(provider).then(function(result){
+      var email = result.user && result.user.email;
+      if(email !== ALLOWED_EMAIL){
+        firebase.auth().signOut();
+        btn.disabled=false;
+        document.getElementById('loginErr').style.display='block';
+        document.getElementById('loginErr').textContent='此帳號（'+email+'）未獲授權使用此系統';
+        return;
+      }
+      btn.disabled=false;
+      // 不需要再做其他事：window.onload 裡的 onAuthStateChanged 監聽器
+      // 會自動偵測到登入狀態變化，接手後續連線與畫面切換
+    }).catch(function(e){
+      btn.disabled=false;
+      document.getElementById('loginErr').style.display='block';
+      document.getElementById('loginErr').textContent='登入失敗：'+e.message;
+    });
+  });
+}
+
+
 function doConnect(){
   var k=document.getElementById('cfg-key').value.trim();
   var p=document.getElementById('cfg-pid').value.trim();
@@ -2004,20 +2071,36 @@ function genReport(code){
 // ════════════════════════════════════════
 window.onload=function(){
   resetForm();
-  var saved=loadCfg();
-  if(saved&&saved.apiKey&&saved.projectId&&saved.appId){
-    document.getElementById('cfg-key').value=saved.apiKey;
-    document.getElementById('cfg-pid').value=saved.projectId;
-    document.getElementById('cfg-aid').value=saved.appId;
-    loadFB(function(){
-      try{
-        var app;
-        try{ app=firebase.app(); }catch(e2){ app=firebase.initializeApp({apiKey:saved.apiKey,projectId:saved.projectId,appId:saved.appId,authDomain:saved.projectId+'.firebaseapp.com'}); }
-        db=app.firestore();
-        db.collection('polls').limit(1).get().then(function(){ setOnline(true); loadAll(); }).catch(function(e){ showErr('自動連線失敗，請手動按連線：'+e.message); });
-      }catch(e){ showErr('自動連線失敗：'+e.message); }
+  document.body.classList.add('auth-locked');
+  loadFB(function(){
+    firebase.auth().onAuthStateChanged(function(user){
+      if(user && user.email===ALLOWED_EMAIL){
+        currentUser = user;
+        document.body.classList.remove('auth-locked');
+        hideLoginGate();
+        // 已登入授權帳號，自動帶入設定並連線
+        var saved=loadCfg();
+        if(saved&&saved.apiKey&&saved.projectId&&saved.appId){
+          document.getElementById('cfg-key').value=saved.apiKey;
+          document.getElementById('cfg-pid').value=saved.projectId;
+          document.getElementById('cfg-aid').value=saved.appId;
+          try{
+            var app;
+            try{ app=firebase.app(); }catch(e2){ app=firebase.initializeApp({apiKey:saved.apiKey,projectId:saved.projectId,appId:saved.appId,authDomain:saved.projectId+'.firebaseapp.com'}); }
+            db=app.firestore();
+            db.collection('polls').limit(1).get().then(function(){ setOnline(true); loadAll(); }).catch(function(e){ showErr('自動連線失敗，請手動按連線：'+e.message); });
+          }catch(e){ showErr('自動連線失敗：'+e.message); }
+        } else {
+          document.getElementById('setup').style.display='flex';
+        }
+      } else {
+        currentUser = null;
+        document.body.classList.add('auth-locked');
+        document.getElementById('setup').style.display='none';
+        showLoginGate();
+      }
     });
-  }
+  });
 };
 </script>
 </body>
