@@ -1,0 +1,2120 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 選舉民調追蹤系統</title>
+<style>
+:root{--bg:#f6f8fa;--bg2:#ffffff;--bg3:#f0f2f5;--border:rgba(0,0,0,.1);--border2:rgba(0,0,0,.2);--text:#1a1f2e;--text2:#57606a;--text3:#8c959f;--good:#1a7f37;--warn:#9a6700;--bad:#cf222e;--good-bg:rgba(26,127,55,.08);--warn-bg:rgba(154,103,0,.08);--bad-bg:rgba(207,34,46,.08);--r:8px;--r2:12px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,'Helvetica Neue',sans-serif;font-size:14px;line-height:1.6;}
+@keyframes spin{to{transform:rotate(360deg)}}
+#setup{position:fixed;inset:0;background:rgba(246,248,250,.98);z-index:9999;display:flex;align-items:center;justify-content:center;}
+.sbox{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r2);padding:32px;width:480px;max-width:95vw;}
+.stitle{font-size:18px;font-weight:700;margin-bottom:6px;}
+.ssub{font-size:13px;color:var(--text2);margin-bottom:24px;line-height:1.6;}
+.sinput{width:100%;background:var(--bg);border:1px solid var(--border2);border-radius:6px;padding:9px 12px;color:var(--text);font-size:13px;font-family:monospace;outline:none;margin-top:8px;}
+.sinput:focus{border-color:var(--good);}
+.sbtn{width:100%;padding:11px;background:#238636;border:none;border-radius:var(--r);color:#fff;font-size:14px;font-weight:600;cursor:pointer;margin-top:16px;}
+.sbtn:disabled{opacity:.4;cursor:not-allowed;}
+.serr{color:var(--bad);font-size:12px;margin-top:8px;display:none;padding:8px;background:var(--bad-bg);border-radius:6px;}
+header{border-bottom:1px solid var(--border);padding:0 24px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:rgba(246,248,250,.97);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);z-index:100;}
+.logo{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px;color:var(--text);}
+.ldot{width:7px;height:7px;border-radius:50%;background:var(--good);box-shadow:0 0 6px var(--good);}
+.ldot.off{background:var(--text3);box-shadow:none;}
+.dbadge{font-size:11px;padding:3px 9px;border-radius:4px;margin-left:4px;}
+.dbadge.on{background:var(--good-bg);color:var(--good);}
+.dbadge.off{background:var(--bg3);color:var(--text3);}
+nav{display:flex;gap:2px;}
+.nb{padding:5px 14px;border-radius:6px;font-size:13px;color:var(--text2);cursor:pointer;border:none;background:transparent;}
+.nb:hover{color:var(--text);background:var(--bg3);}
+.nb.active{color:#fff;background:var(--bg3);border:1px solid var(--border2);}
+.page{display:none;padding:24px;max-width:1200px;margin:0 auto;}
+.page.active{display:block;}
+/* overview */
+.ovg{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px;}
+.ovc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;}
+.ovl{font-size:11px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px;}
+.ovv{font-size:26px;font-weight:700;letter-spacing:-.02em;}
+.ovs{font-size:12px;color:var(--text2);margin-top:2px;}
+/* county cards */
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px;}
+.cc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;cursor:pointer;}
+.cc:hover{border-color:var(--border2);}
+.cc.has{border-left:3px solid var(--border2);}
+.cc.conf{border-left:3px solid var(--warn);}
+.cch{padding:12px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);}
+.ccn{font-size:14px;font-weight:600;}
+.ccm{display:flex;align-items:center;gap:6px;}
+.badge{padding:2px 7px;border-radius:4px;font-size:11px;font-weight:600;}
+.b-cnt{background:var(--bg3);color:var(--text2);}
+.b-emp{background:transparent;color:var(--text3);border:1px solid var(--border);}
+.b-alert{background:var(--warn-bg);color:var(--warn);}
+.ccbody{padding:12px 16px;}
+.br{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.br-n{width:56px;font-size:12px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.br-p{width:44px;font-size:10px;color:var(--text2);flex-shrink:0;}
+.br-t{flex:1;height:5px;background:var(--bg3);border-radius:3px;overflow:hidden;}
+.br-f{height:100%;border-radius:3px;}
+.br-r{font-size:12px;font-weight:600;min-width:36px;text-align:right;}
+.ccfoot{padding:6px 16px 12px;display:flex;justify-content:space-between;}
+.ccd{font-size:11px;color:var(--text3);}
+.ccs{font-size:11px;color:var(--text2);}
+.ccnote{padding:0 16px 10px;margin:0 16px 2px;font-size:11px;color:var(--text2);line-height:1.5;border-left:2px solid var(--border2);}
+.ccempty{padding:20px;text-align:center;color:var(--text3);font-size:13px;}
+/* detail */
+.dh{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+.backbtn{padding:6px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;font-size:12px;color:var(--text2);cursor:pointer;}
+.backbtn:hover{color:var(--text);border-color:var(--border2);}
+.dtitle{font-size:20px;font-weight:700;}
+.dsub{font-size:13px;color:var(--text2);margin-top:2px;}
+.confbox{background:var(--warn-bg);border:1px solid rgba(210,153,34,.3);border-radius:var(--r);padding:12px 16px;margin-bottom:16px;font-size:13px;color:var(--warn);line-height:1.6;}
+.tl{display:flex;flex-direction:column;gap:12px;}
+.tli{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
+.tli.q-good{border-left:3px solid var(--good);}
+.tli.q-warn{border-left:3px solid var(--warn);}
+.tli.q-bad{border-left:3px solid var(--bad);}
+.tlh{padding:10px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.tld{font-size:13px;font-weight:600;white-space:nowrap;}
+.tls{font-size:12px;color:var(--text2);flex:1;}
+.tltags{display:flex;gap:5px;align-items:center;flex-shrink:0;flex-wrap:wrap;}
+.tag{padding:2px 7px;border-radius:4px;font-size:11px;}
+.t-good{background:var(--good-bg);color:var(--good);}
+.t-warn{background:var(--warn-bg);color:var(--warn);}
+.t-bad{background:var(--bad-bg);color:var(--bad);}
+.t-gray{background:var(--bg3);color:var(--text2);}
+.t-purple{background:rgba(155,143,232,.15);color:#9b8fe8;}
+.t-blue{background:rgba(88,166,255,.12);color:#58a6ff;}
+.tlbars{padding:10px 16px 4px;display:flex;flex-direction:column;gap:7px;}
+.tlnote{padding:4px 16px 12px;font-size:12px;color:var(--text2);line-height:1.5;}
+.delta{font-size:10px;font-weight:600;padding:1px 5px;border-radius:3px;margin-left:4px;}
+.d-up{background:var(--bad-bg);color:var(--bad);}
+.d-dn{background:var(--good-bg);color:var(--good);}
+.delbtn{float:right;background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:2px 8px;font-size:11px;color:var(--text3);cursor:pointer;}
+.delbtn:hover{border-color:var(--bad);color:var(--bad);}
+/* input page */
+.inplayout{display:grid;grid-template-columns:440px 1fr;gap:20px;}
+.inppanel{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:20px;display:flex;flex-direction:column;gap:14px;}
+.ptitle{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);}
+.flabel{font-size:12px;color:var(--text2);margin-bottom:5px;font-weight:500;}
+.freq{color:var(--bad);margin-left:2px;}
+.finput,.fsel,.fta{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:9px 12px;color:var(--text);font-size:13px;outline:none;font-family:inherit;}
+.finput:focus,.fsel:focus,.fta:focus{border-color:rgba(255,255,255,.3);}
+.fsel option{background:#fff;}
+.fta{resize:vertical;min-height:72px;line-height:1.6;}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.parse-area{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);overflow:hidden;}
+.parse-area textarea{width:100%;background:transparent;border:none;padding:10px 12px;color:var(--text);font-size:13px;outline:none;font-family:inherit;resize:vertical;min-height:120px;line-height:1.6;}
+.parse-area textarea::placeholder{color:var(--text3);}
+.parse-foot{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-top:1px solid var(--border);}
+.parse-hint{font-size:11px;color:var(--text3);}
+.parse-btn{padding:6px 16px;background:#1f6feb;border:none;border-radius:6px;color:#fff;font-size:12px;font-weight:600;cursor:pointer;}
+.ce{display:grid;grid-template-columns:1fr 80px 65px 28px;gap:6px;align-items:center;margin-bottom:6px;}
+.ce input,.ce select{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:7px 9px;color:var(--text);font-size:12px;outline:none;width:100%;}
+.bi{background:var(--bg3);border:1px solid var(--border);border-radius:6px;width:28px;height:32px;cursor:pointer;color:var(--text3);font-size:16px;display:flex;align-items:center;justify-content:center;}
+.bi:hover{color:var(--bad);border-color:var(--bad);}
+.addbtn{font-size:12px;color:var(--text2);background:none;border:1px dashed var(--border2);border-radius:6px;padding:6px;cursor:pointer;width:100%;}
+.addbtn:hover{color:var(--text);}
+.savebtn{width:100%;padding:11px;background:#238636;border:none;border-radius:var(--r);color:#fff;font-size:14px;font-weight:600;cursor:pointer;}
+.savebtn:disabled{opacity:.4;cursor:not-allowed;}
+.prevpanel{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:20px;position:sticky;top:72px;max-height:calc(100vh - 96px);overflow-y:auto;}
+.prev-empty{color:var(--text3);text-align:center;padding:40px 20px;font-size:13px;line-height:1.7;}
+/* national */
+.nl{display:grid;grid-template-columns:420px 1fr;gap:20px;}
+.ncard{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:18px;}
+/* tab btn helper */
+.tabbtn{padding:7px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;flex:1;}
+.tabbtn.on{border:1px solid var(--good);background:var(--good-bg);color:var(--good);}
+.tabbtn.off{border:1px solid var(--border);background:transparent;color:var(--text2);}
+.viewbtn{padding:6px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;}
+.viewbtn.on{border:1px solid var(--good);background:var(--good-bg);color:var(--good);}
+.viewbtn.off{border:1px solid var(--border);background:transparent;color:var(--text2);}
+/* toast */
+#toast{position:fixed;bottom:20px;right:20px;padding:11px 18px;border-radius:var(--r);font-size:13px;font-weight:500;opacity:0;transform:translateY(6px);transition:all .2s;pointer-events:none;z-index:9999;max-width:360px;}
+#toast.show{opacity:1;transform:translateY(0);}
+#toast.ok{background:#238636;color:#fff;}
+#toast.err{background:#da3633;color:#fff;}
+#toast.info{background:#1f6feb;color:#fff;}
+::-webkit-scrollbar{width:6px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:#c8ccd0;border-radius:3px;}
+body.auth-locked header,
+body.auth-locked .page,
+body.auth-locked #toast { display:none !important; }
+</style>
+</head>
+<body>
+
+<!-- Firebase 設定畫面 -->
+<div id="setup">
+  <div class="sbox">
+    <div class="stitle">🗳 選舉民調追蹤系統</div>
+    <div class="ssub">輸入 Firebase 設定後，資料將永久儲存於雲端。</div>
+    <div style="background:var(--bg3);border-radius:var(--r);padding:14px 16px;margin-bottom:12px;">
+      <div style="font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.08em;margin-bottom:8px;">FIREBASE 設定值</div>
+      <input class="sinput" id="cfg-key" placeholder="apiKey">
+      <input class="sinput" id="cfg-pid" placeholder="projectId" style="margin-top:6px;">
+      <input class="sinput" id="cfg-aid" placeholder="appId" style="margin-top:6px;">
+    </div>
+    <div id="serr" class="serr"></div>
+    <button class="sbtn" id="sbtn" onclick="doConnect()">連線並載入資料</button>
+  </div>
+</div>
+
+<!-- 登入關卡：未登入或非授權帳號時顯示，蓋住整個畫面 -->
+<div id="loginGate" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:9000;align-items:center;justify-content:center;flex-direction:column;">
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:32px 36px;max-width:360px;text-align:center;">
+    <div style="font-size:18px;font-weight:700;margin-bottom:6px;">🗳 選舉民調追蹤系統</div>
+    <div id="loginMsg" style="font-size:13px;color:var(--text2);margin-bottom:20px;">請使用授權的 Google 帳號登入</div>
+    <button id="loginBtn" onclick="doGoogleLogin()" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:10px 16px;border:1px solid var(--border2);border-radius:var(--r);background:var(--bg2);cursor:pointer;font-size:14px;font-weight:600;">
+      <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84c-.21 1.13-.85 2.08-1.81 2.72v2.26h2.92c1.71-1.57 2.69-3.88 2.69-6.62z"/><path fill="#34A853" d="M9 18c2.43 0 4.47-.81 5.96-2.18l-2.92-2.26c-.81.54-1.84.87-3.04.87-2.34 0-4.32-1.58-5.03-3.71H.96v2.33C2.44 15.98 5.48 18 9 18z"/><path fill="#FBBC05" d="M3.97 10.72c-.18-.54-.28-1.12-.28-1.72s.1-1.18.28-1.72V4.95H.96C.35 6.18 0 7.55 0 9s.35 2.82.96 4.05l3.01-2.33z"/><path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.58C13.46.89 11.43 0 9 0 5.48 0 2.44 2.02.96 4.95l3.01 2.33C4.68 5.16 6.66 3.58 9 3.58z"/></svg>
+      使用 Google 帳號登入
+    </button>
+    <div id="loginErr" style="display:none;margin-top:14px;font-size:12px;color:var(--bad);"></div>
+  </div>
+</div>
+
+<header>
+  <div class="logo">
+    <span class="ldot off" id="ldot"></span>
+    2026 選舉民調追蹤
+    <span class="dbadge off" id="dbadge">未連線</span>
+  </div>
+  <nav>
+    <button class="nb active" onclick="goPage('dashboard',this)">選情總覽</button>
+    <button class="nb" onclick="goPage('national',this)">全國觀察</button>
+    <button class="nb" onclick="goPage('history',this)">歷史投票</button>
+    <button class="nb" onclick="goPage('analysis',this)">選情分析</button>
+    <button class="nb" onclick="goPage('input',this)">新增民調</button>
+    <button class="nb" onclick="showSetup()" style="font-size:12px;color:var(--text3);">⚙ 重新設定</button>
+    <button class="nb" onclick="doLogout()" style="font-size:12px;color:var(--text3);">登出</button>
+  </nav>
+</header>
+
+<!-- 選情總覽 -->
+<div class="page active" id="page-dashboard">
+  <div id="vlist">
+    <div class="ovg" id="ovGrid"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <div style="font-size:13px;font-weight:600;">各縣市選情</div>
+      <div style="display:flex;gap:14px;font-size:12px;color:var(--text2);">
+        <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--good);margin-right:4px;vertical-align:middle;"></span>可信（n≥1000）</span>
+        <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--warn);margin-right:4px;vertical-align:middle;"></span>注意</span>
+        <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--bad);margin-right:4px;vertical-align:middle;"></span>存疑</span>
+      </div>
+    </div>
+    <div class="cgrid" id="cGrid"></div>
+  </div>
+  <div id="vdetail" style="display:none;"></div>
+</div>
+
+<!-- 全國觀察 -->
+<div class="page" id="page-national">
+  <div style="margin-bottom:20px;">
+    <div style="font-size:18px;font-weight:700;margin-bottom:4px;">全國觀察</div>
+    <div style="font-size:13px;color:var(--text2);">全國性民調、施政滿意度、政治評論家跨縣市觀察</div>
+  </div>
+  <div class="nl">
+    <div class="ncard">
+      <div class="ptitle" style="margin-bottom:12px;">新增紀錄</div>
+      <div class="parse-area" style="margin-bottom:14px;">
+        <textarea id="natText" style="min-height:120px;" placeholder="貼入 Project 記錄格式，可一次多筆，自動判斷民調或評論&#10;&#10;【評論格式】&#10;2026-05-22　小笠原欣幸／日本經濟新聞　學者　全國　內容摘要　高　出處&#10;&#10;【民調格式】&#10;2026-05-27　聯合報民調　（施政滿意41%）　1,068　✅ 可信　備註"></textarea>
+        <div class="parse-foot">
+          <span class="parse-hint">欄位間用全形空格（　）分隔，支援批次</span>
+          <button class="parse-btn" onclick="doNatParse()">⚡ 解析並儲存</button>
+        </div>
+      </div>
+      <div style="height:1px;background:var(--border);margin-bottom:14px;"></div>
+      <div class="ptitle" style="margin-bottom:10px;">或手動填寫</div>
+      <div style="display:flex;gap:6px;margin-bottom:12px;">
+        <button class="tabbtn on" id="ntab-poll" onclick="switchNTab('poll')">📊 全國民調</button>
+        <button class="tabbtn off" id="ntab-comment" onclick="switchNTab('comment')">💬 評論觀察</button>
+      </div>
+      <!-- 全國民調 -->
+      <div id="nmode-poll">
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div><div class="flabel">日期 *</div><input class="finput" type="date" id="np-date"></div>
+          <div><div class="flabel">來源機構 *</div><input class="finput" type="text" id="np-source" placeholder="TVBS、聯合報、台灣民意基金會…"></div>
+          <div><div class="flabel">民調主題 *</div><input class="finput" type="text" id="np-topic" placeholder="賴清德施政滿意度、能源政策…"></div>
+          <div class="frow">
+            <div><div class="flabel">樣本數</div><input class="finput" type="number" id="np-sample" placeholder="不詳則留空"></div>
+            <div><div class="flabel">品質</div>
+              <select class="fsel" id="np-quality">
+                <option value="good">✅ 可信</option>
+                <option value="warn" selected>⚠️ 注意</option>
+                <option value="bad">❌ 存疑</option>
+              </select>
+            </div>
+          </div>
+          <div><div class="flabel">關鍵數字與摘要 *</div>
+            <textarea class="fta" id="np-content" style="min-height:90px;" placeholder="滿意度38%、不滿意45%；三大民怨：打擊詐騙不滿56%、司法改革55%、能源53%…"></textarea>
+          </div>
+          <button class="savebtn" onclick="saveNational('poll')">💾 儲存全國民調</button>
+        </div>
+      </div>
+      <!-- 評論觀察 -->
+      <div id="nmode-comment" style="display:none;">
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div class="frow">
+            <div><div class="flabel">日期 *</div><input class="finput" type="date" id="nc-date"></div>
+            <div><div class="flabel">可信度</div>
+              <select class="fsel" id="nc-trust">
+                <option value="high">🟢 高（學者、資深記者）</option>
+                <option value="mid" selected>🟡 中（有立場但有據）</option>
+                <option value="low">🔴 低（政黨人士）</option>
+              </select>
+            </div>
+          </div>
+          <div><div class="flabel">評論來源 *</div><input class="finput" type="text" id="nc-source" placeholder="姓名／媒體，如：小笠原欣幸／日本經濟新聞"></div>
+          <div class="frow">
+            <div><div class="flabel">評論類型</div>
+              <select class="fsel" id="nc-type">
+                <option>學者</option><option>評論家</option><option>資深記者</option><option>政黨人士</option>
+              </select>
+            </div>
+            <div><div class="flabel">涉及縣市</div><input class="finput" type="text" id="nc-counties" placeholder="全國、台北市…"></div>
+          </div>
+          <div><div class="flabel">內容摘要 *</div>
+            <textarea class="fta" id="nc-content" style="min-height:100px;" placeholder="賴清德就職兩週年演講定調守勢，迴避台獨，強調維持現狀…"></textarea>
+          </div>
+          <div><div class="flabel">原文出處</div><input class="finput" type="text" id="nc-ref" placeholder="節目名稱、文章標題或連結"></div>
+          <button class="savebtn" onclick="saveNational('comment')">💾 儲存評論觀察</button>
+        </div>
+      </div>
+    </div>
+    <!-- 右側列表 -->
+    <div>
+      <div style="display:flex;gap:6px;margin-bottom:14px;">
+        <button class="viewbtn on" id="nview-poll" onclick="switchNView('poll')">📊 全國民調</button>
+        <button class="viewbtn off" id="nview-comment" onclick="switchNView('comment')">💬 評論觀察</button>
+      </div>
+      <div id="nlist-poll"><div class="ccempty">尚無全國民調紀錄</div></div>
+      <div id="nlist-comment" style="display:none;"><div class="ccempty">尚無評論觀察紀錄</div></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- 歷史投票 -->
+<div class="page" id="page-history">
+  <!-- 縣市總覽層 -->
+  <div id="hist-county-view">
+    <div style="margin-bottom:20px;">
+      <div style="font-size:18px;font-weight:700;margin-bottom:4px;">歷史投票查詢</div>
+      <div style="font-size:13px;color:var(--text2);">2018、2022 縣市長選舉 ／ 2020、2024 總統選舉 — 點擊縣市可查看鄉鎮市區細節</div>
+    </div>
+    <!-- 篩選列 -->
+    <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:flex-end;">
+      <div>
+        <div class="flabel">檢視模式</div>
+        <div style="display:flex;gap:6px;">
+          <button class="viewbtn on" id="hmode-single" onclick="switchHistMode('single')">單屆檢視</button>
+          <button class="viewbtn off" id="hmode-compare" onclick="switchHistMode('compare')">📊 四屆對比</button>
+        </div>
+      </div>
+      <div id="elecTabsWrap">
+        <div class="flabel">選舉屆次</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;" id="elecTabs">
+          <button class="viewbtn on" onclick="switchElec('mayor2022',this)">2022 縣市長</button>
+          <button class="viewbtn off" onclick="switchElec('mayor2018',this)">2018 縣市長</button>
+          <button class="viewbtn off" onclick="switchElec('president2024',this)">2024 總統</button>
+          <button class="viewbtn off" onclick="switchElec('president2020',this)">2020 總統</button>
+        </div>
+      </div>
+      <div style="margin-left:auto;">
+        <div class="flabel">搜尋縣市</div>
+        <input class="finput" type="text" id="histSearch" placeholder="輸入縣市名稱…" oninput="renderHistory()" style="width:160px;">
+      </div>
+    </div>
+    <!-- 結果區 -->
+    <div id="histGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(500px,1fr));gap:12px;"></div>
+  </div>
+
+  <!-- 鄉鎮市區細節層 -->
+  <div id="hist-district-view" style="display:none;">
+    <!-- 麵包屑 -->
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+      <button onclick="closeDistrictView()" style="display:flex;align-items:center;gap:4px;padding:6px 12px;border:1px solid var(--border2);border-radius:var(--r);background:var(--bg2);cursor:pointer;font-size:13px;font-weight:600;">
+        ← 返回
+      </button>
+      <span style="color:var(--text3);font-size:13px;">歷史投票</span>
+      <span style="color:var(--text3);">›</span>
+      <span id="dist-breadcrumb-county" style="font-size:13px;font-weight:600;"></span>
+      <span style="color:var(--text3);">›</span>
+      <span id="dist-breadcrumb-elec" style="font-size:13px;color:var(--text2);"></span>
+    </div>
+
+    <!-- 縣市概要列 -->
+    <div id="dist-county-summary" style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:16px;margin-bottom:20px;"></div>
+
+    <!-- 層級切換（若有村里資料則顯示） -->
+    <div id="dist-level-wrap" style="display:flex;gap:8px;margin-bottom:16px;align-items:center;">
+      <div class="flabel" style="margin:0;">查看層級</div>
+      <button class="viewbtn on" id="dlvl-district" onclick="switchDistLevel('district')">鄉鎮市區</button>
+      <button class="viewbtn off" id="dlvl-village" onclick="switchDistLevel('village')" id="dlvl-village">村里</button>
+      <div style="margin-left:auto;">
+        <input class="finput" type="text" id="distSearch" placeholder="搜尋…" oninput="renderDistrictDetail()" style="width:140px;">
+      </div>
+    </div>
+
+    <!-- 行政區點入後的村里層 -->
+    <div id="dist-village-breadcrumb" style="display:none;margin-bottom:12px;">
+      <button onclick="backToDistricts()" style="display:flex;align-items:center;gap:4px;padding:5px 10px;border:1px solid var(--border2);border-radius:var(--r);background:var(--bg2);cursor:pointer;font-size:12px;">
+        ← 返回鄉鎮市區
+      </button>
+    </div>
+
+    <!-- 結果格 -->
+    <div id="dist-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:10px;"></div>
+  </div>
+</div>
+
+<!-- 選情分析 -->
+<div class="page" id="page-analysis">
+  <div style="margin-bottom:20px;">
+    <div style="font-size:18px;font-weight:700;margin-bottom:4px;">選情分析報告</div>
+    <div style="font-size:13px;color:var(--text2);">整合民調趨勢、歷史基本盤、全國政治環境，產生結構化選情報告</div>
+  </div>
+  <!-- 競爭激烈度排行 -->
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:18px;margin-bottom:20px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <div style="font-size:14px;font-weight:700;">📊 競爭激烈度排行</div>
+      <div style="font-size:11px;color:var(--text3);">依最新民調領先差距由小到大排列，點擊進入詳細報告</div>
+    </div>
+    <div id="rankingList"></div>
+  </div>
+  <div style="display:grid;grid-template-columns:220px 1fr;gap:20px;">
+    <!-- 左：選擇縣市 -->
+    <div>
+      <div class="flabel" style="margin-bottom:8px;">選擇縣市</div>
+      <div id="analysisList" style="display:flex;flex-direction:column;gap:4px;"></div>
+    </div>
+    <!-- 右：報告內容 -->
+    <div id="analysisReport">
+      <div class="prev-empty" style="padding:60px 20px;">
+        ← 從左側選擇縣市<br>產生選情分析報告
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 新增民調 -->
+<div class="page" id="page-input">
+  <div style="margin-bottom:20px;">
+    <div style="font-size:18px;font-weight:700;margin-bottom:4px;">新增民調紀錄</div>
+    <div style="font-size:13px;color:var(--text2);">貼入 Project 格式自動批次儲存，或手動填寫</div>
+  </div>
+  <div class="inplayout">
+    <div class="inppanel">
+      <div class="ptitle">Step 1 — 貼入資料</div>
+      <div style="display:flex;gap:6px;margin-bottom:6px;">
+        <button class="tabbtn on" id="itab-prj" onclick="switchITab('prj')">📋 Project 格式（推薦）</button>
+        <button class="tabbtn off" id="itab-free" onclick="switchITab('free')">📰 自由文字</button>
+      </div>
+      <!-- Project 格式 -->
+      <div id="imode-prj" class="parse-area">
+        <textarea id="projectText" placeholder="將 Claude Project 整理的記錄格式貼入此處，可一次貼入多縣市多筆&#10;&#10;新北市&#10;2026-06-02　TVBS（國民黨黨團委託）　李四川（國民黨 39.2%）／蘇巧慧（民進黨 33.0%）　1,073　⚠️ 注意　差距6.2%"></textarea>
+        <div class="parse-foot">
+          <span class="parse-hint">支援有無 ## 的縣市標題，批次儲存</span>
+          <button class="parse-btn" onclick="doProjectParse()">⚡ 解析並儲存</button>
+        </div>
+      </div>
+      <!-- 自由文字 -->
+      <div id="imode-free" class="parse-area" style="display:none;">
+        <textarea id="pasteText" placeholder="將民調新聞全文貼入此處&#10;&#10;例如：TVBS民調顯示，蔣萬安（國民黨）58%，沈伯洋（民進黨）30%，有效樣本901份"></textarea>
+        <div class="parse-foot">
+          <span class="parse-hint">解析後確認欄位再按儲存</span>
+          <button class="parse-btn" onclick="doParse()">⚡ 解析並儲存</button>
+        </div>
+      </div>
+      <div style="height:1px;background:var(--border);"></div>
+      <div class="ptitle">Step 2 — 若有缺漏請補填</div>
+      <div class="frow">
+        <div><div class="flabel">縣市 / 選區<span class="freq">*</span></div>
+          <select class="fsel" id="f-county" onchange="doPreview()">
+            <option value="">請選擇</option>
+            <optgroup label="六都"><option value="TPE">台北市</option><option value="NTC">新北市</option><option value="TYN">桃園市</option><option value="TXG">台中市</option><option value="TNN">台南市</option><option value="KHH">高雄市</option></optgroup>
+            <optgroup label="省轄市"><option value="KEL">基隆市</option><option value="HSC">新竹市</option><option value="CYI">嘉義市</option></optgroup>
+            <optgroup label="縣"><option value="HSN">新竹縣</option><option value="MIA">苗栗縣</option><option value="CHA">彰化縣</option><option value="NTO">南投縣</option><option value="YUN">雲林縣</option><option value="CYN">嘉義縣</option><option value="PIF">屏東縣</option><option value="ILA">宜蘭縣</option><option value="HUA">花蓮縣</option><option value="TTT">台東縣</option><option value="PEH">澎湖縣</option><option value="KIN">金門縣</option><option value="LIE">連江縣</option></optgroup>
+            <optgroup label="特別追蹤"><option value="ZHUBEI">竹北市長</option><option value="CHANGHUA_CITY">彰化市長</option></optgroup>
+          </select>
+        </div>
+        <div><div class="flabel">民調品質<span class="freq">*</span></div>
+          <select class="fsel" id="f-quality" onchange="doPreview()">
+            <option value="good">✅ 可信（n≥1000）</option>
+            <option value="warn" selected>⚠️ 注意（n600-999）</option>
+            <option value="bad">❌ 存疑（n&lt;600）</option>
+          </select>
+        </div>
+      </div>
+      <div class="frow">
+        <div><div class="flabel">公布日期<span class="freq">*</span></div><input class="finput" type="date" id="f-date" oninput="doPreview()"></div>
+        <div><div class="flabel">來源機構<span class="freq">*</span></div><input class="finput" type="text" id="f-source" placeholder="TVBS、美麗島…" oninput="doPreview()"></div>
+      </div>
+      <div class="frow">
+        <div><div class="flabel">樣本數</div><input class="finput" type="number" id="f-sample" placeholder="不詳則留空" oninput="doPreview()"></div>
+        <div><div class="flabel">調查方式</div>
+          <select class="fsel" id="f-method"><option>電話訪問</option><option>網路調查</option><option>面訪</option><option>混合</option><option>不詳</option></select>
+        </div>
+      </div>
+      <div><div class="flabel">情境標記（選填）</div><input class="finput" type="text" id="f-scenario" placeholder="情境A / 情境B" oninput="doPreview()"></div>
+      <div>
+        <div class="flabel">候選人支持率<span class="freq">*</span></div>
+        <div id="candList"></div>
+        <button class="addbtn" onclick="addCand()">＋ 新增候選人</button>
+      </div>
+      <div><div class="flabel">備註</div><input class="finput" type="text" id="f-note" placeholder="差距、未表態等（15字內）" oninput="doPreview()"></div>
+      <button class="savebtn" id="saveBtn" onclick="doSave()">💾 儲存至 Firebase</button>
+    </div>
+    <div class="prevpanel">
+      <div style="font-size:13px;font-weight:600;margin-bottom:14px;color:var(--text2);">即時預覽</div>
+      <div id="prevContent"><div class="prev-empty">貼入 Project 格式後按解析<br>或填寫左側表單預覽</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ════════════════════════════════════════
+//  DIST 資料檔動態載入
+// ════════════════════════════════════════
+var DIST_LOADED = {};
+function loadDistFile(elecKey, callback){
+  var varName = DIST_MAP[elecKey];
+  if(!varName) { if(callback) callback(false); return; }
+  // 已載入
+  if(window[varName]) { if(callback) callback(true); return; }
+  // 已在載入中
+  if(DIST_LOADED[varName]==='loading') {
+    var t = setInterval(function(){
+      if(window[varName]){ clearInterval(t); if(callback) callback(true); }
+    }, 100);
+    return;
+  }
+  DIST_LOADED[varName] = 'loading';
+  var fileMap = {
+    'DIST2022':'district-2022.js',
+    'DIST2018':'district-2018.js',
+    'DIST2024':'district-2024.js',
+    'DIST2020':'district-2020.js'
+  };
+  var fname = fileMap[varName];
+  if(!fname) { if(callback) callback(false); return; }
+
+  // 先嘗試 jsDelivr CDN，失敗再 fallback 本機
+  var CDN_BASE = 'https://cdn.jsdelivr.net/gh/chinghung0701/election-2026@main/';
+  function tryLoad(src, onOk, onFail){
+    var s = document.createElement('script');
+    s.src = src;
+    s.onload = onOk;
+    s.onerror = onFail;
+    document.head.appendChild(s);
+  }
+  tryLoad(CDN_BASE + fname,
+    function(){ DIST_LOADED[varName]='done'; if(callback) callback(true); },
+    function(){
+      // CDN 失敗，嘗試本機
+      tryLoad(fname,
+        function(){ DIST_LOADED[varName]='done'; if(callback) callback(true); },
+        function(){ DIST_LOADED[varName]='err'; toast('載入 '+fname+' 失敗（CDN 與本機均無法取得）', 'warn'); if(callback) callback(false); }
+      );
+    }
+  );
+}
+
+// 覆寫 openDistrictView，先確保資料已載入
+var _openDistrictView = openDistrictView;
+openDistrictView = function(code, elecKey){
+  var distGrid = document.getElementById('dist-grid');
+  if(distGrid) distGrid.innerHTML = '<div style="padding:40px;text-align:center;color:var(--text3);">載入資料中…</div>';
+  document.getElementById('hist-county-view').style.display = 'none';
+  document.getElementById('hist-district-view').style.display = '';
+  loadDistFile(elecKey, function(ok){
+    _openDistrictView(code, elecKey);
+    if(!ok){
+      document.getElementById('dist-grid').innerHTML =
+        '<div class="ccempty">找不到資料檔（需將 district-'+elecKey.replace('mayor','').replace('president','')+'.js 放在同一目錄）</div>';
+    }
+  });
+};
+var FB_LOADED = false;
+function loadFB(cb){
+  if(FB_LOADED){ cb(); return; }
+  var loaded=0;
+  ['https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js',
+   'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js',
+   'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js'
+  ].forEach(function(src){
+    var s=document.createElement('script');
+    s.src=src;
+    s.onload=function(){ if(++loaded===3){ FB_LOADED=true; cb(); } };
+    document.head.appendChild(s);
+  });
+}
+
+// ════════════════════════════════════════
+//  常數
+// ════════════════════════════════════════
+var COUNTIES = {
+  TPE:'台北市',NTC:'新北市',TYN:'桃園市',TXG:'台中市',TNN:'台南市',KHH:'高雄市',
+  KEL:'基隆市',HSC:'新竹市',CYI:'嘉義市',HSN:'新竹縣',MIA:'苗栗縣',CHA:'彰化縣',
+  NTO:'南投縣',YUN:'雲林縣',CYN:'嘉義縣',PIF:'屏東縣',ILA:'宜蘭縣',HUA:'花蓮縣',
+  TTT:'台東縣',PEH:'澎湖縣',KIN:'金門縣',LIE:'連江縣',
+  ZHUBEI:'竹北市長',CHANGHUA_CITY:'彰化市長'
+};
+var COUNTY_ORDER=['TPE','NTC','TYN','TXG','TNN','KHH','KEL','HSC','CYI','HSN','MIA','CHA','NTO','YUN','CYN','PIF','ILA','HUA','TTT','PEH','KIN','LIE','ZHUBEI','CHANGHUA_CITY'];
+var COUNTY_MAP={
+  '台北市':'TPE','台北':'TPE','新北市':'NTC','新北':'NTC','桃園市':'TYN','桃園':'TYN',
+  '台中市':'TXG','台中':'TXG','台南市':'TNN','台南':'TNN','高雄市':'KHH','高雄':'KHH',
+  '基隆市':'KEL','基隆':'KEL','新竹市':'HSC','竹市':'HSC','嘉義市':'CYI','嘉市':'CYI',
+  '新竹縣':'HSN','竹縣':'HSN','苗栗縣':'MIA','苗栗':'MIA','彰化縣':'CHA','彰化':'CHA',
+  '南投縣':'NTO','南投':'NTO','雲林縣':'YUN','雲林':'YUN','嘉義縣':'CYN','嘉縣':'CYN',
+  '屏東縣':'PIF','屏東':'PIF','宜蘭縣':'ILA','宜蘭':'ILA','花蓮縣':'HUA','花蓮':'HUA',
+  '台東縣':'TTT','台東':'TTT','澎湖縣':'PEH','澎湖':'PEH','金門縣':'KIN','金門':'KIN',
+  '連江縣':'LIE','馬祖':'LIE','竹北市長':'ZHUBEI','竹北市':'ZHUBEI','竹北':'ZHUBEI',
+  '彰化市長':'CHANGHUA_CITY','彰化市':'CHANGHUA_CITY'
+};
+var MEDIA_MAP={
+  'TVBS民調中心':'TVBS','TVBS民意調查中心':'TVBS','TVBS':'TVBS',
+  '美麗島電子報':'美麗島','美麗島':'美麗島','ETtoday民調雲':'ETtoday','ETtoday':'ETtoday',
+  '台灣民意基金會':'民意基金會','民意基金會':'民意基金會',
+  '山水民調':'山水','山水':'山水','聯合報民調':'聯合報','聯合報':'聯合報',
+  '震傳媒':'震傳媒','上報':'上報','年代民調':'年代','公信力民調':'公信力',
+  '趨勢民調':'趨勢','東森新聞':'東森','東森':'東森'
+};
+var PARTY_COLOR={'國民黨':'#29b6d1','民進黨':'#e85c5c','民眾黨':'#9b8fe8','無黨籍':'#d4a84b','藍白共推':'#7db5cc','台灣基進':'#c84b31'};
+var QL={good:'✅ 可信',warn:'⚠️ 注意',bad:'❌ 存疑'};
+var PARTIES=['國民黨','民進黨','民眾黨','無黨籍','藍白共推','台灣基進'];
+function pc(p){ return PARTY_COLOR[p]||'#6e9e6e'; }
+
+// ════════════════════════════════════════
+//  初始資料（20筆歷史民調）
+// ════════════════════════════════════════
+var SEED=[
+  {countyCode:'TPE',date:'2026-05-07',source:'趨勢民調',sample:null,quality:'warn',candidates:[{name:'蔣萬安',party:'國民黨',rate:52.9},{name:'沈伯洋',party:'民進黨',rate:29.7}],note:'差距23.2%；委託方具民進黨色彩；未表態17.4%'},
+  {countyCode:'TPE',date:'2026-05-26',source:'TVBS',sample:901,quality:'warn',candidates:[{name:'蔣萬安',party:'國民黨',rate:58},{name:'沈伯洋',party:'民進黨',rate:30}],note:'差距28%；中立選民57%挺蔣；黃珊珊票源61%流蔣'},
+  {countyCode:'NTC',date:'2026-04-08',source:'美麗島',sample:1075,quality:'good',candidates:[{name:'李四川',party:'國民黨',rate:35.5},{name:'蘇巧慧',party:'民進黨',rate:34.5}],note:'差距在誤差內，換黨執政意願37.9%值得關注'},
+  {countyCode:'NTC',date:'2026-05-01',source:'山水',sample:1070,quality:'good',candidates:[{name:'李四川',party:'國民黨',rate:39.6},{name:'蘇巧慧',party:'民進黨',rate:34.8}],note:'差距4.8%，未表態25.6%，競爭態勢'},
+  {countyCode:'TXG',date:'2026-01-23',source:'TVBS',sample:null,quality:'good',candidates:[{name:'江啟臣',party:'國民黨',rate:46},{name:'何欣純',party:'民進黨',rate:31}],note:'差距15%，較一年前縮小9%'},
+  {countyCode:'TNN',date:'2026-03-09',source:'TVBS',sample:1052,quality:'good',candidates:[{name:'陳亭妃',party:'民進黨',rate:53},{name:'謝龍介',party:'國民黨',rate:30}],note:'未決定17%，民眾黨認同者60%挺謝'},
+  {countyCode:'KHH',date:'2026-01-19',source:'ETtoday',sample:1078,quality:'good',candidates:[{name:'柯志恩',party:'國民黨',rate:44},{name:'賴瑞隆',party:'民進黨',rate:37.7}],note:'差距6.3%；中間選民較支持柯'},
+  {countyCode:'KHH',date:'2026-02-10',source:'東森',sample:null,quality:'warn',candidates:[{name:'賴瑞隆',party:'民進黨',rate:45.5},{name:'柯志恩',party:'國民黨',rate:26.2}],note:'差距19.3%；與ETtoday方向相反'},
+  {countyCode:'KHH',date:'2026-04-29',source:'山水',sample:2027,quality:'good',candidates:[{name:'賴瑞隆',party:'民進黨',rate:47},{name:'柯志恩',party:'國民黨',rate:30.7}],note:'未表態22.3%；陳其邁滿意度78.9%'},
+  {countyCode:'KHH',date:'2026-05-05',source:'山水',sample:null,quality:'warn',candidates:[{name:'賴瑞隆',party:'民進黨',rate:47},{name:'柯志恩',party:'國民黨',rate:30.7}],note:'差距16.3%；山水過往與實際落差較大'},
+  {countyCode:'KHH',date:'2026-06-02',source:'TVBS',sample:1207,quality:'good',candidates:[{name:'賴瑞隆',party:'民進黨',rate:40.3},{name:'柯志恩',party:'國民黨',rate:39.7}],note:'差距0.6%在誤差內；陳其邁滿意度68%'},
+  {countyCode:'HSN',date:'2025-12-01',source:'公信力',sample:null,quality:'warn',candidates:[{name:'徐欣瑩',party:'國民黨',rate:33.2},{name:'鄭朝方',party:'民進黨',rate:33.2}],note:'藍綠打平，初選前數據'},
+  {countyCode:'HSN',date:'2026-01-26',source:'公信力',sample:1074,quality:'good',candidates:[{name:'徐欣瑩',party:'國民黨',rate:39.3},{name:'鄭朝方',party:'民進黨',rate:33.8}],note:'差距5.5%；白營58%傾向徐欣瑩'},
+  {countyCode:'HSN',date:'2026-03-25',source:'美麗島',sample:1072,quality:'good',scenario:'情境A',candidates:[{name:'徐欣瑩',party:'國民黨',rate:44.7},{name:'鄭朝方',party:'民進黨',rate:27.0}],note:'藍綠差距17.7%，未表態28.3%'},
+  {countyCode:'HSN',date:'2026-03-25',source:'美麗島',sample:1072,quality:'good',scenario:'情境B',candidates:[{name:'陳見賢',party:'國民黨',rate:39.7},{name:'鄭朝方',party:'民進黨',rate:31.2}],note:'藍綠差距8.5%，提名人選影響勝差'},
+  {countyCode:'HSN',date:'2026-04-10',source:'年代',sample:null,quality:'good',candidates:[{name:'徐欣瑩',party:'國民黨',rate:36.6},{name:'鄭朝方',party:'民進黨',rate:30.8}],note:'差距5.8%；看好度徐42.3% vs 鄭31.8%'},
+  {countyCode:'HSN',date:'2026-04-24',source:'公信力',sample:null,quality:'good',candidates:[{name:'徐欣瑩',party:'國民黨',rate:38.7},{name:'鄭朝方',party:'民進黨',rate:27.3}],note:'差距擴大至11.4%；未表態45.2%'},
+  {countyCode:'CYI',date:'2026-04-30',source:'TVBS',sample:948,quality:'warn',candidates:[{name:'王美惠',party:'民進黨',rate:43},{name:'張啟楷',party:'藍白共推',rate:37}],note:'未決定20%；黃敏惠票源未完全轉移'},
+  {countyCode:'ILA',date:'2026-03-13',source:'TVBS',sample:1042,quality:'good',candidates:[{name:'林國漳',party:'民進黨',rate:33},{name:'吳宗憲',party:'國民黨',rate:28},{name:'陳琬惠',party:'民眾黨',rate:8}],note:'三人情境；未決定31%'},
+  {countyCode:'HUA',date:'2026-03-20',source:'美麗島',sample:1071,quality:'good',candidates:[{name:'游淑貞',party:'國民黨',rate:28.7},{name:'魏嘉賢',party:'無黨籍',rate:20.2},{name:'張峻',party:'無黨籍',rate:19.8}],note:'魏一對一勝游；換政黨意向高41.7%'}
+];
+
+// ════════════════════════════════════════
+//  狀態
+// ════════════════════════════════════════
+var db=null, localMode=false;
+var allPolls=[], natPolls=[], natComments=[];
+var curCode=null, candCount=0;
+var CFG='ptcfg_v4';
+
+function saveCfg(c){ try{ localStorage.setItem(CFG,JSON.stringify(c)); }catch(e){} }
+function loadCfg(){ try{ return JSON.parse(localStorage.getItem(CFG)||'null'); }catch(e){ return null; } }
+
+// ════════════════════════════════════════
+//  工具函數
+// ════════════════════════════════════════
+function toast(msg,type){
+  var t=document.getElementById('toast');
+  t.textContent=msg; t.className='show '+(type||'ok');
+  setTimeout(function(){ t.className=''; },3000);
+}
+function showErr(msg){ var e=document.getElementById('serr'); e.style.display='block'; e.textContent=msg; }
+function hideErr(){ document.getElementById('serr').style.display='none'; }
+function showLoad(msg){
+  var el=document.getElementById('loadOv');
+  if(!el){
+    el=document.createElement('div'); el.id='loadOv';
+    el.style.cssText='position:fixed;inset:0;background:rgba(246,248,250,.85);z-index:8000;display:flex;align-items:center;justify-content:center;';
+    el.innerHTML='<div style="background:var(--bg2);border:1px solid var(--border2);border-radius:8px;padding:16px 24px;font-size:13px;color:var(--text2);display:flex;align-items:center;gap:10px;"><span style="display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.15);border-top-color:var(--text2);border-radius:50%;animation:spin .6s linear infinite;"></span><span id="loadMsg"></span></div>';
+    document.body.appendChild(el);
+  }
+  document.getElementById('loadMsg').textContent=msg||'處理中…';
+  el.style.display='flex';
+}
+function hideLoad(){ var el=document.getElementById('loadOv'); if(el) el.style.display='none'; }
+function setOnline(on){
+  document.getElementById('ldot').className='ldot'+(on?'':' off');
+  var b=document.getElementById('dbadge');
+  b.className='dbadge '+(on?'on':'off');
+  b.textContent=on?'Firebase 已連線':'本機模式';
+}
+function hideSplash(){ document.getElementById('setup').style.display='none'; }
+function showSetup(){ document.getElementById('setup').style.display='flex'; }
+function pad(n){ return String(n).length<2?'0'+n:String(n); }
+
+// ════════════════════════════════════════
+//  登入授權（僅限白名單帳號）
+// ════════════════════════════════════════
+var ALLOWED_EMAIL = 'eric.hung1976@gmail.com';
+var currentUser = null;
+
+function showLoginGate(msg, isErr){
+  document.getElementById('setup').style.display='none';
+  var gate=document.getElementById('loginGate');
+  gate.style.display='flex';
+  if(msg){
+    if(isErr){
+      document.getElementById('loginErr').style.display='block';
+      document.getElementById('loginErr').textContent=msg;
+    } else {
+      document.getElementById('loginMsg').textContent=msg;
+    }
+  }
+}
+function hideLoginGate(){ document.getElementById('loginGate').style.display='none'; }
+
+function doLogout(){
+  if(!confirm('確定要登出嗎？')) return;
+  firebase.auth().signOut().then(function(){
+    toast('已登出','info');
+  });
+}
+
+function doGoogleLogin(){
+  var btn=document.getElementById('loginBtn');
+  btn.disabled=true;
+  document.getElementById('loginErr').style.display='none';
+  loadFB(function(){
+    var provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithPopup(provider).then(function(result){
+      var email = result.user && result.user.email;
+      if(email !== ALLOWED_EMAIL){
+        firebase.auth().signOut();
+        btn.disabled=false;
+        document.getElementById('loginErr').style.display='block';
+        document.getElementById('loginErr').textContent='此帳號（'+email+'）未獲授權使用此系統';
+        return;
+      }
+      btn.disabled=false;
+      // 不需要再做其他事：window.onload 裡的 onAuthStateChanged 監聽器
+      // 會自動偵測到登入狀態變化，接手後續連線與畫面切換
+    }).catch(function(e){
+      btn.disabled=false;
+      document.getElementById('loginErr').style.display='block';
+      document.getElementById('loginErr').textContent='登入失敗：'+e.message;
+    });
+  });
+}
+
+
+function doConnect(){
+  var k=document.getElementById('cfg-key').value.trim();
+  var p=document.getElementById('cfg-pid').value.trim();
+  var a=document.getElementById('cfg-aid').value.trim();
+  if(!k||!p||!a){ showErr('請填入全部三個欄位'); return; }
+  hideErr();
+  var btn=document.getElementById('sbtn');
+  btn.disabled=true; btn.textContent='連線中…';
+  loadFB(function(){
+    try{
+      var app;
+      try{ app=firebase.app(); }catch(e2){ app=firebase.initializeApp({apiKey:k,projectId:p,appId:a,authDomain:p+'.firebaseapp.com'}); }
+      db=app.firestore();
+      db.collection('polls').limit(1).get().then(function(){
+        saveCfg({apiKey:k,projectId:p,appId:a});
+        setOnline(true); loadAll();
+      }).catch(function(e){ btn.disabled=false; btn.textContent='連線並載入資料'; showErr('連線失敗：'+e.message); });
+    }catch(e){ btn.disabled=false; btn.textContent='連線並載入資料'; showErr('初始化失敗：'+e.message); }
+  });
+}
+
+function useLocal(){
+  localMode=true; db=null;
+  allPolls=SEED.map(function(d,i){ return Object.assign({},d,{id:'L'+i}); });
+  setOnline(false); hideSplash(); renderDash();
+  toast('本機模式：資料不會儲存至雲端','info');
+}
+
+// ════════════════════════════════════════
+//  資料讀取
+// ════════════════════════════════════════
+function loadAll(){
+  showLoad('載入資料…');
+  var done=0;
+  function check(){ if(++done>=3){ hideLoad(); hideSplash(); renderDash(); } }
+
+  // 民調
+  db.collection('polls').orderBy('date','asc').get().then(function(snap){
+    allPolls=snap.docs.map(function(d){ return Object.assign({id:d.id},d.data()); });
+    if(allPolls.length===0){
+      showLoad('首次使用，匯入歷史資料…');
+      var batch=db.batch();
+      SEED.forEach(function(p){ var ref=db.collection('polls').doc(); batch.set(ref,Object.assign({},p,{createdAt:firebase.firestore.FieldValue.serverTimestamp()})); });
+      batch.commit().then(function(){
+        db.collection('polls').orderBy('date','asc').get().then(function(s2){
+          allPolls=s2.docs.map(function(d){ return Object.assign({id:d.id},d.data()); });
+          toast('已匯入 20 筆歷史民調','ok'); check();
+        });
+      });
+    } else { check(); }
+  }).catch(function(){ check(); });
+
+  // 全國民調
+  db.collection('national_polls').orderBy('date','desc').get().then(function(snap){
+    natPolls=snap.docs.map(function(d){ return Object.assign({id:d.id},d.data()); }); check();
+  }).catch(function(){ check(); });
+
+  // 評論觀察
+  db.collection('national_comments').orderBy('date','desc').get().then(function(snap){
+    natComments=snap.docs.map(function(d){ return Object.assign({id:d.id},d.data()); }); check();
+  }).catch(function(){ check(); });
+}
+
+// ════════════════════════════════════════
+//  儲存
+// ════════════════════════════════════════
+function saveOne(data, cb){
+  // 清理 undefined
+  var clean={};
+  Object.keys(data).forEach(function(k){ if(data[k]!==undefined) clean[k]=data[k]; });
+  if(localMode){ allPolls.push(Object.assign({},clean,{id:'L'+Date.now()})); if(cb) cb(); return; }
+  showLoad('儲存中…');
+  db.collection('polls').add(Object.assign({},clean,{createdAt:firebase.firestore.FieldValue.serverTimestamp()}))
+    .then(function(ref){ allPolls.push(Object.assign({},clean,{id:ref.id})); hideLoad(); if(cb) cb(); })
+    .catch(function(e){ hideLoad(); toast('儲存失敗：'+e.message,'err'); });
+}
+
+function delPoll(id){
+  if(!confirm('確定要刪除這筆民調記錄?')) return;
+  if(!localMode&&db){ showLoad('刪除中…'); db.collection('polls').doc(id).delete().then(function(){ hideLoad(); }).catch(function(){ hideLoad(); }); }
+  allPolls=allPolls.filter(function(p){ return p.id!==id; });
+  renderDetail(curCode); renderDash(); toast('已刪除','ok');
+}
+
+// ════════════════════════════════════════
+//  頁面切換
+// ════════════════════════════════════════
+function goPage(id,btn){
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.nb').forEach(function(b){ b.classList.remove('active'); });
+  document.getElementById('page-'+id).classList.add('active');
+  if(btn) btn.classList.add('active');
+  if(id==='dashboard') renderDash();
+  if(id==='national'){ renderNatList(); }
+  if(id==='history'){ renderHistory(); }
+  if(id==='analysis'){ renderAnalysisList(); }
+  if(id==='input') resetForm();
+}
+
+// ════════════════════════════════════════
+//  選情總覽
+// ════════════════════════════════════════
+function groupBy(){
+  var m={}; COUNTY_ORDER.forEach(function(c){ m[c]=[]; });
+  allPolls.forEach(function(p){ if(m[p.countyCode]) m[p.countyCode].push(p); });
+  return m;
+}
+function hasConflict(polls){
+  if(polls.length<2) return false;
+  var leaders=polls.slice(-4).map(function(p){ var s=[].concat(p.candidates).sort(function(a,b){ return b.rate-a.rate; }); return s[0]?s[0].party:null; }).filter(Boolean);
+  return new Set(leaders).size>1;
+}
+function renderDash(){
+  var byC=groupBy();
+  var total=allPolls.length;
+  var withP=COUNTY_ORDER.filter(function(k){ return byC[k]&&byC[k].length>0; }).length;
+  var alerts=COUNTY_ORDER.filter(function(k){ return hasConflict(byC[k]||[]); }).length;
+  document.getElementById('ovGrid').innerHTML=
+    '<div class="ovc"><div class="ovl">民調總筆數</div><div class="ovv">'+total+'</div><div class="ovs">已建立紀錄</div></div>'+
+    '<div class="ovc"><div class="ovl">已有民調選區</div><div class="ovv">'+withP+'</div><div class="ovs">共 '+COUNTY_ORDER.length+' 個</div></div>'+
+    '<div class="ovc"><div class="ovl">待輸入</div><div class="ovv" style="color:var(--text2)">'+(COUNTY_ORDER.length-withP)+'</div><div class="ovs">尚無資料</div></div>'+
+    '<div class="ovc"><div class="ovl">衝突預警</div><div class="ovv" style="color:var(--warn)">'+alerts+'</div><div class="ovs">民調方向相反</div></div>';
+  document.getElementById('cGrid').innerHTML=COUNTY_ORDER.map(function(c){ return cCard(c,byC[c]||[]); }).join('');
+  document.getElementById('vlist').style.display='';
+  document.getElementById('vdetail').style.display='none';
+}
+function cCard(code,polls){
+  var name=COUNTIES[code]||code;
+  var latest=polls.length?polls[polls.length-1]:null;
+  var conf=hasConflict(polls);
+  if(!latest) return '<div class="cc" onclick="showDetail(\''+code+'\')"><div class="cch"><div class="ccn">'+name+'</div><span class="badge b-emp">待輸入</span></div><div class="ccempty">尚無民調資料</div></div>';
+  var maxR=Math.max.apply(null,latest.candidates.map(function(c){ return c.rate; }));
+  var bars=latest.candidates.slice(0,3).map(function(c){
+    return '<div class="br"><span class="br-n">'+c.name+'</span><span class="br-p" style="color:'+pc(c.party)+'">'+c.party+'</span><div class="br-t"><div class="br-f" style="width:'+Math.round(c.rate/maxR*100)+'%;background:'+pc(c.party)+'"></div></div><span class="br-r">'+c.rate+'%</span></div>';
+  }).join('');
+  return '<div class="cc has'+(conf?' conf':'')+'" onclick="showDetail(\''+code+'\')">'+
+    '<div class="cch"><div class="ccn">'+name+'</div><div class="ccm">'+(conf?'<span class="badge b-alert">⚠ 衝突</span>':'')+
+    '<span class="badge b-cnt">'+polls.length+' 筆</span></div></div>'+
+    '<div class="ccbody">'+bars+'</div>'+
+    (latest.note?'<div class="ccnote">'+latest.note+'</div>':'')+
+    '<div class="ccfoot"><span class="ccd">'+latest.date+'</span><span class="ccs">'+latest.source+'</span></div></div>';
+}
+
+// ════════════════════════════════════════
+//  縣市詳情
+// ════════════════════════════════════════
+function showDetail(code){
+  curCode=code; renderDetail(code);
+  document.getElementById('vlist').style.display='none';
+  document.getElementById('vdetail').style.display='';
+}
+function makeTrendChart(polls, code){
+  var sorted=polls.slice().sort(function(a,b){ return a.date.localeCompare(b.date); });
+  var parties=[];
+  sorted.forEach(function(p){ p.candidates.forEach(function(cc){ if(parties.indexOf(cc.party)<0) parties.push(cc.party); }); });
+  var main=["國民黨","民進黨","民眾黨","無黨籍","藍白共推"];
+  parties.sort(function(a,b){ var ai=main.indexOf(a),bi=main.indexOf(b); if(ai<0)ai=99; if(bi<0)bi=99; return ai-bi; });
+  // 不限制政黨數，全部顯示
+  var W=560,H=200,PL=44,PR=20,PT=20,PB=40;
+  var IW=W-PL-PR, IH=H-PT-PB;
+  var allR=[];
+  sorted.forEach(function(p){ p.candidates.forEach(function(cc){ if(parties.indexOf(cc.party)>=0) allR.push(cc.rate); }); });
+  var minR=Math.max(0,Math.floor(Math.min.apply(null,allR)/10)*10-5);
+  var maxR=Math.min(100,Math.ceil(Math.max.apply(null,allR)/10)*10+5);
+  var rRange=maxR-minR||1;
+  function xPos(i){ return PL+(i/(sorted.length-1||1))*IW; }
+  function yPos(r){ return PT+(1-(r-minR)/rRange)*IH; }
+  var lines="",dots="";
+  parties.forEach(function(party){
+    var pts=sorted.map(function(p,i){
+      var cc=p.candidates.find(function(x){ return x.party===party; });
+      return cc?{x:xPos(i),y:yPos(cc.rate),r:cc.rate}:null;
+    });
+    var d="";
+    pts.forEach(function(pt){ if(!pt) return; d+=(d===""?"M":"L")+pt.x.toFixed(1)+","+pt.y.toFixed(1); });
+    if(d) lines+='<path d="'+d+'" fill="none" stroke="'+pc(party)+'" stroke-width="2.5" stroke-linejoin="round"/>';
+    pts.forEach(function(pt,i){
+      if(!pt) return;
+      dots+='<circle cx="'+pt.x.toFixed(1)+'" cy="'+pt.y.toFixed(1)+'" r="4" fill="'+pc(party)+'"/>';
+      dots+='<text x="'+pt.x.toFixed(1)+'" y="'+( pt.y-9).toFixed(1)+'" text-anchor="middle" fill="'+pc(party)+'" font-size="10">'+pt.r+'%</text>';
+    });
+  });
+  var xLabels=sorted.map(function(p,i){
+    var x=xPos(i);
+    return '<text x="'+x.toFixed(1)+'" y="'+( H-PB+14)+'" text-anchor="middle" fill="#484f58" font-size="10">'+p.date.slice(5)+'</text>'+
+           '<text x="'+x.toFixed(1)+'" y="'+( H-PB+24)+'" text-anchor="middle" fill="#484f58" font-size="9">'+p.source.slice(0,4)+'</text>'+
+           '<line x1="'+x.toFixed(1)+'" y1="'+PT+'" x2="'+x.toFixed(1)+'" y2="'+( H-PB)+'" stroke="#21262d" stroke-width="1"/>';
+  }).join("");
+  var yGrid="";
+  for(var r=minR;r<=maxR;r+=10){
+    var y=yPos(r);
+    yGrid+='<line x1="'+PL+'" y1="'+y.toFixed(1)+'" x2="'+( W-PR)+'" y2="'+y.toFixed(1)+'" stroke="#21262d" stroke-width="1"/>'+
+           '<text x="'+( PL-4)+'" y="'+( y+4).toFixed(1)+'" text-anchor="end" fill="#484f58" font-size="10">'+r+'%</text>';
+  }
+  var legend=parties.map(function(party,i){
+    return '<g transform="translate('+( i*90)+',0)">'+
+      '<rect width="14" height="3" y="5" fill="'+pc(party)+'"/>'+
+      '<text x="18" y="12" fill="#8b949e" font-size="11">'+party+'</text></g>';
+  }).join("");
+  return '<div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:16px;overflow-x:auto;">'+
+    '<div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:10px;">支持率趨勢</div>'+
+    '<svg width="'+W+'" height="'+( H+32)+'" xmlns="http://www.w3.org/2000/svg" style="display:block;">'+
+    yGrid+xLabels+lines+dots+
+    '<g transform="translate('+PL+','+( H+10)+'">'+legend+'</g>'+
+    '</svg></div>';
+}
+function renderDetail(code){
+  var name=COUNTIES[code]||code;
+  var polls=(groupBy()[code]||[]).slice().sort(function(a,b){ return a.date.localeCompare(b.date); });
+  var conf=hasConflict(polls);
+  var tlHtml=polls.map(function(p,i){
+    var maxR=Math.max.apply(null,p.candidates.map(function(c){ return c.rate; }));
+    var bars=p.candidates.map(function(c){
+      var prev=i>0?polls[i-1].candidates.find(function(x){ return x.party===c.party||x.name===c.name; }):null;
+      var dlt='';
+      if(prev){ var d=parseFloat((c.rate-prev.rate).toFixed(1)); if(Math.abs(d)>=0.2) dlt='<span class="delta '+(d>0?'d-up':'d-dn')+'">'+(d>0?'▲':'▼')+Math.abs(d)+'</span>'; }
+      return '<div class="br"><span class="br-n">'+c.name+'</span><span class="br-p" style="color:'+pc(c.party)+'">'+c.party+'</span><div class="br-t"><div class="br-f" style="width:'+Math.round(c.rate/maxR*100)+'%;background:'+pc(c.party)+'"></div></div><span class="br-r">'+c.rate+'%'+dlt+'</span></div>';
+    }).join('');
+    var qc='t-'+(p.quality==='good'?'good':p.quality==='warn'?'warn':'bad');
+    return '<div class="tli q-'+p.quality+'"><div class="tlh"><span class="tld">'+p.date+'</span><span class="tls">'+p.source+'</span>'+
+      '<div class="tltags">'+(p.scenario?'<span class="tag t-purple">'+p.scenario+'</span>':'')+
+      '<span class="tag t-gray">'+(p.sample?'n='+Number(p.sample).toLocaleString():'n=不詳')+'</span>'+
+      '<span class="tag '+qc+'">'+QL[p.quality]+'</span>'+
+      '<button class="delbtn" onclick="delPoll(\''+p.id+'\')">刪除</button></div></div>'+
+      '<div class="tlbars">'+bars+'</div>'+
+      (p.note?'<div class="tlnote">'+p.note+'</div>':'')+
+      '</div>';
+  }).join('');
+  var chartHtml = polls.length>=2 ? makeTrendChart(polls,code) : '';
+  document.getElementById('vdetail').innerHTML=
+    '<div class="dh"><button class="backbtn" onclick="renderDash()">← 返回總覽</button>'+
+    '<div><div class="dtitle">'+name+'</div><div class="dsub">'+polls.length+' 筆紀錄</div></div></div>'+
+    (conf?'<div class="confbox">⚠️ <strong>民調衝突預警</strong>：近期不同機構民調呈現相反領先態勢，建議比較各機構調查方式與委託方背景。</div>':'')+
+    chartHtml+
+    '<div class="tl">'+(polls.length?tlHtml:'<div class="ccempty">尚無民調資料</div>')+'</div>';
+}
+
+// ════════════════════════════════════════
+//  全國觀察
+// ════════════════════════════════════════
+function switchNTab(mode){
+  var ip=mode==='poll';
+  document.getElementById('nmode-poll').style.display=ip?'':'none';
+  document.getElementById('nmode-comment').style.display=ip?'none':'';
+  document.getElementById('ntab-poll').className='tabbtn '+(ip?'on':'off');
+  document.getElementById('ntab-comment').className='tabbtn '+(ip?'off':'on');
+}
+function switchNView(mode){
+  var ip=mode==='poll';
+  document.getElementById('nlist-poll').style.display=ip?'':'none';
+  document.getElementById('nlist-comment').style.display=ip?'none':'';
+  document.getElementById('nview-poll').className='viewbtn '+(ip?'on':'off');
+  document.getElementById('nview-comment').className='viewbtn '+(ip?'off':'on');
+}
+function doNatParse(){
+  var txt=document.getElementById('natText').value.trim();
+  if(!txt){ toast('請先貼入資料','err'); return; }
+  var TAB="　";
+  var lines=txt.split('\n');
+  var polls=[], comments=[];
+  lines.forEach(function(line){
+    line=line.trim();
+    if(!line) return;
+    if(line.indexOf('日期')===0 && line.indexOf('來源')>0) return;
+    var cols=line.split(TAB);
+    if(cols.length<5) return;
+    var date=cols[0].trim();
+    if(!date.match(/^\d{4}-\d{2}-\d{2}$/)) return;
+    var col2=cols[2].trim();
+    var col4=(cols[4]||"").trim();
+    var hasPct=col2.indexOf("%")>=0||col2.indexOf("(")>=0||col2.indexOf("（")>=0;
+    var hasQ=col4.indexOf("✅")>=0||col4.indexOf("⚠")>=0||col4.indexOf("❌")>=0;
+    if(hasPct && hasQ){
+      var quality="warn";
+      if(col4.indexOf("✅")>=0) quality="good";
+      else if(col4.indexOf("❌")>=0) quality="bad";
+      var sample=null, sn=parseInt((cols[3]||"").replace(/[,，]/g,""));
+      if(!isNaN(sn)) sample=sn;
+      var d={type:"national_poll",date:date,source:cols[1].trim(),
+        topic:col2.replace(/[（()）]/g,"").trim(),
+        quality:quality,content:cols.slice(5).join(TAB).trim()};
+      if(sample) d.sample=sample;
+      polls.push(d);
+    } else {
+      var trust="mid";
+      var ts=(cols[5]||"").trim();
+      if(ts.indexOf("高")>=0) trust="high";
+      else if(ts.indexOf("低")>=0) trust="low";
+      var d2={type:"national_comment",date:date,source:cols[1].trim(),
+        commentType:cols[2].trim(),counties:(cols[3]||"全國").trim(),
+        content:col4,trust:trust};
+      if(cols[6]&&cols[6].trim()) d2.ref=cols[6].trim();
+      comments.push(d2);
+    }
+  });
+  var total=polls.length+comments.length;
+  if(!total){ toast("未解析到資料，請確認欄位間使用全形空格（　）分隔","err"); return; }
+  toast("解析：民調 "+polls.length+" 筆、評論 "+comments.length+" 筆，儲存中…","info");
+  var saved=0;
+  function saveItems(items,col,arr,cb){
+    if(!items.length){cb();return;}
+    function nx(i){
+      if(i>=items.length){cb();return;}
+      var item=items[i];
+      if(localMode||!db){arr.unshift(Object.assign({},item,{id:"L"+Date.now()+i}));saved++;nx(i+1);return;}
+      db.collection(col).add(Object.assign({},item,{createdAt:firebase.firestore.FieldValue.serverTimestamp()}))
+        .then(function(r){arr.unshift(Object.assign({},item,{id:r.id}));saved++;nx(i+1);})
+        .catch(function(){nx(i+1);});
+    }
+    nx(0);
+  }
+  saveItems(polls,"national_polls",natPolls,function(){
+    saveItems(comments,"national_comments",natComments,function(){
+      renderNatList();
+      toast("已儲存 "+saved+" 筆（民調 "+polls.length+"、評論 "+comments.length+"）","ok");
+      document.getElementById('natText').value='';
+    });
+  });
+}
+function saveNational(type){
+  var data, col;
+  if(type==='poll'){
+    var date=document.getElementById('np-date').value;
+    var source=document.getElementById('np-source').value.trim();
+    var topic=document.getElementById('np-topic').value.trim();
+    var content=document.getElementById('np-content').value.trim();
+    var sample=document.getElementById('np-sample').value;
+    var quality=document.getElementById('np-quality').value;
+    if(!date||!source||!topic||!content){ toast('請填入日期、來源、主題與摘要','err'); return; }
+    data={type:'national_poll',date:date,source:source,topic:topic,content:content,quality:quality};
+    if(sample) data.sample=parseInt(sample);
+    col='national_polls';
+    ['np-date','np-source','np-topic','np-content','np-sample'].forEach(function(id){ document.getElementById(id).value=''; });
+  } else {
+    var date2=document.getElementById('nc-date').value;
+    var source2=document.getElementById('nc-source').value.trim();
+    var content2=document.getElementById('nc-content').value.trim();
+    var trust=document.getElementById('nc-trust').value;
+    var ctype=document.getElementById('nc-type').value;
+    var counties=document.getElementById('nc-counties').value.trim();
+    var ref=document.getElementById('nc-ref').value.trim();
+    if(!date2||!source2||!content2){ toast('請填入日期、來源與摘要','err'); return; }
+    data={type:'national_comment',date:date2,source:source2,trust:trust,commentType:ctype,content:content2};
+    if(counties) data.counties=counties;
+    if(ref) data.ref=ref;
+    col='national_comments';
+    ['nc-date','nc-source','nc-counties','nc-content','nc-ref'].forEach(function(id){ document.getElementById(id).value=''; });
+  }
+  if(localMode||!db){
+    if(type==='poll') natPolls.unshift(Object.assign({},data,{id:'L'+Date.now()}));
+    else natComments.unshift(Object.assign({},data,{id:'L'+Date.now()}));
+    renderNatList(); toast('已儲存（本機模式）','ok'); return;
+  }
+  showLoad('儲存中…');
+  db.collection(col).add(Object.assign({},data,{createdAt:firebase.firestore.FieldValue.serverTimestamp()}))
+    .then(function(ref2){
+      if(type==='poll') natPolls.unshift(Object.assign({},data,{id:ref2.id}));
+      else natComments.unshift(Object.assign({},data,{id:ref2.id}));
+      hideLoad(); renderNatList(); toast('已儲存','ok');
+    }).catch(function(e){ hideLoad(); toast('儲存失敗：'+e.message,'err'); });
+}
+function delNational(id,type){
+  if(!confirm('確定要刪除此筆記錄?')) return;
+  var col=type==='poll'?'national_polls':'national_comments';
+  if(!localMode&&db){ showLoad('刪除中…'); db.collection(col).doc(id).delete().then(function(){ hideLoad(); }).catch(function(){ hideLoad(); }); }
+  if(type==='poll') natPolls=natPolls.filter(function(p){ return p.id!==id; });
+  else natComments=natComments.filter(function(p){ return p.id!==id; });
+  renderNatList(); toast('已刪除','ok');
+}
+function renderNatList(){
+  // 全國民調
+  var pe=document.getElementById('nlist-poll');
+  if(pe){
+    if(!natPolls.length){ pe.innerHTML='<div class="ccempty">尚無全國民調紀錄</div>'; }
+    else {
+      pe.innerHTML=natPolls.map(function(p){
+        var qc='t-'+(p.quality==='good'?'good':p.quality==='warn'?'warn':'bad');
+        return '<div class="tli q-'+(p.quality||'warn')+'" style="margin-bottom:10px;">'+
+          '<div class="tlh"><span class="tld">'+(p.date||'')+'</span><span class="tls">'+(p.source||'')+'</span>'+
+          '<div class="tltags"><span class="tag t-purple">'+(p.topic||'')+'</span>'+
+          (p.sample?'<span class="tag t-gray">n='+Number(p.sample).toLocaleString()+'</span>':'')+
+          '<span class="tag '+qc+'">'+(QL[p.quality]||'')+'</span>'+
+          '<button class="delbtn" onclick="delNational(\''+p.id+'\',\'poll\')">刪除</button></div></div>'+
+          '<div class="tlnote" style="padding:10px 16px;">'+(p.content||'')+'</div></div>';
+      }).join('');
+    }
+  }
+  // 評論觀察
+  var ce=document.getElementById('nlist-comment');
+  if(ce){
+    if(!natComments.length){ ce.innerHTML='<div class="ccempty">尚無評論觀察紀錄</div>'; }
+    else {
+      var TL={high:'🟢 高',mid:'🟡 中',low:'🔴 低'};
+      var BC={high:'var(--good)',mid:'var(--warn)',low:'var(--bad)'};
+      ce.innerHTML=natComments.map(function(p){
+        return '<div class="tli" style="margin-bottom:10px;border-left:3px solid '+(BC[p.trust]||'var(--warn)')+';">'+
+          '<div class="tlh"><span class="tld">'+(p.date||'')+'</span><span class="tls">'+(p.source||'')+'</span>'+
+          '<div class="tltags"><span class="tag t-gray">'+(p.commentType||'')+'</span>'+
+          (p.counties?'<span class="tag t-purple">'+p.counties+'</span>':'')+
+          '<span class="tag t-blue">'+(TL[p.trust]||'')+'</span>'+
+          '<button class="delbtn" onclick="delNational(\''+p.id+'\',\'comment\')">刪除</button></div></div>'+
+          '<div class="tlnote" style="padding:10px 16px;">'+(p.content||'')+'</div>'+
+          (p.ref?'<div style="padding:0 16px 10px;font-size:11px;color:var(--text3);">📎 '+p.ref+'</div>':'')+
+          '</div>';
+      }).join('');
+    }
+  }
+}
+
+// ════════════════════════════════════════
+//  Project 格式解析
+// ════════════════════════════════════════
+function switchITab(mode){
+  var ip=mode==='prj';
+  document.getElementById('imode-prj').style.display=ip?'':'none';
+  document.getElementById('imode-free').style.display=ip?'none':'';
+  document.getElementById('itab-prj').className='tabbtn '+(ip?'on':'off');
+  document.getElementById('itab-free').className='tabbtn '+(ip?'off':'on');
+}
+
+function parseProjectFmt(text){
+  var results=[];
+  var curCounty='', curCode='';
+  var lines=text.split('\n');
+  var TAB='\u3000'; // 全形空格
+
+  for(var i=0;i<lines.length;i++){
+    var line=lines[i].trim();
+    if(!line) continue;
+
+    // 縣市標題：支援「## 新北市」或直接「新北市」
+    var hm=line.match(/^##\s+(.+)/);
+    if(!hm && COUNTY_MAP[line] && line.indexOf(TAB)<0) hm=[null,line];
+    if(hm){
+      var cname=(hm[1]||hm[0]).trim();
+      curCounty=cname; curCode=COUNTY_MAP[cname]||''; continue;
+    }
+
+    // 跳過表頭行
+    if(line.indexOf('日期')===0 && line.indexOf('來源')>0) continue;
+
+    // 資料列（全形空格分隔）
+    var cols=line.split(TAB);
+    if(cols.length<5) continue;
+
+    var date=cols[0].trim();
+    var source=cols[1].trim();
+    var candStr=cols[2].trim();
+    var sampleStr=cols[3].trim();
+    var qualStr=cols[4].trim();
+    var note=cols.slice(5).join(TAB).trim();
+
+    // 日期驗證
+    if(!date.match(/^\d{4}-\d{2}-\d{2}$/)) continue;
+
+    // 樣本數
+    var sample=null;
+    if(sampleStr && sampleStr!=='不詳'){
+      var sn=parseInt(sampleStr.replace(/[,，]/g,''));
+      if(!isNaN(sn)) sample=sn;
+    }
+
+    // 品質
+    var quality='warn';
+    if(qualStr.indexOf('✅')>=0) quality='good';
+    else if(qualStr.indexOf('❌')>=0) quality='bad';
+
+    // 候選人：「姓名（黨派 XX%）／姓名（黨派 XX%）」
+    var candidates=[];
+    candStr.split('／').forEach(function(part){
+      part=part.trim();
+      // 支援全形括號和半形括號
+      var m=part.match(/^(.+?)[（(](.+?)\s+(\d{1,2}(?:\.\d{1,2})?)[%％][）)]$/);
+      if(!m) m=part.match(/^(.+?)[（(](.+?)\s+(\d{1,2}(?:\.\d{1,2})?)%[）)]$/);
+      if(m) candidates.push({name:m[1].trim(),party:m[2].trim(),rate:parseFloat(m[3])});
+    });
+
+    if(!curCode||!date||!source||candidates.length===0) continue;
+    results.push({countyCode:curCode,countyName:curCounty,date:date,source:source,sample:sample,quality:quality,candidates:candidates,note:note});
+  }
+  return results;
+}
+
+function doProjectParse(){
+  var txt=document.getElementById('projectText').value.trim();
+  if(!txt){ toast('請先貼入 Project 格式資料','err'); return; }
+  var items=parseProjectFmt(txt);
+  if(!items.length){ toast('未解析到資料，請確認格式（全形空格分隔欄位，候選人格式：姓名（黨派 XX%））','err'); return; }
+
+  // 預覽第一筆
+  showPollPreview(items[0], items.length);
+  toast('解析到 '+items.length+' 筆，開始儲存…','info');
+
+  var saved=0, errs=0;
+  function next(idx){
+    if(idx>=items.length){
+      renderDash();
+      toast('已儲存 '+saved+' 筆民調'+(errs>0?'，'+errs+' 筆失敗':''),'ok');
+      if(saved>0) setTimeout(function(){ document.getElementById('projectText').value=''; },800);
+      return;
+    }
+    var item=items[idx];
+    var data={countyCode:item.countyCode,date:item.date,source:item.source,quality:item.quality,candidates:item.candidates,note:item.note};
+    if(item.sample) data.sample=item.sample;
+    saveOne(data, function(){ saved++; next(idx+1); });
+  }
+  next(0);
+}
+
+// ════════════════════════════════════════
+//  自由文字解析（備援）
+// ════════════════════════════════════════
+function normParty(raw){
+  var map={'民進黨':'民進黨','民主進步黨':'民進黨','國民黨':'國民黨','中國國民黨':'國民黨','民眾黨':'民眾黨','台灣民眾黨':'民眾黨','無黨籍':'無黨籍','無黨':'無黨籍','藍白共推':'藍白共推','台灣基進':'台灣基進'};
+  for(var k in map){ if(raw.indexOf(k)>=0) return map[k]; } return raw;
+}
+function findParty(txt){
+  for(var i=0;i<PARTIES.length;i++){ if(txt.indexOf(PARTIES[i])>=0) return PARTIES[i]; } return '';
+}
+
+function doParse(){
+  var txt=document.getElementById('pasteText').value.trim();
+  if(!txt){ toast('請先貼上新聞文字','err'); return; }
+  var res={county:'',date:'',source:'',sample:null,quality:'warn',method:'電話訪問',scenario:'',note:'',candidates:[]};
+  var missing=[];
+
+  // 日期
+  var dm, re4y=/(20[2-9]\d)[年\-\/](\d{1,2})[月\-\/](\d{1,2})/g;
+  while((dm=re4y.exec(txt))!==null){ res.date=dm[1]+'-'+pad(dm[2])+'-'+pad(dm[3]); break; }
+  if(!res.date){ var reMD=/(\d{1,2})[月](\d{1,2})[日號]/g; while((dm=reMD.exec(txt))!==null){ res.date=new Date().getFullYear()+'-'+pad(dm[1])+'-'+pad(dm[2]); break; } }
+  if(!res.date) missing.push('日期');
+
+  // 媒體
+  var mkeys=Object.keys(MEDIA_MAP).sort(function(a,b){ return b.length-a.length; });
+  for(var mi=0;mi<mkeys.length;mi++){ if(txt.indexOf(mkeys[mi])>=0){ res.source=MEDIA_MAP[mkeys[mi]]; break; } }
+  if(!res.source) missing.push('來源機構');
+
+  // 縣市（最長匹配優先）
+  var ckeys=Object.keys(COUNTY_MAP).sort(function(a,b){ return b.length-a.length; });
+  for(var ci=0;ci<ckeys.length;ci++){ if(txt.indexOf(ckeys[ci])>=0){ res.county=COUNTY_MAP[ckeys[ci]]; break; } }
+  if(!res.county) missing.push('縣市');
+
+  // 樣本數
+  var spats=[/完成\s*([0-9,，]+)\s*份有效樣本/,/有效樣本\s*([0-9,，]+)/,/([0-9,，]+)\s*份有效樣本/,/(?:有效)?樣本[數份]?\s*[：:共為]?\s*([0-9,，]+)/];
+  for(var si=0;si<spats.length;si++){ var sm=txt.match(spats[si]); if(sm){ res.sample=parseInt(sm[1].replace(/[,，]/g,'')); break; } }
+  if(res.sample) res.quality=res.sample>=1000?'good':res.sample>=600?'warn':'bad';
+
+  // 候選人（以「支持度為XX%」為錨點）
+  var cands=[], m;
+  var patRate=new RegExp('([^\\d\\s，。（）、\\n]{1,6})支持度為?\\s*(\\d{1,2}(?:\\.\\d{1,2})?)\\s*%','g');
+  while((m=patRate.exec(txt))!==null){
+    var raw=m[1];
+    var name=raw.replace(/^.{0,4}[人黨]/,'').trim();
+    if(name.length<2) name=raw.slice(-3).trim();
+    if(name.length<2||name.length>4) continue;
+    var bef=txt.substring(Math.max(0,m.index-50),m.index);
+    cands.push({name:name,party:findParty(bef)||'',rate:parseFloat(m[2])});
+  }
+  // 備援：「姓名（黨派）XX%」
+  if(!cands.length){
+    var patA=/([\u4e00-\u9fff]{2,4})[（(]([\u4e00-\u9fff]{2,4})[）)]\s*(\d{1,2}(?:\.\d{1,2})?)\s*%/g;
+    while((m=patA.exec(txt))!==null){ var p2=normParty(m[2]); if(p2) cands.push({name:m[1],party:p2,rate:parseFloat(m[3])}); }
+  }
+  // 去重
+  var sN={},sP={};
+  res.candidates=cands.filter(function(c){
+    if(sN[c.name]||(c.party&&sP[c.party])) return false;
+    sN[c.name]=true; if(c.party) sP[c.party]=true; return true;
+  });
+  if(!res.candidates.length) missing.push('候選人支持率');
+
+  // 備註
+  var notes=[];
+  if(res.candidates.length>=2){ var s2=res.candidates.slice().sort(function(a,b){ return b.rate-a.rate; }); notes.push('差距'+(s2[0].rate-s2[1].rate).toFixed(1)+'%'); }
+  var udm=txt.match(/(?:未表態|未決定)[^\d]*?(\d{1,2}(?:\.\d)?)\s*%/);
+  if(udm) notes.push('未表態'+udm[1]+'%');
+  res.note=notes.join('；');
+
+  // 填入表單
+  if(res.county) document.getElementById('f-county').value=res.county;
+  if(res.date) document.getElementById('f-date').value=res.date;
+  if(res.source) document.getElementById('f-source').value=res.source;
+  if(res.sample) document.getElementById('f-sample').value=res.sample;
+  document.getElementById('f-quality').value=res.quality;
+  document.getElementById('f-note').value=res.note;
+  document.getElementById('f-scenario').value=res.scenario||'';
+  document.getElementById('candList').innerHTML=''; candCount=0;
+  if(res.candidates.length){ res.candidates.forEach(function(c){ addCand(c.name,c.party,c.rate); }); }
+  else { addCand('','國民黨',''); addCand('','民進黨',''); }
+  setTimeout(doPreview,80);
+
+  if(missing.length) toast('請補填：'+missing.join('、')+'，確認後按儲存','info');
+  else toast('解析完成，請確認後按儲存','ok');
+}
+
+// ════════════════════════════════════════
+//  候選人欄位
+// ════════════════════════════════════════
+function addCand(name,party,rate){
+  candCount++;
+  var id='c'+candCount;
+  var parties=['國民黨','民進黨','民眾黨','無黨籍','藍白共推','台灣基進','其他'];
+  var opts=parties.map(function(p){ return '<option'+(p===(party||'國民黨')?' selected':'')+'>'+p+'</option>'; }).join('');
+  var div=document.createElement('div');
+  div.className='ce'; div.id=id;
+  div.innerHTML='<input type="text" placeholder="候選人姓名" value="'+(name||'')+'" oninput="doPreview()">'+
+    '<select onchange="doPreview()">'+opts+'</select>'+
+    '<input type="number" placeholder="%" step="0.1" min="0" max="100" value="'+(rate||'')+'" oninput="doPreview()">'+
+    '<button class="bi" onclick="document.getElementById(\''+id+'\').remove();doPreview()">×</button>';
+  document.getElementById('candList').appendChild(div);
+}
+function getCands(){
+  return Array.from(document.querySelectorAll('.ce')).map(function(el){
+    var inp=el.querySelectorAll('input,select');
+    return {name:inp[0].value.trim(),party:inp[1].value,rate:parseFloat(inp[2].value)||0};
+  }).filter(function(c){ return c.name; });
+}
+
+// ════════════════════════════════════════
+//  即時預覽
+// ════════════════════════════════════════
+function showPollPreview(p, total){
+  var maxR=Math.max.apply(null,p.candidates.map(function(c){ return c.rate; }));
+  var qc='t-'+(p.quality==='good'?'good':p.quality==='warn'?'warn':'bad');
+  var bars=p.candidates.map(function(c){
+    return '<div class="br"><span class="br-n">'+c.name+'</span><span class="br-p" style="color:'+pc(c.party)+'">'+c.party+'</span><div class="br-t"><div class="br-f" style="width:'+Math.round(c.rate/maxR*100)+'%;background:'+pc(c.party)+'"></div></div><span class="br-r">'+c.rate+'%</span></div>';
+  }).join('');
+  var totalNote=total>1?'<div style="font-size:11px;color:var(--text3);margin-bottom:8px;">共解析 '+total+' 筆，預覽第一筆：'+(p.countyName||COUNTIES[p.countyCode]||'')+'</div>':'';
+  document.getElementById('prevContent').innerHTML=totalNote+
+    '<div class="tli q-'+p.quality+'"><div class="tlh"><span class="tld">'+p.date+'</span><span class="tls">'+p.source+'</span>'+
+    '<div class="tltags"><span class="tag t-gray">'+(p.sample?'n='+Number(p.sample).toLocaleString():'n=不詳')+'</span>'+
+    '<span class="tag '+qc+'">'+QL[p.quality]+'</span></div></div>'+
+    '<div class="tlbars">'+bars+'</div>'+(p.note?'<div class="tlnote">'+p.note+'</div>':'')+
+    '</div>';
+}
+
+function doPreview(){
+  var county=document.getElementById('f-county').value;
+  var date=document.getElementById('f-date').value;
+  var source=document.getElementById('f-source').value;
+  var quality=document.getElementById('f-quality').value;
+  var sample=document.getElementById('f-sample').value;
+  var scenario=document.getElementById('f-scenario').value;
+  var note=document.getElementById('f-note').value;
+  var cands=getCands();
+  if(!county||!date||!source||!cands.length){ document.getElementById('prevContent').innerHTML='<div class="prev-empty">填寫縣市、日期、來源及候選人後顯示預覽</div>'; return; }
+  showPollPreview({countyCode:county,date:date,source:source,quality:quality,sample:sample?parseInt(sample):null,candidates:cands,note:note,scenario:scenario},1);
+}
+
+// ════════════════════════════════════════
+//  手動儲存
+// ════════════════════════════════════════
+function doSave(){
+  var county=document.getElementById('f-county').value;
+  var date=document.getElementById('f-date').value;
+  var source=document.getElementById('f-source').value;
+  var quality=document.getElementById('f-quality').value;
+  var sample=document.getElementById('f-sample').value;
+  var method=document.getElementById('f-method').value;
+  var scenario=document.getElementById('f-scenario').value.trim();
+  var note=document.getElementById('f-note').value.trim();
+  var cands=getCands();
+  if(!county){ toast('請選擇縣市','err'); return; }
+  if(!date){ toast('請填入日期','err'); return; }
+  if(!source){ toast('請填入來源機構','err'); return; }
+  if(!cands.length){ toast('請至少填入一位候選人','err'); return; }
+  var btn=document.getElementById('saveBtn'); btn.disabled=true;
+  var data={countyCode:county,date:date,source:source,quality:quality,method:method,candidates:cands,note:note};
+  if(sample) data.sample=parseInt(sample);
+  if(scenario) data.scenario=scenario;
+  saveOne(data, function(){
+    renderDash(); btn.disabled=false;
+    toast('已儲存：'+(COUNTIES[county]||county)+' '+date,'ok');
+    setTimeout(resetForm,600);
+  });
+}
+
+function resetForm(){
+  document.getElementById('projectText').value='';
+  document.getElementById('pasteText').value='';
+  ['f-county','f-date','f-source','f-sample','f-scenario','f-note'].forEach(function(id){ var el=document.getElementById(id); if(el) el.value=''; });
+  document.getElementById('f-quality').value='warn';
+  document.getElementById('f-method').value='電話訪問';
+  document.getElementById('candList').innerHTML=''; candCount=0;
+  addCand('','國民黨',''); addCand('','民進黨','');
+  document.getElementById('prevContent').innerHTML='<div class="prev-empty">貼入 Project 格式後按解析<br>或填寫左側表單預覽</div>';
+}
+
+
+// ════════════════════════════════════════
+//  歷史投票資料
+// ════════════════════════════════════════
+var HIST = {
+mayor2018:[
+  {code:'TPE',name:'台北市',winner:'柯文哲',winParty:'無黨籍',candidates:[{name:'柯文哲',party:'無黨籍',rate:41.05},{name:'丁守中',party:'國民黨',rate:40.81},{name:'姚文智',party:'民進黨',rate:21.34}]},
+  {code:'NTC',name:'新北市',winner:'侯友宜',winParty:'國民黨',candidates:[{name:'侯友宜',party:'國民黨',rate:57.54},{name:'蘇貞昌',party:'民進黨',rate:40.27}]},
+  {code:'TYN',name:'桃園市',winner:'鄭文燦',winParty:'民進黨',candidates:[{name:'鄭文燦',party:'民進黨',rate:55.58},{name:'陳學聖',party:'國民黨',rate:38.13}]},
+  {code:'TXG',name:'台中市',winner:'盧秀燕',winParty:'國民黨',candidates:[{name:'盧秀燕',party:'國民黨',rate:53.19},{name:'林佳龍',party:'民進黨',rate:44.17}]},
+  {code:'TNN',name:'台南市',winner:'黃偉哲',winParty:'民進黨',candidates:[{name:'黃偉哲',party:'民進黨',rate:38.78},{name:'高思博',party:'國民黨',rate:28.87},{name:'葉宜津',party:'無黨籍',rate:23.99}]},
+  {code:'KHH',name:'高雄市',winner:'韓國瑜',winParty:'國民黨',candidates:[{name:'韓國瑜',party:'國民黨',rate:53.87},{name:'陳其邁',party:'民進黨',rate:44.80}]},
+  {code:'KEL',name:'基隆市',winner:'林右昌',winParty:'民進黨',candidates:[{name:'林右昌',party:'民進黨',rate:49.64},{name:'謝立功',party:'國民黨',rate:40.41}]},
+  {code:'HSC',name:'新竹市',winner:'林智堅',winParty:'民進黨',candidates:[{name:'林智堅',party:'民進黨',rate:50.97},{name:'林耕仁',party:'國民黨',rate:38.78}]},
+  {code:'CYI',name:'嘉義市',winner:'黃敏惠',winParty:'國民黨',candidates:[{name:'黃敏惠',party:'國民黨',rate:53.73},{name:'涂醒哲',party:'民進黨',rate:43.04}]},
+  {code:'HSN',name:'新竹縣',winner:'楊文科',winParty:'國民黨',candidates:[{name:'楊文科',party:'國民黨',rate:50.06},{name:'鄭朝方',party:'民進黨',rate:46.27}]},
+  {code:'MIA',name:'苗栗縣',winner:'徐耀昌',winParty:'國民黨',candidates:[{name:'徐耀昌',party:'國民黨',rate:65.11},{name:'翁章梁',party:'民進黨',rate:28.26}]},
+  {code:'CHA',name:'彰化縣',winner:'王惠美',winParty:'國民黨',candidates:[{name:'王惠美',party:'國民黨',rate:51.98},{name:'林漢泉',party:'民進黨',rate:43.69}]},
+  {code:'NTO',name:'南投縣',winner:'林明溱',winParty:'國民黨',candidates:[{name:'林明溱',party:'國民黨',rate:54.59},{name:'洪國浩',party:'民進黨',rate:39.21}]},
+  {code:'YUN',name:'雲林縣',winner:'張麗善',winParty:'國民黨',candidates:[{name:'張麗善',party:'國民黨',rate:51.66},{name:'李進勇',party:'民進黨',rate:45.74}]},
+  {code:'CYN',name:'嘉義縣',winner:'翁章梁',winParty:'民進黨',candidates:[{name:'翁章梁',party:'民進黨',rate:55.37},{name:'王育敏',party:'國民黨',rate:39.84}]},
+  {code:'PIF',name:'屏東縣',winner:'潘孟安',winParty:'民進黨',candidates:[{name:'潘孟安',party:'民進黨',rate:52.28},{name:'蘇清泉',party:'國民黨',rate:41.94}]},
+  {code:'ILA',name:'宜蘭縣',winner:'林姿妙',winParty:'國民黨',candidates:[{name:'林姿妙',party:'國民黨',rate:49.48},{name:'陳歐珀',party:'民進黨',rate:44.76}]},
+  {code:'HUA',name:'花蓮縣',winner:'徐榛蔚',winParty:'國民黨',candidates:[{name:'徐榛蔚',party:'國民黨',rate:60.96},{name:'劉曉玫',party:'民進黨',rate:26.12}]},
+  {code:'TTT',name:'台東縣',winner:'饒慶鈴',winParty:'國民黨',candidates:[{name:'饒慶鈴',party:'國民黨',rate:58.37},{name:'劉櫂豪',party:'民進黨',rate:38.07}]},
+  {code:'PEH',name:'澎湖縣',winner:'賴峰偉',winParty:'國民黨',candidates:[{name:'賴峰偉',party:'國民黨',rate:52.78},{name:'陳光復',party:'民進黨',rate:45.77}]},
+  {code:'KIN',name:'金門縣',winner:'楊鎮浯',winParty:'國民黨',candidates:[{name:'楊鎮浯',party:'國民黨',rate:59.88},{name:'陳滄江',party:'無黨籍',rate:37.33}]},
+  {code:'LIE',name:'連江縣',winner:'劉增應',winParty:'國民黨',candidates:[{name:'劉增應',party:'國民黨',rate:50.05},{name:'王忠銘',party:'民進黨',rate:46.25}]}
+],
+mayor2022:[
+  {code:'TPE',name:'台北市',winner:'蔣萬安',winParty:'國民黨',candidates:[{name:'蔣萬安',party:'國民黨',rate:42.29},{name:'陳時中',party:'民進黨',rate:31.62},{name:'黃珊珊',party:'無黨籍',rate:23.25}]},
+  {code:'NTC',name:'新北市',winner:'侯友宜',winParty:'國民黨',candidates:[{name:'侯友宜',party:'國民黨',rate:62.47},{name:'林佳龍',party:'民進黨',rate:34.22}]},
+  {code:'TYN',name:'桃園市',winner:'張善政',winParty:'國民黨',candidates:[{name:'張善政',party:'國民黨',rate:50.49},{name:'鄭運鵬',party:'民進黨',rate:42.25}]},
+  {code:'TXG',name:'台中市',winner:'盧秀燕',winParty:'國民黨',candidates:[{name:'盧秀燕',party:'國民黨',rate:59.13},{name:'蔡其昌',party:'民進黨',rate:38.41}]},
+  {code:'TNN',name:'台南市',winner:'黃偉哲',winParty:'民進黨',candidates:[{name:'黃偉哲',party:'民進黨',rate:48.80},{name:'謝龍介',party:'國民黨',rate:43.12}]},
+  {code:'KHH',name:'高雄市',winner:'陳其邁',winParty:'民進黨',candidates:[{name:'陳其邁',party:'民進黨',rate:62.74},{name:'柯志恩',party:'國民黨',rate:35.62}]},
+  {code:'KEL',name:'基隆市',winner:'謝國樑',winParty:'國民黨',candidates:[{name:'謝國樑',party:'國民黨',rate:52.37},{name:'蔡適應',party:'民進黨',rate:43.25}]},
+  {code:'HSC',name:'新竹市',winner:'高虹安',winParty:'民眾黨',candidates:[{name:'高虹安',party:'民眾黨',rate:45.05},{name:'林耕仁',party:'國民黨',rate:33.03},{name:'沈慧虹',party:'民進黨',rate:21.52}]},
+  {code:'CYI',name:'嘉義市',winner:'黃敏惠',winParty:'國民黨',candidates:[{name:'黃敏惠',party:'國民黨',rate:47.39},{name:'李俊俋',party:'民進黨',rate:46.70}]},
+  {code:'HSN',name:'新竹縣',winner:'楊文科',winParty:'國民黨',candidates:[{name:'楊文科',party:'國民黨',rate:75.23},{name:'鄭朝方',party:'民進黨',rate:22.72}]},
+  {code:'MIA',name:'苗栗縣',winner:'鍾東錦',winParty:'無黨籍',candidates:[{name:'鍾東錦',party:'無黨籍',rate:52.25},{name:'謝福弘',party:'國民黨',rate:27.60},{name:'徐定禎',party:'民進黨',rate:19.55}]},
+  {code:'CHA',name:'彰化縣',winner:'王惠美',winParty:'國民黨',candidates:[{name:'王惠美',party:'國民黨',rate:60.27},{name:'周江杰',party:'民進黨',rate:37.80}]},
+  {code:'NTO',name:'南投縣',winner:'許淑華',winParty:'國民黨',candidates:[{name:'許淑華',party:'國民黨',rate:57.97},{name:'李文忠',party:'民進黨',rate:38.77}]},
+  {code:'YUN',name:'雲林縣',winner:'張麗善',winParty:'國民黨',candidates:[{name:'張麗善',party:'國民黨',rate:52.59},{name:'劉建國',party:'民進黨',rate:46.41}]},
+  {code:'CYN',name:'嘉義縣',winner:'翁章梁',winParty:'民進黨',candidates:[{name:'翁章梁',party:'民進黨',rate:62.85},{name:'王育敏',party:'國民黨',rate:34.31}]},
+  {code:'PIF',name:'屏東縣',winner:'周春米',winParty:'民進黨',candidates:[{name:'周春米',party:'民進黨',rate:52.11},{name:'蘇清泉',party:'國民黨',rate:44.53}]},
+  {code:'ILA',name:'宜蘭縣',winner:'林姿妙',winParty:'國民黨',candidates:[{name:'林姿妙',party:'國民黨',rate:51.55},{name:'江聰淵',party:'民進黨',rate:43.52}]},
+  {code:'HUA',name:'花蓮縣',winner:'徐榛蔚',winParty:'國民黨',candidates:[{name:'徐榛蔚',party:'國民黨',rate:54.17},{name:'魏嘉賢',party:'無黨籍',rate:31.53},{name:'游建智',party:'民進黨',rate:11.39}]},
+  {code:'TTT',name:'台東縣',winner:'饒慶鈴',winParty:'國民黨',candidates:[{name:'饒慶鈴',party:'國民黨',rate:63.13},{name:'劉櫂豪',party:'民進黨',rate:34.01}]},
+  {code:'PEH',name:'澎湖縣',winner:'陳光復',winParty:'民進黨',candidates:[{name:'陳光復',party:'民進黨',rate:52.79},{name:'賴峰偉',party:'國民黨',rate:47.14}]},
+  {code:'KIN',name:'金門縣',winner:'陳福海',winParty:'無黨籍',candidates:[{name:'陳福海',party:'無黨籍',rate:49.14},{name:'洪志恆',party:'國民黨',rate:42.08}]},
+  {code:'LIE',name:'連江縣',winner:'王忠銘',winParty:'民進黨',candidates:[{name:'王忠銘',party:'民進黨',rate:50.60},{name:'劉增應',party:'國民黨',rate:49.42}]}
+],
+president2020:[
+  {code:'TPE',name:'台北市',candidates:[{name:'蔡英文',party:'民進黨',rate:52.90},{name:'韓國瑜',party:'國民黨',rate:40.83},{name:'宋楚瑜',party:'親民黨',rate:5.76}]},
+  {code:'NTC',name:'新北市',candidates:[{name:'蔡英文',party:'民進黨',rate:54.31},{name:'韓國瑜',party:'國民黨',rate:38.54},{name:'宋楚瑜',party:'親民黨',rate:6.60}]},
+  {code:'TYN',name:'桃園市',candidates:[{name:'蔡英文',party:'民進黨',rate:55.93},{name:'韓國瑜',party:'國民黨',rate:36.90},{name:'宋楚瑜',party:'親民黨',rate:6.66}]},
+  {code:'TXG',name:'台中市',candidates:[{name:'蔡英文',party:'民進黨',rate:53.48},{name:'韓國瑜',party:'國民黨',rate:39.24},{name:'宋楚瑜',party:'親民黨',rate:6.77}]},
+  {code:'TNN',name:'台南市',candidates:[{name:'蔡英文',party:'民進黨',rate:63.63},{name:'韓國瑜',party:'國民黨',rate:30.21},{name:'宋楚瑜',party:'親民黨',rate:5.71}]},
+  {code:'KHH',name:'高雄市',candidates:[{name:'蔡英文',party:'民進黨',rate:57.99},{name:'韓國瑜',party:'國民黨',rate:36.24},{name:'宋楚瑜',party:'親民黨',rate:5.28}]},
+  {code:'KEL',name:'基隆市',candidates:[{name:'蔡英文',party:'民進黨',rate:53.82},{name:'韓國瑜',party:'國民黨',rate:38.62},{name:'宋楚瑜',party:'親民黨',rate:6.98}]},
+  {code:'HSC',name:'新竹市',candidates:[{name:'蔡英文',party:'民進黨',rate:56.33},{name:'韓國瑜',party:'國民黨',rate:35.44},{name:'宋楚瑜',party:'親民黨',rate:7.73}]},
+  {code:'CYI',name:'嘉義市',candidates:[{name:'蔡英文',party:'民進黨',rate:59.89},{name:'韓國瑜',party:'國民黨',rate:33.17},{name:'宋楚瑜',party:'親民黨',rate:6.37}]},
+  {code:'HSN',name:'新竹縣',candidates:[{name:'韓國瑜',party:'國民黨',rate:48.23},{name:'蔡英文',party:'民進黨',rate:44.24},{name:'宋楚瑜',party:'親民黨',rate:7.06}]},
+  {code:'MIA',name:'苗栗縣',candidates:[{name:'韓國瑜',party:'國民黨',rate:54.46},{name:'蔡英文',party:'民進黨',rate:38.35},{name:'宋楚瑜',party:'親民黨',rate:6.72}]},
+  {code:'CHA',name:'彰化縣',candidates:[{name:'蔡英文',party:'民進黨',rate:50.88},{name:'韓國瑜',party:'國民黨',rate:42.25},{name:'宋楚瑜',party:'親民黨',rate:6.41}]},
+  {code:'NTO',name:'南投縣',candidates:[{name:'韓國瑜',party:'國民黨',rate:49.45},{name:'蔡英文',party:'民進黨',rate:43.53},{name:'宋楚瑜',party:'親民黨',rate:6.55}]},
+  {code:'YUN',name:'雲林縣',candidates:[{name:'蔡英文',party:'民進黨',rate:51.46},{name:'韓國瑜',party:'國民黨',rate:41.46},{name:'宋楚瑜',party:'親民黨',rate:6.62}]},
+  {code:'CYN',name:'嘉義縣',candidates:[{name:'蔡英文',party:'民進黨',rate:56.46},{name:'韓國瑜',party:'國民黨',rate:37.10},{name:'宋楚瑜',party:'親民黨',rate:5.98}]},
+  {code:'PIF',name:'屏東縣',candidates:[{name:'蔡英文',party:'民進黨',rate:56.08},{name:'韓國瑜',party:'國民黨',rate:37.93},{name:'宋楚瑜',party:'親民黨',rate:5.55}]},
+  {code:'ILA',name:'宜蘭縣',candidates:[{name:'蔡英文',party:'民進黨',rate:53.89},{name:'韓國瑜',party:'國民黨',rate:39.05},{name:'宋楚瑜',party:'親民黨',rate:6.61}]},
+  {code:'HUA',name:'花蓮縣',candidates:[{name:'韓國瑜',party:'國民黨',rate:60.92},{name:'蔡英文',party:'民進黨',rate:32.44},{name:'宋楚瑜',party:'親民黨',rate:6.17}]},
+  {code:'TTT',name:'台東縣',candidates:[{name:'韓國瑜',party:'國民黨',rate:59.55},{name:'蔡英文',party:'民進黨',rate:34.07},{name:'宋楚瑜',party:'親民黨',rate:5.99}]},
+  {code:'PEH',name:'澎湖縣',candidates:[{name:'韓國瑜',party:'國民黨',rate:49.78},{name:'蔡英文',party:'民進黨',rate:43.85},{name:'宋楚瑜',party:'親民黨',rate:5.94}]},
+  {code:'KIN',name:'金門縣',candidates:[{name:'韓國瑜',party:'國民黨',rate:67.95},{name:'蔡英文',party:'民進黨',rate:25.32},{name:'宋楚瑜',party:'親民黨',rate:6.28}]},
+  {code:'LIE',name:'連江縣',candidates:[{name:'韓國瑜',party:'國民黨',rate:67.59},{name:'蔡英文',party:'民進黨',rate:26.01},{name:'宋楚瑜',party:'親民黨',rate:5.96}]}
+],
+president2024:[
+  {code:'TPE',name:'台北市',candidates:[{name:'賴清德',party:'民進黨',rate:41.67},{name:'侯友宜',party:'國民黨',rate:35.82},{name:'柯文哲',party:'民眾黨',rate:21.06}]},
+  {code:'NTC',name:'新北市',candidates:[{name:'賴清德',party:'民進黨',rate:41.16},{name:'侯友宜',party:'國民黨',rate:36.97},{name:'柯文哲',party:'民眾黨',rate:20.57}]},
+  {code:'TYN',name:'桃園市',candidates:[{name:'賴清德',party:'民進黨',rate:42.49},{name:'侯友宜',party:'國民黨',rate:32.39},{name:'柯文哲',party:'民眾黨',rate:23.73}]},
+  {code:'TXG',name:'台中市',candidates:[{name:'賴清德',party:'民進黨',rate:40.80},{name:'侯友宜',party:'國民黨',rate:33.04},{name:'柯文哲',party:'民眾黨',rate:24.76}]},
+  {code:'TNN',name:'台南市',candidates:[{name:'賴清德',party:'民進黨',rate:55.89},{name:'侯友宜',party:'國民黨',rate:24.67},{name:'柯文哲',party:'民眾黨',rate:18.12}]},
+  {code:'KHH',name:'高雄市',candidates:[{name:'賴清德',party:'民進黨',rate:51.89},{name:'侯友宜',party:'國民黨',rate:27.36},{name:'柯文哲',party:'民眾黨',rate:19.42}]},
+  {code:'KEL',name:'基隆市',candidates:[{name:'賴清德',party:'民進黨',rate:43.17},{name:'侯友宜',party:'國民黨',rate:34.07},{name:'柯文哲',party:'民眾黨',rate:21.41}]},
+  {code:'HSC',name:'新竹市',candidates:[{name:'賴清德',party:'民進黨',rate:40.62},{name:'侯友宜',party:'國民黨',rate:29.43},{name:'柯文哲',party:'民眾黨',rate:28.64}]},
+  {code:'CYI',name:'嘉義市',candidates:[{name:'賴清德',party:'民進黨',rate:52.24},{name:'侯友宜',party:'國民黨',rate:27.81},{name:'柯文哲',party:'民眾黨',rate:18.66}]},
+  {code:'HSN',name:'新竹縣',candidates:[{name:'侯友宜',party:'國民黨',rate:41.23},{name:'賴清德',party:'民進黨',rate:33.54},{name:'柯文哲',party:'民眾黨',rate:23.88}]},
+  {code:'MIA',name:'苗栗縣',candidates:[{name:'侯友宜',party:'國民黨',rate:45.86},{name:'賴清德',party:'民進黨',rate:31.56},{name:'柯文哲',party:'民眾黨',rate:21.17}]},
+  {code:'CHA',name:'彰化縣',candidates:[{name:'賴清德',party:'民進黨',rate:43.08},{name:'侯友宜',party:'國民黨',rate:35.97},{name:'柯文哲',party:'民眾黨',rate:19.64}]},
+  {code:'NTO',name:'南投縣',candidates:[{name:'侯友宜',party:'國民黨',rate:42.23},{name:'賴清德',party:'民進黨',rate:37.28},{name:'柯文哲',party:'民眾黨',rate:19.06}]},
+  {code:'YUN',name:'雲林縣',candidates:[{name:'賴清德',party:'民進黨',rate:46.05},{name:'侯友宜',party:'國民黨',rate:34.16},{name:'柯文哲',party:'民眾黨',rate:18.48}]},
+  {code:'CYN',name:'嘉義縣',candidates:[{name:'賴清德',party:'民進黨',rate:54.00},{name:'侯友宜',party:'國民黨',rate:29.31},{name:'柯文哲',party:'民眾黨',rate:15.61}]},
+  {code:'PIF',name:'屏東縣',candidates:[{name:'賴清德',party:'民進黨',rate:52.40},{name:'侯友宜',party:'國民黨',rate:29.93},{name:'柯文哲',party:'民眾黨',rate:16.52}]},
+  {code:'ILA',name:'宜蘭縣',candidates:[{name:'賴清德',party:'民進黨',rate:45.97},{name:'侯友宜',party:'國民黨',rate:33.84},{name:'柯文哲',party:'民眾黨',rate:18.89}]},
+  {code:'HUA',name:'花蓮縣',candidates:[{name:'侯友宜',party:'國民黨',rate:52.61},{name:'賴清德',party:'民進黨',rate:29.15},{name:'柯文哲',party:'民眾黨',rate:16.60}]},
+  {code:'TTT',name:'台東縣',candidates:[{name:'侯友宜',party:'國民黨',rate:50.69},{name:'賴清德',party:'民進黨',rate:31.94},{name:'柯文哲',party:'民眾黨',rate:15.97}]},
+  {code:'PEH',name:'澎湖縣',candidates:[{name:'侯友宜',party:'國民黨',rate:42.61},{name:'賴清德',party:'民進黨',rate:39.85},{name:'柯文哲',party:'民眾黨',rate:16.27}]},
+  {code:'KIN',name:'金門縣',candidates:[{name:'侯友宜',party:'國民黨',rate:60.01},{name:'賴清德',party:'民進黨',rate:22.78},{name:'柯文哲',party:'民眾黨',rate:15.72}]},
+  {code:'LIE',name:'連江縣',candidates:[{name:'侯友宜',party:'國民黨',rate:61.92},{name:'賴清德',party:'民進黨',rate:21.20},{name:'柯文哲',party:'民眾黨',rate:15.35}]}
+]
+};
+
+var curElec = 'mayor2022';
+var curHistMode = 'single';
+
+// 鄉鎮市區細節頁狀態
+var distViewCode = null;   // 目前查看的縣市 code
+var distViewElec = null;   // 目前查看的選舉 key
+var distLevel = 'district'; // 'district' | 'village'
+var distFocusDistrict = null; // 村里模式下目前聚焦的行政區
+
+// DIST 資料來源對應
+var DIST_MAP = {
+  'mayor2022': 'DIST2022',
+  'mayor2018': 'DIST2018',
+  'president2024': 'DIST2024',
+  'president2020': 'DIST2020'
+};
+var ELEC_LABELS = {
+  'mayor2022':'2022 縣市長',
+  'mayor2018':'2018 縣市長',
+  'president2024':'2024 總統',
+  'president2020':'2020 總統'
+};
+
+function openDistrictView(code, elecKey){
+  distViewCode = code;
+  distViewElec = elecKey;
+  distLevel = 'district';
+  distFocusDistrict = null;
+  document.getElementById('hist-county-view').style.display = 'none';
+  document.getElementById('hist-district-view').style.display = '';
+  document.getElementById('dist-breadcrumb-county').textContent = COUNTIES[code]||code;
+  document.getElementById('dist-breadcrumb-elec').textContent = ELEC_LABELS[elecKey]||elecKey;
+  document.getElementById('distSearch').value = '';
+  document.getElementById('dist-village-breadcrumb').style.display = 'none';
+  // 設定層級按鈕
+  var hasVil = getDistData(code, elecKey, 'villages').length > 0;
+  document.getElementById('dlvl-village').style.display = hasVil ? '' : 'none';
+  document.getElementById('dlvl-district').className = 'viewbtn on';
+  document.getElementById('dlvl-village').className = 'viewbtn off';
+  renderCountySummary();
+  renderDistrictDetail();
+}
+
+function closeDistrictView(){
+  document.getElementById('hist-district-view').style.display = 'none';
+  document.getElementById('hist-county-view').style.display = '';
+}
+
+function switchDistLevel(lv){
+  distLevel = lv;
+  distFocusDistrict = null;
+  document.getElementById('dlvl-district').className = 'viewbtn '+(lv==='district'?'on':'off');
+  document.getElementById('dlvl-village').className = 'viewbtn '+(lv==='village'?'on':'off');
+  document.getElementById('dist-village-breadcrumb').style.display = 'none';
+  document.getElementById('distSearch').value = '';
+  renderDistrictDetail();
+}
+
+function backToDistricts(){
+  distFocusDistrict = null;
+  distLevel = 'district';
+  document.getElementById('dlvl-district').className = 'viewbtn on';
+  document.getElementById('dlvl-village').className = 'viewbtn off';
+  document.getElementById('dist-village-breadcrumb').style.display = 'none';
+  document.getElementById('distSearch').value = '';
+  renderDistrictDetail();
+}
+
+function getDistData(code, elecKey, type){
+  var varName = DIST_MAP[elecKey];
+  if(!varName) return [];
+  var distObj = window[varName];
+  if(!distObj || !distObj[code]) return [];
+  return distObj[code][type] || [];
+}
+
+function renderCountySummary(){
+  var code = distViewCode, elecKey = distViewElec;
+  var histEntry = (HIST[elecKey]||[]).find(function(x){ return x.code===code; });
+  var el = document.getElementById('dist-county-summary');
+  if(!histEntry){ el.innerHTML='<div style="color:var(--text3);font-size:13px;">無縣市整體資料</div>'; return; }
+  var isMayor = elecKey.indexOf('mayor')>=0;
+  var maxR = Math.max.apply(null, histEntry.candidates.map(function(c){ return c.rate; }));
+  el.innerHTML =
+    '<div style="font-size:13px;font-weight:700;margin-bottom:10px;color:var(--text2);">'+COUNTIES[code]+'整體</div>'+
+    '<div style="display:flex;flex-wrap:wrap;gap:16px;">'+
+    histEntry.candidates.map(function(c){
+      var isWin = isMayor && histEntry.winner===c.name;
+      var w = Math.round(c.rate/maxR*100);
+      return '<div style="min-width:160px;flex:1;">'+
+        '<div style="display:flex;justify-content:space-between;margin-bottom:3px;">'+
+        '<span style="font-size:13px;font-weight:'+(isWin?'700':'400')+';color:'+pc(c.party)+';">'+c.name+(isWin?' 🏆':'')+'</span>'+
+        '<span style="font-size:13px;font-weight:700;">'+c.rate+'%</span></div>'+
+        '<div style="height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;">'+
+        '<div style="height:100%;width:'+w+'%;background:'+pc(c.party)+';border-radius:3px;"></div></div>'+
+        '</div>';
+    }).join('')+'</div>';
+}
+
+function renderDistrictDetail(){
+  var code = distViewCode, elecKey = distViewElec;
+  var search = (document.getElementById('distSearch')||{value:''}).value.trim();
+  var isMayor = elecKey.indexOf('mayor')>=0;
+
+  if(distLevel==='village' && distFocusDistrict){
+    // 村里模式，聚焦某行政區
+    var vils = getDistData(code, elecKey, 'villages')
+      .filter(function(v){ return v.d===distFocusDistrict; });
+    if(search) vils = vils.filter(function(v){ return v.v.indexOf(search)>=0; });
+    document.getElementById('dist-grid').innerHTML = vils.length
+      ? vils.map(function(v){ return makeDistCard(v.c, v.v, isMayor, null); }).join('')
+      : '<div class="ccempty">找不到村里</div>';
+    return;
+  }
+
+  if(distLevel==='village'){
+    // 村里模式：先選行政區
+    var allVils = getDistData(code, elecKey, 'villages');
+    if(!allVils.length){
+      document.getElementById('dist-grid').innerHTML = '<div class="ccempty">此選舉無村里層級資料</div>';
+      return;
+    }
+    // 依行政區分組，先顯示行政區選擇
+    var dists = [];
+    allVils.forEach(function(v){ if(dists.indexOf(v.d)<0) dists.push(v.d); });
+    if(search){ dists = dists.filter(function(d){ return d.indexOf(search)>=0; }); }
+    document.getElementById('dist-grid').innerHTML =
+      '<div style="grid-column:1/-1;font-size:12px;color:var(--text3);margin-bottom:4px;">點選行政區查看村里</div>'+
+      dists.map(function(d){
+        return '<button onclick="drillToVillage(\''+d+'\')" style="text-align:left;padding:10px 14px;border:1px solid var(--border);border-radius:var(--r);background:var(--bg2);cursor:pointer;font-size:13px;font-weight:600;transition:border-color .15s;" onmouseover="this.style.borderColor=\'var(--border2)\'" onmouseout="this.style.borderColor=\'var(--border)\'">'+
+          d+' <span style="font-size:11px;font-weight:400;color:var(--text3);">'+allVils.filter(function(v){ return v.d===d; }).length+' 個村里 ›</span></button>';
+      }).join('');
+    return;
+  }
+
+  // 行政區模式
+  var ddata = getDistData(code, elecKey, 'districts');
+  if(!ddata.length){
+    document.getElementById('dist-grid').innerHTML = '<div class="ccempty">此選舉無鄉鎮市區資料（需載入 DIST 資料檔）</div>';
+    return;
+  }
+  if(search) ddata = ddata.filter(function(d){ return d.d.indexOf(search)>=0; });
+
+  // 計算全縣最高得票率（正規化用）
+  var allRates = [];
+  ddata.forEach(function(d){ d.c.forEach(function(c){ allRates.push(c.rate); }); });
+  var globalMax = allRates.length ? Math.max.apply(null, allRates) : 100;
+
+  document.getElementById('dist-grid').innerHTML = ddata.length
+    ? ddata.map(function(d){ return makeDistCard(d.c, d.d, isMayor, globalMax); }).join('')
+    : '<div class="ccempty">找不到鄉鎮市區</div>';
+}
+
+function drillToVillage(distName){
+  distFocusDistrict = distName;
+  document.getElementById('dist-village-breadcrumb').style.display = '';
+  document.getElementById('dist-village-breadcrumb').querySelector('button').textContent = '← 返回 / 所有行政區';
+  document.getElementById('distSearch').value = '';
+  renderDistrictDetail();
+}
+
+function makeDistCard(cands, title, isMayor, globalMax){
+  if(!cands || !cands.length) return '';
+  var rates = cands.map(function(c){ return c.rate; });
+  var maxR = globalMax || Math.max.apply(null, rates);
+  var sorted = cands.slice().sort(function(a,b){ return b.rate-a.rate; });
+  var winner = isMayor ? sorted[0] : null;
+  var gap = sorted.length>=2 ? (sorted[0].rate-sorted[1].rate).toFixed(1) : null;
+  var gapColor = gap!==null ? (gap<=3?'var(--bad)':gap<=8?'var(--warn)':'var(--text3)') : 'var(--text3)';
+
+  return '<div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:12px;">'+
+    '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;">'+
+    '<div style="font-size:13px;font-weight:700;">'+title+'</div>'+
+    (gap!==null?'<div style="font-size:11px;color:'+gapColor+';">差距 '+gap+'%</div>':'')+
+    '</div>'+
+    cands.map(function(c){
+      var isWin = winner && c.name===winner.name;
+      var w = Math.round(c.rate/maxR*100);
+      return '<div style="margin-bottom:5px;">'+
+        '<div style="display:flex;justify-content:space-between;margin-bottom:2px;">'+
+        '<span style="font-size:12px;font-weight:'+(isWin?'700':'400')+';color:'+pc(c.party)+';">'+c.name+(isWin?' 🏆':'')+'</span>'+
+        '<span style="font-size:12px;font-weight:'+(isWin?'700':'400')+';color:'+pc(c.party)+';">'+c.rate+'%</span></div>'+
+        '<div style="height:5px;background:var(--bg3);border-radius:2px;overflow:hidden;">'+
+        '<div style="height:100%;width:'+w+'%;background:'+pc(c.party)+';border-radius:2px;opacity:'+(isWin?'1':'.65')+'"></div></div>'+
+        '</div>';
+    }).join('')+
+    '</div>';
+}
+
+function switchElec(key, btn){
+  curElec = key;
+  document.querySelectorAll('#elecTabs .viewbtn').forEach(function(b){ b.className='viewbtn off'; });
+  if(btn) btn.className='viewbtn on';
+  renderHistory();
+}
+
+function switchHistMode(mode){
+  curHistMode = mode;
+  var isCmp = mode==='compare';
+  document.getElementById('hmode-single').className='viewbtn '+(isCmp?'off':'on');
+  document.getElementById('hmode-compare').className='viewbtn '+(isCmp?'on':'off');
+  document.getElementById('elecTabsWrap').style.display = isCmp?'none':'';
+  renderHistory();
+}
+
+function makeBar(c, maxR, isWinner){
+  return '<div class="br">'+
+    '<span class="br-n" style="'+(isWinner?'font-weight:700;':'')+'">'+c.name+'</span>'+
+    '<span class="br-p" style="color:'+pc(c.party)+'">'+c.party+'</span>'+
+    '<div class="br-t"><div class="br-f" style="width:'+Math.round(c.rate/maxR*100)+'%;background:'+pc(c.party)+'"></div></div>'+
+    '<span class="br-r">'+c.rate+'%'+(isWinner?' 🏆':'')+'</span>'+
+    '</div>';
+}
+
+function makeCompareCard(code, name){
+  var EKEYS = ['mayor2022','mayor2018','president2024','president2020'];
+  var ELABELS = {'mayor2022':'2022縣市長','mayor2018':'2018縣市長','president2024':'2024總統','president2020':'2020總統'};
+  var rows = EKEYS.map(function(key){ var d=HIST[key]||[]; return d.find(function(x){ return x.code===code; }); });
+  var partyOrder = [];
+  var mainParties = ['國民黨','民進黨','民眾黨'];
+  rows.forEach(function(r){ if(!r) return; r.candidates.forEach(function(cc){ if(partyOrder.indexOf(cc.party)<0) partyOrder.push(cc.party); }); });
+  partyOrder.sort(function(a,b){ var ai=mainParties.indexOf(a),bi=mainParties.indexOf(b); if(ai<0)ai=99; if(bi<0)bi=99; return ai-bi; });
+
+  var tableRows = partyOrder.map(function(party){
+    var cells = rows.map(function(r){
+      if(!r) return '<td style="color:var(--text3);text-align:center;">—</td>';
+      var cc = r.candidates.find(function(x){ return x.party===party; });
+      var isWin = r.winner && r.candidates.find(function(x){ return x.name===r.winner&&x.party===party; });
+      if(!cc) return '<td style="color:var(--text3);text-align:center;">—</td>';
+      return '<td style="text-align:center;font-weight:'+(isWin?'700':'400')+';color:'+pc(party)+'">'+cc.rate+'%'+(isWin?' 🏆':'')+'</td>';
+    }).join('');
+    return '<tr><td style="color:'+pc(party)+';font-weight:600;padding:6px 8px;white-space:nowrap;">'+party+'</td>'+cells+'</tr>';
+  }).join('');
+
+  var byC = groupBy();
+  var polls = byC[code]||[];
+  var lp = polls.length ? polls[polls.length-1] : null;
+  var pollRow = '';
+  if(lp){
+    pollRow = '<tr style="border-top:1px solid var(--border2);">'+
+      '<td style="font-size:11px;color:var(--text3);padding:6px 8px;white-space:nowrap;">2026民調<br>'+lp.source+'</td>'+
+      '<td colspan="4" style="padding:6px 8px;">'+lp.candidates.slice(0,3).map(function(cc){
+        return '<span style="color:'+pc(cc.party)+';font-size:12px;">'+cc.name+' '+cc.rate+'%</span>';
+      }).join('　')+'</td></tr>';
+  }
+
+  var headers = EKEYS.map(function(k){
+    var hasDist = (function(){
+      var varName = DIST_MAP[k]; if(!varName) return false;
+      var d = window[varName]; return !!(d && d[code] && d[code].districts && d[code].districts.length);
+    })();
+    return '<th style="text-align:center;font-size:10px;color:var(--text3);font-weight:600;padding:4px 6px;white-space:nowrap;">'+ELABELS[k]+
+      (hasDist?'<br><span onclick="event.stopPropagation();openDistrictView(\''+code+'\',\''+k+'\')" style="font-size:10px;color:var(--text2);cursor:pointer;font-weight:400;text-decoration:underline;">鄉鎮 ›</span>':'')+'</th>';
+  }).join('');
+
+  return '<div class="cc has" style="cursor:default;">'+
+    '<div class="cch"><div class="ccn">'+name+'</div></div>'+
+    '<div class="ccbody" style="overflow-x:auto;">'+
+    '<table style="width:100%;min-width:520px;border-collapse:collapse;font-size:13px;">'+
+    '<thead><tr><th style="text-align:left;font-size:11px;color:var(--text3);padding:4px 8px;">政黨</th>'+headers+'</tr></thead>'+
+    '<tbody>'+tableRows+pollRow+'</tbody></table></div></div>';
+}
+
+function renderHistory(){
+  var search = (document.getElementById('histSearch')||{value:''}).value.trim();
+  var isCmp = curHistMode==='compare';
+
+  if(isCmp){
+    var allCodes = COUNTY_ORDER.filter(function(code){ return COUNTIES[code]&&code!=='ZHUBEI'&&code!=='CHANGHUA_CITY'; });
+    var filtered = search ? allCodes.filter(function(code){ return COUNTIES[code].indexOf(search)>=0; }) : allCodes;
+    document.getElementById('histGrid').innerHTML = filtered.map(function(code){ return makeCompareCard(code, COUNTIES[code]||code); }).join('') || '<div class="ccempty">找不到符合的縣市</div>';
+    return;
+  }
+
+  var data = HIST[curElec]||[];
+  var isMayor = curElec.indexOf('mayor')>=0;
+  var filtered2 = search ? data.filter(function(d){ return d.name.indexOf(search)>=0; }) : data;
+  var byC = groupBy();
+
+  document.getElementById('histGrid').innerHTML = filtered2.map(function(d){
+    var maxR = Math.max.apply(null, d.candidates.map(function(cc){ return cc.rate; }));
+    var bars = d.candidates.map(function(cc){ return makeBar(cc, maxR, isMayor&&d.winner===cc.name); }).join('');
+    var lp = byC[d.code]&&byC[d.code].length ? byC[d.code][byC[d.code].length-1] : null;
+    var cmpHtml = '';
+    if(lp&&isMayor){
+      cmpHtml = '<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);">'+
+        '<div style="font-size:11px;color:var(--text3);margin-bottom:4px;">vs 2026最新民調（'+lp.source+' '+lp.date+'）</div>'+
+        lp.candidates.slice(0,3).map(function(lc){
+          var hc = d.candidates.find(function(h){ return h.party===lc.party; });
+          var diff = hc ? (lc.rate-hc.rate).toFixed(1) : null;
+          var dh = diff!==null?'<span class="delta '+(diff>0?'d-up':'d-dn')+'">'+(diff>0?'▲':'▼')+Math.abs(diff)+'</span>':'';
+          return '<div class="br"><span class="br-n">'+lc.name+'</span><span class="br-p" style="color:'+pc(lc.party)+'">'+lc.party+'</span><div class="br-t"><div class="br-f" style="width:'+Math.round(lc.rate/maxR*100)+'%;background:'+pc(lc.party)+';opacity:.5"></div></div><span class="br-r">'+lc.rate+'%'+dh+'</span></div>';
+        }).join('')+'</div>';
+    }
+    return '<div class="cc has" onclick="openDistrictView(\''+d.code+'\',\''+curElec+'\')" style="cursor:pointer;" title="點擊查看鄉鎮市區細節">'+
+      '<div class="cch"><div class="ccn">'+d.name+'</div>'+
+      '<div style="display:flex;align-items:center;gap:6px;">'+
+      (isMayor&&d.winner?'<span class="badge" style="background:'+pc(d.winParty)+';color:#fff;font-size:11px;">'+d.winner+' 當選</span>':'')+
+      '<span style="font-size:11px;color:var(--text3);">鄉鎮市區 ›</span>'+
+      '</div></div>'+
+      '<div class="ccbody">'+bars+cmpHtml+'</div></div>';
+  }).join('') || '<div class="ccempty">找不到符合的縣市</div>';
+}
+
+
+// ════════════════════════════════════════
+//  選情分析報告
+// ════════════════════════════════════════
+function renderRanking(){
+  var byC=groupBy();
+  var items=[];
+  COUNTY_ORDER.forEach(function(code){
+    if(code==="ZHUBEI"||code==="CHANGHUA_CITY") return;
+    var polls=byC[code]||[];
+    if(!polls.length) return;
+    var latest=polls[polls.length-1];
+    var srt=latest.candidates.slice().sort(function(a,b){ return b.rate-a.rate; });
+    if(srt.length<2) return;
+    var gap=parseFloat((srt[0].rate-srt[1].rate).toFixed(1));
+    items.push({code:code,name:COUNTIES[code]||code,gap:gap,
+      leader:srt[0],second:srt[1],pollCount:polls.length,
+      latestDate:latest.date,latestSource:latest.source,
+      quality:latest.quality,conflict:hasConflict(polls)});
+  });
+  items.sort(function(a,b){ return a.gap-b.gap; });
+  var el=document.getElementById("rankingList");
+  if(!el) return;
+  if(!items.length){
+    el.innerHTML="<div style=\"text-align:center;padding:20px;color:var(--text3);font-size:13px;\">尚無足夠民調資料</div>";
+    return;
+  }
+  el.innerHTML=items.map(function(item,idx){
+    var level,lc,lb;
+    if(item.gap<=3){level="極度膠著";lc="#cf222e";lb="rgba(207,34,46,.08)";}
+    else if(item.gap<=8){level="競爭激烈";lc="#9a6700";lb="rgba(154,103,0,.08)";}
+    else if(item.gap<=15){level="小幅領先";lc="#1a7f37";lb="rgba(26,127,55,.08)";}
+    else{level="明顯領先";lc="#57606a";lb="rgba(87,96,106,.08)";}
+    var bw=Math.min(item.gap/30*100,100);
+    var rankColor=idx===0?"#cf222e":idx===1?"#9a6700":idx===2?"#1a7f37":"var(--text3)";
+    return "<div onclick=\"goPage('analysis',null);setTimeout(function(){ genReport('"+item.code+"'); },100);\" "+
+      "style=\"display:grid;grid-template-columns:32px 90px 1fr 90px;gap:12px;align-items:center;"+
+      "padding:10px 12px;border-radius:var(--r);margin-bottom:6px;cursor:pointer;"+
+      "border:1px solid var(--border);background:var(--bg2);transition:border-color .15s;\" "+
+      "onmouseover=\"this.style.borderColor='var(--border2)'\" onmouseout=\"this.style.borderColor='var(--border)'\">"+
+      "<div style=\"font-size:15px;font-weight:700;color:"+rankColor+";text-align:center;\">"+(idx+1)+"</div>"+
+      "<div><div style=\"font-size:13px;font-weight:600;\">"+item.name+"</div>"+
+      "<div style=\"font-size:11px;color:var(--text3);margin-top:1px;\">"+item.pollCount+" 筆</div></div>"+
+      "<div>"+
+        "<div style=\"display:flex;align-items:center;gap:6px;margin-bottom:5px;\">"+
+          "<span style=\"font-size:12px;font-weight:600;color:"+pc(item.leader.party)+";\">"+item.leader.name+" "+item.leader.rate+"%</span>"+
+          "<span style=\"font-size:11px;color:var(--text3);\">vs</span>"+
+          "<span style=\"font-size:12px;color:"+pc(item.second.party)+";\">"+item.second.name+" "+item.second.rate+"%</span>"+
+          (item.conflict?"<span style=\"font-size:10px;background:rgba(154,103,0,.08);color:#9a6700;padding:2px 5px;border-radius:4px;\">⚠ 衝突</span>":"")+"</div>"+
+        "<div style=\"height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;\">"+
+          "<div style=\"height:100%;width:"+bw+"%;background:"+pc(item.leader.party)+";border-radius:2px;\"></div></div>"+
+        "<div style=\"font-size:10px;color:var(--text3);margin-top:3px;\">"+item.latestDate+" · "+item.latestSource+"</div></div>"+
+      "<div style=\"text-align:right;\">"+
+        "<div style=\"font-size:18px;font-weight:700;color:"+lc+";\">"+item.gap+"%</div>"+
+        "<div style=\"font-size:11px;padding:2px 6px;border-radius:4px;background:"+lb+";color:"+lc+";white-space:nowrap;margin-top:3px;\">"+level+"</div>"+
+      "</div></div>";
+  }).join("");
+}
+function renderAnalysisList(){
+  renderRanking();
+  var byC = groupBy();
+  // 只顯示有民調的縣市
+  var withPolls = COUNTY_ORDER.filter(function(code){
+    return byC[code] && byC[code].length > 0 && code !== 'ZHUBEI' && code !== 'CHANGHUA_CITY';
+  });
+  var el = document.getElementById('analysisList');
+  if(!el) return;
+  el.innerHTML = withPolls.map(function(code){
+    var cnt = byC[code].length;
+    return '<button onclick="genReport(\''+code+'\')" style="text-align:left;padding:9px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-size:13px;cursor:pointer;width:100%;transition:border-color .15s;" onmouseover="this.style.borderColor=\'var(--border2)\'" onmouseout="this.style.borderColor=\'var(--border)\'">'+
+      '<div style="font-weight:600;">'+COUNTIES[code]+'</div>'+
+      '<div style="font-size:11px;color:var(--text3);margin-top:2px;">'+cnt+' 筆民調</div>'+
+      '</button>';
+  }).join('');
+}
+
+function genReport(code){
+  var name = COUNTIES[code] || code;
+  var byC = groupBy();
+  var polls = (byC[code]||[]).slice().sort(function(a,b){ return a.date.localeCompare(b.date); });
+  if(!polls.length){ document.getElementById('analysisReport').innerHTML='<div class="prev-empty">此縣市尚無民調資料</div>'; return; }
+
+  // 標記選中按鈕
+  document.querySelectorAll('#analysisList button').forEach(function(b){
+    b.style.background = b.textContent.includes(name) ? 'var(--bg3)' : 'var(--bg2)';
+    b.style.borderColor = b.textContent.includes(name) ? 'var(--border2)' : 'var(--border)';
+  });
+
+  var latest = polls[polls.length-1];
+  var conf = hasConflict(polls);
+
+  // ── 1. 歷史基本盤 ──
+  var histRows = ['mayor2022','mayor2018','president2024','president2020'].map(function(key){
+    var label = {'mayor2022':'2022縣市長','mayor2018':'2018縣市長','president2024':'2024總統','president2020':'2020總統'}[key];
+    var d = (HIST[key]||[]).find(function(x){ return x.code===code; });
+    if(!d) return '';
+    var maxR = Math.max.apply(null, d.candidates.map(function(c){ return c.rate; }));
+    var bars = d.candidates.map(function(c){
+      var isW = d.winner && d.winner===c.name;
+      return '<div class="br"><span class="br-n" style="'+(isW?'font-weight:700;':'')+'">'+c.name+'</span>'+
+        '<span class="br-p" style="color:'+pc(c.party)+'">'+c.party+'</span>'+
+        '<div class="br-t"><div class="br-f" style="width:'+Math.round(c.rate/maxR*100)+'%;background:'+pc(c.party)+'"></div></div>'+
+        '<span class="br-r">'+c.rate+'%'+(isW?' 🏆':'')+'</span></div>';
+    }).join('');
+    return '<div style="margin-bottom:12px;"><div style="font-size:11px;color:var(--text3);margin-bottom:6px;">'+label+'</div>'+bars+'</div>';
+  }).join('');
+
+  // ── 2. 民調趨勢 ──
+  var pollRows = polls.map(function(p,i){
+    var qc = p.quality==='good'?'t-good':p.quality==='warn'?'t-warn':'t-bad';
+    var candStr = p.candidates.map(function(c){
+      var prev = i>0 ? polls[i-1].candidates.find(function(x){ return x.party===c.party; }) : null;
+      var diff = prev ? (c.rate-prev.rate).toFixed(1) : null;
+      var dh = diff!==null&&Math.abs(diff)>=0.2 ? '<span class="delta '+(diff>0?'d-up':'d-dn')+'">'+(diff>0?'▲':'▼')+Math.abs(diff)+'</span>' : '';
+      return '<span style="color:'+pc(c.party)+';margin-right:8px;">'+c.name+' '+c.rate+'%'+dh+'</span>';
+    }).join('');
+    return '<div style="padding:8px 0;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:10px;">'+
+      '<span style="font-size:11px;color:var(--text3);white-space:nowrap;min-width:80px;">'+p.date+'</span>'+
+      '<span style="font-size:11px;color:var(--text2);white-space:nowrap;min-width:60px;">'+p.source+'</span>'+
+      '<span class="tag '+qc+'" style="flex-shrink:0;">'+QL[p.quality]+'</span>'+
+      '<div style="flex:1;font-size:13px;">'+candStr+'</div>'+
+      (p.note?'<div style="font-size:11px;color:var(--text2);margin-top:4px;">'+p.note+'</div>':'')+
+      '</div>';
+  }).join('');
+
+  // ── 3. 最新民調 vs 2022歷史對比 ──
+  var hist2022 = (HIST.mayor2022||[]).find(function(x){ return x.code===code; });
+  var compareHTML = '';
+  if(hist2022){
+    var compareRows = latest.candidates.map(function(lc){
+      var hc = hist2022.candidates.find(function(h){ return h.party===lc.party; });
+      var diff = hc ? (lc.rate-hc.rate).toFixed(1) : null;
+      var dh = diff!==null ? '<span class="delta '+(diff>0?'d-up':'d-dn')+'">'+(diff>0?'▲':'▼')+Math.abs(diff)+'</span>' : '<span style="color:var(--text3)">—</span>';
+      return '<div class="br"><span class="br-n">'+lc.party+'</span>'+
+        '<span style="flex:1;font-size:12px;color:'+pc(lc.party)+'">最新民調 '+lc.rate+'%</span>'+
+        '<span style="font-size:12px;color:var(--text2);margin-right:8px;">'+(hc?'歷史 '+hc.rate+'%':'—')+'</span>'+
+        dh+'</div>';
+    }).join('');
+    compareHTML = '<div style="margin-top:6px;">'+compareRows+'</div>';
+  }
+
+  // ── 4. 全國政治環境 ──
+  var natHTML = '';
+  if(natPolls.length||natComments.length){
+    var natItems = [];
+    // 最近3筆全國民調
+    natPolls.slice(0,3).forEach(function(p){
+      natItems.push('<div style="padding:8px 0;border-bottom:1px solid var(--border);">'+
+        '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">'+
+        '<span style="font-size:11px;color:var(--text3);">'+p.date+'</span>'+
+        '<span class="tag t-gray">'+p.source+'</span>'+
+        '<span class="tag t-purple">'+(p.topic||'').slice(0,12)+'</span></div>'+
+        '<div style="font-size:12px;color:var(--text2);">'+(p.content||'').slice(0,100)+(p.content&&p.content.length>100?'…':'')+'</div></div>');
+    });
+    // 最近2筆高可信度評論
+    natComments.filter(function(p){ return p.trust==='high'; }).slice(0,2).forEach(function(p){
+      natItems.push('<div style="padding:8px 0;border-bottom:1px solid var(--border);">'+
+        '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">'+
+        '<span style="font-size:11px;color:var(--text3);">'+p.date+'</span>'+
+        '<span class="tag t-gray">'+p.source+'</span>'+
+        '<span class="tag" style="background:var(--good-bg);color:var(--good);">🟢 高可信度</span></div>'+
+        '<div style="font-size:12px;color:var(--text2);">'+(p.content||'').slice(0,120)+(p.content&&p.content.length>120?'…':'')+'</div></div>');
+    });
+    if(natItems.length){
+      natHTML = natItems.join('');
+    } else {
+      natHTML = '<div style="color:var(--text3);font-size:13px;">尚無全國觀察資料</div>';
+    }
+  } else {
+    natHTML = '<div style="color:var(--text3);font-size:13px;">尚無全國觀察資料，請至「全國觀察」頁面新增</div>';
+  }
+
+  // ── 5. 關鍵變數 ──
+  var keyVars = [];
+  // 未表態
+  polls.forEach(function(p){
+    if(p.note&&p.note.indexOf('未表態')>=0){
+      var m = p.note.match(/未表態(d{1,2}(?:.d)?)/);
+      if(m) keyVars.push('未表態選民 '+m[1]+'%（'+p.date+' '+p.source+'），動向將左右選情');
+    }
+  });
+  // 衝突
+  if(conf) keyVars.push('⚠️ 各家民調出現相反領先方向，建議交叉比對調查方式與委託背景');
+  // 品質警示
+  var warnCount = polls.filter(function(p){ return p.quality==='warn'||p.quality==='bad'; }).length;
+  if(warnCount>0) keyVars.push('共 '+warnCount+' 筆民調品質為「注意」或「存疑」，解讀需保留空間');
+  // 趨勢方向
+  if(polls.length>=2){
+    var firstLeader = polls[0].candidates.slice().sort(function(a,b){ return b.rate-a.rate; })[0];
+    var lastLeader = latest.candidates.slice().sort(function(a,b){ return b.rate-a.rate; })[0];
+    if(firstLeader&&lastLeader&&firstLeader.party!==lastLeader.party){
+      keyVars.push('民調領先政黨出現更替：'+firstLeader.party+'→'+lastLeader.party+'，選情結構發生變化');
+    }
+  }
+
+  // ── 6. 初步研判 ──
+  var latestLeader = latest.candidates.slice().sort(function(a,b){ return b.rate-a.rate; })[0];
+  var latestSecond = latest.candidates.slice().sort(function(a,b){ return b.rate-a.rate; })[1];
+  var gap = latestLeader&&latestSecond ? (latestLeader.rate-latestSecond.rate).toFixed(1) : null;
+  var verdict = '';
+  if(gap!==null){
+    var gapNum = parseFloat(gap);
+    if(gapNum<=3) verdict='選情極度膠著，在抽樣誤差範圍內，難以研判勝負，未表態選民動向為最大變數。';
+    else if(gapNum<=8) verdict='目前'+latestLeader.party+'候選人小幅領先，差距超過誤差但仍在競爭範圍內，選情未定。';
+    else if(gapNum<=15) verdict=''+latestLeader.party+'候選人取得明顯優勢，但仍有翻轉空間，對手若能整合票源或有變數。';
+    else verdict=''+latestLeader.party+'候選人大幅領先，除非出現重大事件，否則選情相對穩定。';
+    if(conf) verdict += ' 惟各家民調方向不一，建議持續追蹤。';
+  }
+
+  // ── 組合報告 ──
+  var sectionStyle = 'background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:14px;';
+  var titleStyle = 'font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);';
+
+  var report = '<div style="max-width:800px;">'+
+    // 標題
+    '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">'+
+    '<div><div style="font-size:22px;font-weight:700;">'+name+'</div>'+
+    '<div style="font-size:12px;color:var(--text3);margin-top:4px;">選情分析報告 · 更新：'+new Date().toLocaleDateString('zh-TW')+'</div></div>'+
+    (conf?'<span class="badge b-alert" style="font-size:13px;padding:6px 12px;">⚠️ 民調衝突</span>':'')+
+    '</div>'+
+
+    // 1. 歷史基本盤
+    '<div style="'+sectionStyle+'">'+
+    '<div style="'+titleStyle+'">一、歷史基本盤</div>'+
+    histRows+
+    '</div>'+
+
+    // 2. 民調趨勢
+    '<div style="'+sectionStyle+'">'+
+    '<div style="'+titleStyle+'">二、民調趨勢（共 '+polls.length+' 筆）</div>'+
+    (polls.length>=2 ? makeTrendChart(polls,code) : '')+
+    '<div style="margin-top:12px;">'+pollRows+'</div>'+
+    '</div>'+
+
+    // 3. 歷史對比
+    (hist2022?'<div style="'+sectionStyle+'">'+
+    '<div style="'+titleStyle+'">三、最新民調 vs 2022 縣市長歷史得票</div>'+
+    '<div style="font-size:11px;color:var(--text3);margin-bottom:8px;">最新民調：'+latest.date+' '+latest.source+'</div>'+
+    compareHTML+'</div>':'<div style="'+sectionStyle+'"><div style="'+titleStyle+'">三、歷史對比</div><div style="color:var(--text3);font-size:13px;">此縣市無 2022 縣市長歷史資料</div></div>')+
+
+    // 4. 全國政治環境
+    '<div style="'+sectionStyle+'">'+
+    '<div style="'+titleStyle+'">四、全國政治環境參考</div>'+
+    natHTML+'</div>'+
+
+    // 5. 關鍵變數
+    '<div style="'+sectionStyle+'">'+
+    '<div style="'+titleStyle+'">五、關鍵變數</div>'+
+    (keyVars.length?keyVars.map(function(v){ return '<div style="padding:6px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--text2);">• '+v+'</div>'; }).join(''):'<div style="color:var(--text3);font-size:13px;">目前未發現重大關鍵變數</div>')+
+    '</div>'+
+
+    // 6. 初步研判
+    '<div style="'+sectionStyle+';border-left:3px solid var(--good);">'+
+    '<div style="'+titleStyle+'">六、初步研判</div>'+
+    (verdict?'<div style="font-size:14px;color:var(--text);line-height:1.8;">'+verdict+'</div>':'<div style="color:var(--text3);">資料不足，無法研判</div>')+
+    '</div>'+
+
+    '</div>';
+
+  document.getElementById('analysisReport').innerHTML = report;
+}
+
+// ════════════════════════════════════════
+//  啟動
+// ════════════════════════════════════════
+window.onload=function(){
+  resetForm();
+  document.body.classList.add('auth-locked');
+  loadFB(function(){
+    // 必須先初始化 Firebase App，才能呼叫 firebase.auth()
+    var saved=loadCfg();
+    try{
+      if(saved&&saved.apiKey&&saved.projectId&&saved.appId){
+        try{ firebase.app(); }catch(e2){ firebase.initializeApp({apiKey:saved.apiKey,projectId:saved.projectId,appId:saved.appId,authDomain:saved.projectId+'.firebaseapp.com'}); }
+      } else {
+        // 尚無已存的設定值：用內建預設值先初始化 App，讓登入功能可用
+        // （登入成功後，若 localStorage 仍無設定，會顯示設定畫面讓使用者輸入）
+        try{ firebase.app(); }catch(e2){
+          firebase.initializeApp({apiKey:'AIzaSyCJ6pTZNhnyBOftImZKVNYeEiQt3UpRVzM',projectId:'lection-polls-2026',appId:'1:204032853257:web:d3168f1c442b9ce0297fd8',authDomain:'lection-polls-2026.firebaseapp.com'});
+        }
+      }
+    }catch(e){ showErr('Firebase 初始化失敗：'+e.message); return; }
+
+    firebase.auth().onAuthStateChanged(function(user){
+      if(user && user.email===ALLOWED_EMAIL){
+        currentUser = user;
+        document.body.classList.remove('auth-locked');
+        hideLoginGate();
+        // 已登入授權帳號，自動帶入設定並連線
+        var saved2=loadCfg();
+        if(saved2&&saved2.apiKey&&saved2.projectId&&saved2.appId){
+          document.getElementById('cfg-key').value=saved2.apiKey;
+          document.getElementById('cfg-pid').value=saved2.projectId;
+          document.getElementById('cfg-aid').value=saved2.appId;
+          try{
+            var app=firebase.app();
+            db=app.firestore();
+            db.collection('polls').limit(1).get().then(function(){ setOnline(true); loadAll(); }).catch(function(e){ showErr('自動連線失敗，請手動按連線：'+e.message); });
+          }catch(e){ showErr('自動連線失敗：'+e.message); }
+        } else {
+          document.getElementById('setup').style.display='flex';
+        }
+      } else {
+        currentUser = null;
+        document.body.classList.add('auth-locked');
+        document.getElementById('setup').style.display='none';
+        showLoginGate();
+      }
+    });
+  });
+};
+</script>
+</body>
+</html>
