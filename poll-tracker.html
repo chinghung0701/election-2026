@@ -560,7 +560,7 @@ var COUNTIES = {
   TTT:'台東縣',PEH:'澎湖縣',KIN:'金門縣',LIE:'連江縣',
   ZHUBEI:'竹北市長',CHANGHUA_CITY:'彰化市長'
 };
-var COUNTY_ORDER=['TPE','NTC','TYN','TXG','TNN','KHH','KEL','HSC','CYI','HSN','MIA','CHA','NTO','YUN','CYN','PIF','ILA','HUA','TTT','PEH','KIN','LIE','ZHUBEI','CHANGHUA_CITY'];
+var COUNTY_ORDER=['TPE','NTC','TYN','TXG','TNN','KHH','HSC','HSN','MIA','CHA','NTO','YUN','CYI','CYN','PIF','TTT','HUA','ILA','KEL','PEH','KIN','LIE','ZHUBEI','CHANGHUA_CITY'];
 var COUNTY_MAP={
   '台北市':'TPE','台北':'TPE','新北市':'NTC','新北':'NTC','桃園市':'TYN','桃園':'TYN',
   '台中市':'TXG','台中':'TXG','台南市':'TNN','台南':'TNN','高雄市':'KHH','高雄':'KHH',
@@ -1402,103 +1402,2569 @@ function resetForm(){
 //  歷史投票資料
 // ════════════════════════════════════════
 var HIST = {
-mayor2018:[
-  {code:'TPE',name:'台北市',winner:'柯文哲',winParty:'無黨籍',candidates:[{name:'柯文哲',party:'無黨籍',rate:41.06},{name:'丁守中',party:'國民黨',rate:40.81},{name:'姚文智',party:'民進黨',rate:17.28}]},
-  {code:'NTC',name:'新北市',winner:'侯友宜',winParty:'國民黨',candidates:[{name:'侯友宜',party:'國民黨',rate:57.14},{name:'蘇貞昌',party:'民進黨',rate:42.85}]},
-  {code:'TYN',name:'桃園市',winner:'鄭文燦',winParty:'民進黨',candidates:[{name:'鄭文燦',party:'民進黨',rate:53.46},{name:'陳學聖',party:'國民黨',rate:39.41}]},
-  {code:'TXG',name:'台中市',winner:'盧秀燕',winParty:'國民黨',candidates:[{name:'盧秀燕',party:'國民黨',rate:56.56},{name:'林佳龍',party:'民進黨',rate:42.34}]},
-  {code:'TNN',name:'台南市',winner:'黃偉哲',winParty:'民進黨',candidates:[{name:'黃偉哲',party:'民進黨',rate:38.01},{name:'高思博',party:'國民黨',rate:32.36},{name:'陳永和',party:'無黨籍',rate:12.12},{name:'林義豐',party:'無黨籍',rate:8.7},{name:'許忠信',party:'無黨籍',rate:4.67},{name:'蘇煥智',party:'無黨籍',rate:4.11}]},
-  {code:'KHH',name:'高雄市',winner:'韓國瑜',winParty:'國民黨',candidates:[{name:'韓國瑜',party:'國民黨',rate:53.86},{name:'陳其邁',party:'民進黨',rate:44.79}]},
-  {code:'KEL',name:'基隆市',winner:'林右昌',winParty:'民進黨',candidates:[{name:'林右昌',party:'民進黨',rate:54.14},{name:'謝立功',party:'國民黨',rate:45.85}]},
-  {code:'HSC',name:'新竹市',winner:'林智堅',winParty:'民進黨',candidates:[{name:'林智堅',party:'民進黨',rate:49.56},{name:'許明財',party:'國民黨',rate:27.87},{name:'謝文進',party:'無黨籍',rate:20.31}]},
-  {code:'CYI',name:'嘉義市',winner:'黃敏惠',winParty:'國民黨',candidates:[{name:'黃敏惠',party:'國民黨',rate:41.17},{name:'涂醒哲',party:'民進黨',rate:39.55},{name:'蕭淑麗',party:'無黨籍',rate:17.98}]},
-  {code:'HSN',name:'新竹縣',winner:'楊文科',winParty:'國民黨',candidates:[{name:'楊文科',party:'國民黨',rate:38.19},{name:'徐欣瑩',party:'民國黨',rate:32.29},{name:'鄭朝方',party:'民進黨',rate:27.68}]},
-  {code:'MIA',name:'苗栗縣',winner:'徐耀昌',winParty:'國民黨',candidates:[{name:'徐耀昌',party:'國民黨',rate:57.74},{name:'徐定禎',party:'無黨籍',rate:37.02}]},
-  {code:'CHA',name:'彰化縣',winner:'王惠美',winParty:'國民黨',candidates:[{name:'王惠美',party:'國民黨',rate:53.17},{name:'魏明谷',party:'民進黨',rate:39.87}]},
-  {code:'NTO',name:'南投縣',winner:'林明溱',winParty:'國民黨',candidates:[{name:'林明溱',party:'國民黨',rate:66.71},{name:'洪國浩',party:'民進黨',rate:33.28}]},
-  {code:'YUN',name:'雲林縣',winner:'張麗善',winParty:'國民黨',candidates:[{name:'張麗善',party:'國民黨',rate:53.83},{name:'李進勇',party:'民進黨',rate:41.71}]},
-  {code:'CYN',name:'嘉義縣',winner:'翁章梁',winParty:'民進黨',candidates:[{name:'翁章梁',party:'民進黨',rate:50.95},{name:'吳育仁',party:'國民黨',rate:29.54},{name:'吳芳銘',party:'無黨籍',rate:17.89}]},
-  {code:'PIF',name:'屏東縣',winner:'潘孟安',winParty:'民進黨',candidates:[{name:'潘孟安',party:'民進黨',rate:55.89},{name:'蘇清泉',party:'國民黨',rate:42.01}]},
-  {code:'ILA',name:'宜蘭縣',winner:'林姿妙',winParty:'國民黨',candidates:[{name:'林姿妙',party:'國民黨',rate:49.48},{name:'陳歐珀',party:'民進黨',rate:38.22},{name:'林信華',party:'無黨籍',rate:10.95}]},
-  {code:'HUA',name:'花蓮縣',winner:'徐榛蔚',winParty:'國民黨',candidates:[{name:'徐榛蔚',party:'國民黨',rate:71.52},{name:'劉曉玫',party:'民進黨',rate:25.87}]},
-  {code:'TTT',name:'台東縣',winner:'饒慶鈴',winParty:'國民黨',candidates:[{name:'饒慶鈴',party:'國民黨',rate:59.05},{name:'劉櫂豪',party:'民進黨',rate:37.03}]},
-  {code:'PEH',name:'澎湖縣',winner:'賴峰偉',winParty:'國民黨',candidates:[{name:'賴峰偉',party:'國民黨',rate:38.87},{name:'陳光復',party:'民進黨',rate:32.78},{name:'陳大松',party:'無黨籍',rate:11},{name:'鄭清發',party:'無黨籍',rate:8.18}]},
-  {code:'KIN',name:'金門縣',winner:'楊鎮浯',winParty:'國民黨',candidates:[{name:'楊鎮浯',party:'國民黨',rate:47.77},{name:'陳福海',party:'無黨籍',rate:46.14}]},
-  {code:'LIE',name:'連江縣',winner:'劉增應',winParty:'國民黨',candidates:[{name:'劉增應',party:'國民黨',rate:65.61},{name:'朱秀珍',party:'無黨籍',rate:17.33},{name:'蘇柏豪',party:'樹黨',rate:12.51}]}
-],
-mayor2022:[
-  {code:'TPE',name:'台北市',winner:'蔣萬安',winParty:'國民黨',candidates:[{name:'蔣萬安',party:'國民黨',rate:42.29},{name:'陳時中',party:'民進黨',rate:31.93},{name:'黃珊珊',party:'無黨籍',rate:25.14}]},
-  {code:'NTC',name:'新北市',winner:'侯友宜',winParty:'國民黨',candidates:[{name:'侯友宜',party:'國民黨',rate:62.42},{name:'林佳龍',party:'民進黨',rate:37.58}]},
-  {code:'TYN',name:'桃園市',winner:'張善政',winParty:'國民黨',candidates:[{name:'張善政',party:'國民黨',rate:52.02},{name:'鄭運鵬',party:'民進黨',rate:40.03},{name:'賴香伶',party:'民眾黨',rate:5.12}]},
-  {code:'TXG',name:'台中市',winner:'盧秀燕',winParty:'國民黨',candidates:[{name:'盧秀燕',party:'國民黨',rate:59.35},{name:'蔡其昌',party:'民進黨',rate:38.93}]},
-  {code:'TNN',name:'台南市',winner:'黃偉哲',winParty:'民進黨',candidates:[{name:'黃偉哲',party:'民進黨',rate:48.8},{name:'謝龍介',party:'國民黨',rate:43.63},{name:'陳永和',party:'無黨籍',rate:12.12}]},
-  {code:'KHH',name:'高雄市',winner:'陳其邁',winParty:'民進黨',candidates:[{name:'陳其邁',party:'民進黨',rate:58.1},{name:'柯志恩',party:'國民黨',rate:40.16}]},
-  {code:'KEL',name:'基隆市',winner:'謝國樑',winParty:'國民黨',candidates:[{name:'謝國樑',party:'國民黨',rate:52.92},{name:'蔡適應',party:'民進黨',rate:39.01},{name:'陳薇仲',party:'時代力量',rate:6.56}]},
-  {code:'HSC',name:'新竹市',winner:'高虹安',winParty:'民眾黨',candidates:[{name:'高虹安',party:'民眾黨',rate:45.02},{name:'沈慧虹',party:'民進黨',rate:35.68},{name:'林耕仁',party:'國民黨',rate:18.07}]},
-  {code:'CYI',name:'嘉義市',winner:'黃敏惠',winParty:'國民黨',candidates:[{name:'黃敏惠',party:'國民黨',rate:63.83},{name:'李俊俋',party:'民進黨',rate:34.95}]},
-  {code:'HSN',name:'新竹縣',winner:'楊文科',winParty:'國民黨',candidates:[{name:'楊文科',party:'國民黨',rate:63.36},{name:'周江杰',party:'民進黨',rate:32.4}]},
-  {code:'MIA',name:'苗栗縣',winner:'鍾東錦',winParty:'無黨籍',candidates:[{name:'鍾東錦',party:'無黨籍',rate:42.66},{name:'徐定禎',party:'民進黨',rate:31.24},{name:'宋國鼎',party:'時代力量',rate:13.47},{name:'謝福弘',party:'國民黨',rate:10.96}]},
-  {code:'CHA',name:'彰化縣',winner:'王惠美',winParty:'國民黨',candidates:[{name:'王惠美',party:'國民黨',rate:56.75},{name:'黃秀芳',party:'民進黨',rate:41.94}]},
-  {code:'NTO',name:'南投縣',winner:'許淑華',winParty:'國民黨',candidates:[{name:'許淑華',party:'國民黨',rate:55.99},{name:'蔡培慧',party:'民進黨',rate:42.83}]},
-  {code:'YUN',name:'雲林縣',winner:'張麗善',winParty:'國民黨',candidates:[{name:'張麗善',party:'國民黨',rate:56.57},{name:'劉建國',party:'民進黨',rate:41.6}]},
-  {code:'CYN',name:'嘉義縣',winner:'翁章梁',winParty:'民進黨',candidates:[{name:'翁章梁',party:'民進黨',rate:62.85},{name:'王育敏',party:'國民黨',rate:37.15}]},
-  {code:'PIF',name:'屏東縣',winner:'周春米',winParty:'民進黨',candidates:[{name:'周春米',party:'民進黨',rate:49.09},{name:'蘇清泉',party:'國民黨',rate:46.59},{name:'詹智鈞',party:'時代力量',rate:4.32}]},
-  {code:'ILA',name:'宜蘭縣',winner:'林姿妙',winParty:'國民黨',candidates:[{name:'林姿妙',party:'國民黨',rate:50.76},{name:'江淵',party:'民進黨',rate:41.13},{name:'陳琬惠',party:'民眾黨',rate:6.98}]},
-  {code:'HUA',name:'花蓮縣',winner:'徐榛蔚',winParty:'國民黨',candidates:[{name:'徐榛蔚',party:'國民黨',rate:64.73},{name:'谷辣斯．尤達卡',party:'民進黨',rate:32.04},{name:'黃師鵬',party:'無黨籍',rate:3.23}]},
-  {code:'TTT',name:'台東縣',winner:'饒慶鈴',winParty:'國民黨',candidates:[{name:'饒慶鈴',party:'國民黨',rate:61.22},{name:'劉櫂豪',party:'民進黨',rate:36.65}]},
-  {code:'PEH',name:'澎湖縣',winner:'陳光復',winParty:'民進黨',candidates:[{name:'陳光復',party:'民進黨',rate:36.64},{name:'賴峰偉',party:'國民黨',rate:33.33},{name:'葉竹林',party:'無黨籍',rate:30.02}]},
-  {code:'KIN',name:'金門縣',winner:'陳福海',winParty:'無黨籍',candidates:[{name:'陳福海',party:'無黨籍',rate:49.34},{name:'楊鎮浯',party:'國民黨',rate:41.05},{name:'李應文',party:'無黨籍',rate:7.34}]},
-  {code:'LIE',name:'連江縣',winner:'王忠銘',winParty:'國民黨',candidates:[{name:'王忠銘',party:'國民黨',rate:50.99},{name:'曹爾元',party:'國民黨',rate:42.12},{name:'李問',party:'民進黨',rate:6.89}]}
-],
-president2020:[
-  {code:'TPE',name:'台北市',candidates:[{name:'宋楚瑜',party:'親民黨',rate:4.34},{name:'韓國瑜',party:'國民黨',rate:42.01},{name:'蔡英文',party:'民進黨',rate:53.65}]},
-  {code:'NTC',name:'新北市',candidates:[{name:'宋楚瑜',party:'親民黨',rate:4.57},{name:'韓國瑜',party:'國民黨',rate:38.91},{name:'蔡英文',party:'民進黨',rate:56.52}]},
-  {code:'TYN',name:'桃園市',candidates:[{name:'宋楚瑜',party:'親民黨',rate:4.82},{name:'韓國瑜',party:'國民黨',rate:40.4},{name:'蔡英文',party:'民進黨',rate:54.78}]},
-  {code:'TXG',name:'台中市',candidates:[{name:'宋楚瑜',party:'親民黨',rate:4.99},{name:'韓國瑜',party:'國民黨',rate:38.06},{name:'蔡英文',party:'民進黨',rate:56.95}]},
-  {code:'TNN',name:'台南市',candidates:[{name:'宋楚瑜',party:'親民黨',rate:3.52},{name:'韓國瑜',party:'國民黨',rate:29.1},{name:'蔡英文',party:'民進黨',rate:67.38}]},
-  {code:'KHH',name:'高雄市',candidates:[{name:'宋楚瑜',party:'親民黨',rate:3.14},{name:'韓國瑜',party:'國民黨',rate:34.63},{name:'蔡英文',party:'民進黨',rate:62.23}]},
-  {code:'KEL',name:'基隆市',candidates:[{name:'宋楚瑜',party:'親民黨',rate:5.25},{name:'韓國瑜',party:'國民黨',rate:43.92},{name:'蔡英文',party:'民進黨',rate:50.82}]},
-  {code:'HSC',name:'新竹市',candidates:[{name:'宋楚瑜',party:'親民黨',rate:5.4},{name:'韓國瑜',party:'國民黨',rate:39.34},{name:'蔡英文',party:'民進黨',rate:55.26}]},
-  {code:'CYI',name:'嘉義市',candidates:[{name:'宋楚瑜',party:'親民黨',rate:3.84},{name:'韓國瑜',party:'國民黨',rate:34.79},{name:'蔡英文',party:'民進黨',rate:61.37}]},
-  {code:'HSN',name:'新竹縣',candidates:[{name:'宋楚瑜',party:'親民黨',rate:5.67},{name:'韓國瑜',party:'國民黨',rate:47.45},{name:'蔡英文',party:'民進黨',rate:46.88}]},
-  {code:'MIA',name:'苗栗縣',candidates:[{name:'宋楚瑜',party:'親民黨',rate:4.66},{name:'韓國瑜',party:'國民黨',rate:50.32},{name:'蔡英文',party:'民進黨',rate:45.02}]},
-  {code:'CHA',name:'彰化縣',candidates:[{name:'宋楚瑜',party:'親民黨',rate:4.59},{name:'韓國瑜',party:'國民黨',rate:38.24},{name:'蔡英文',party:'民進黨',rate:57.17}]},
-  {code:'NTO',name:'南投縣',candidates:[{name:'宋楚瑜',party:'親民黨',rate:4.45},{name:'韓國瑜',party:'國民黨',rate:44.72},{name:'蔡英文',party:'民進黨',rate:50.83}]},
-  {code:'YUN',name:'雲林縣',candidates:[{name:'宋楚瑜',party:'親民黨',rate:3.83},{name:'韓國瑜',party:'國民黨',rate:34.6},{name:'蔡英文',party:'民進黨',rate:61.56}]},
-  {code:'CYN',name:'嘉義縣',candidates:[{name:'宋楚瑜',party:'親民黨',rate:3.62},{name:'韓國瑜',party:'國民黨',rate:32.16},{name:'蔡英文',party:'民進黨',rate:64.22}]},
-  {code:'PIF',name:'屏東縣',candidates:[{name:'宋楚瑜',party:'親民黨',rate:2.74},{name:'韓國瑜',party:'國民黨',rate:35.1},{name:'蔡英文',party:'民進黨',rate:62.16}]},
-  {code:'ILA',name:'宜蘭縣',candidates:[{name:'宋楚瑜',party:'親民黨',rate:3.91},{name:'韓國瑜',party:'國民黨',rate:32.8},{name:'蔡英文',party:'民進黨',rate:63.28}]},
-  {code:'HUA',name:'花蓮縣',candidates:[{name:'宋楚瑜',party:'親民黨',rate:3.71},{name:'韓國瑜',party:'國民黨',rate:60.38},{name:'蔡英文',party:'民進黨',rate:35.91}]},
-  {code:'TTT',name:'台東縣',candidates:[{name:'宋楚瑜',party:'親民黨',rate:3.6},{name:'韓國瑜',party:'國民黨',rate:58.28},{name:'蔡英文',party:'民進黨',rate:38.12}]},
-  {code:'PEH',name:'澎湖縣',candidates:[{name:'宋楚瑜',party:'親民黨',rate:5.07},{name:'韓國瑜',party:'國民黨',rate:41.08},{name:'蔡英文',party:'民進黨',rate:53.85}]},
-  {code:'KIN',name:'金門縣',candidates:[{name:'宋楚瑜',party:'親民黨',rate:3.41},{name:'韓國瑜',party:'國民黨',rate:74.83},{name:'蔡英文',party:'民進黨',rate:21.77}]},
-  {code:'LIE',name:'連江縣',candidates:[{name:'宋楚瑜',party:'親民黨',rate:3.04},{name:'韓國瑜',party:'國民黨',rate:77.16},{name:'蔡英文',party:'民進黨',rate:19.81}]}
-],
-president2024:[
-  {code:'TPE',name:'台北市',candidates:[{name:'柯文哲',party:'民眾黨',rate:23.79},{name:'賴清德',party:'民進黨',rate:38.13},{name:'侯友宜',party:'國民黨',rate:38.08}]},
-  {code:'NTC',name:'新北市',candidates:[{name:'柯文哲',party:'民眾黨',rate:26.24},{name:'賴清德',party:'民進黨',rate:38.59},{name:'侯友宜',party:'國民黨',rate:35.17}]},
-  {code:'TYN',name:'桃園市',candidates:[{name:'柯文哲',party:'民眾黨',rate:30.61},{name:'賴清德',party:'民進黨',rate:35.27},{name:'侯友宜',party:'國民黨',rate:34.12}]},
-  {code:'TXG',name:'台中市',candidates:[{name:'柯文哲',party:'民眾黨',rate:30.05},{name:'賴清德',party:'民進黨',rate:37.58},{name:'侯友宜',party:'國民黨',rate:32.37}]},
-  {code:'TNN',name:'台南市',candidates:[{name:'柯文哲',party:'民眾黨',rate:23.44},{name:'賴清德',party:'民進黨',rate:50.95},{name:'侯友宜',party:'國民黨',rate:25.61}]},
-  {code:'KHH',name:'高雄市',candidates:[{name:'柯文哲',party:'民眾黨',rate:21.88},{name:'賴清德',party:'民進黨',rate:48.89},{name:'侯友宜',party:'國民黨',rate:29.23}]},
-  {code:'KEL',name:'基隆市',candidates:[{name:'柯文哲',party:'民眾黨',rate:26.6},{name:'賴清德',party:'民進黨',rate:34.77},{name:'侯友宜',party:'國民黨',rate:38.63}]},
-  {code:'HSC',name:'新竹市',candidates:[{name:'柯文哲',party:'民眾黨',rate:34.3},{name:'賴清德',party:'民進黨',rate:34.79},{name:'侯友宜',party:'國民黨',rate:30.9}]},
-  {code:'CYI',name:'嘉義市',candidates:[{name:'柯文哲',party:'民眾黨',rate:25.34},{name:'賴清德',party:'民進黨',rate:43.26},{name:'侯友宜',party:'國民黨',rate:31.4}]},
-  {code:'HSN',name:'新竹縣',candidates:[{name:'柯文哲',party:'民眾黨',rate:35.55},{name:'賴清德',party:'民進黨',rate:27.42},{name:'侯友宜',party:'國民黨',rate:37.03}]},
-  {code:'MIA',name:'苗栗縣',candidates:[{name:'柯文哲',party:'民眾黨',rate:30.01},{name:'賴清德',party:'民進黨',rate:28.81},{name:'侯友宜',party:'國民黨',rate:41.18}]},
-  {code:'CHA',name:'彰化縣',candidates:[{name:'柯文哲',party:'民眾黨',rate:28.96},{name:'賴清德',party:'民進黨',rate:38.11},{name:'侯友宜',party:'國民黨',rate:32.93}]},
-  {code:'NTO',name:'南投縣',candidates:[{name:'柯文哲',party:'民眾黨',rate:26.05},{name:'賴清德',party:'民進黨',rate:35.95},{name:'侯友宜',party:'國民黨',rate:38}]},
-  {code:'YUN',name:'雲林縣',candidates:[{name:'柯文哲',party:'民眾黨',rate:26.13},{name:'賴清德',party:'民進黨',rate:44.54},{name:'侯友宜',party:'國民黨',rate:29.33}]},
-  {code:'CYN',name:'嘉義縣',candidates:[{name:'柯文哲',party:'民眾黨',rate:23.03},{name:'賴清德',party:'民進黨',rate:47.69},{name:'侯友宜',party:'國民黨',rate:29.28}]},
-  {code:'PIF',name:'屏東縣',candidates:[{name:'柯文哲',party:'民眾黨',rate:21.65},{name:'賴清德',party:'民進黨',rate:47.51},{name:'侯友宜',party:'國民黨',rate:30.84}]},
-  {code:'ILA',name:'宜蘭縣',candidates:[{name:'柯文哲',party:'民眾黨',rate:26.27},{name:'賴清德',party:'民進黨',rate:44.74},{name:'侯友宜',party:'國民黨',rate:28.99}]},
-  {code:'HUA',name:'花蓮縣',candidates:[{name:'柯文哲',party:'民眾黨',rate:24.72},{name:'賴清德',party:'民進黨',rate:24.78},{name:'侯友宜',party:'國民黨',rate:50.5}]},
-  {code:'TTT',name:'台東縣',candidates:[{name:'柯文哲',party:'民眾黨',rate:23.28},{name:'賴清德',party:'民進黨',rate:27.41},{name:'侯友宜',party:'國民黨',rate:49.32}]},
-  {code:'PEH',name:'澎湖縣',candidates:[{name:'柯文哲',party:'民眾黨',rate:24.76},{name:'賴清德',party:'民進黨',rate:38.6},{name:'侯友宜',party:'國民黨',rate:36.63}]},
-  {code:'KIN',name:'金門縣',candidates:[{name:'柯文哲',party:'民眾黨',rate:28.58},{name:'賴清德',party:'民進黨',rate:10.02},{name:'侯友宜',party:'國民黨',rate:61.4}]},
-  {code:'LIE',name:'連江縣',candidates:[{name:'柯文哲',party:'民眾黨',rate:26.81},{name:'賴清德',party:'民進黨',rate:10.52},{name:'侯友宜',party:'國民黨',rate:62.67}]}
-]
+  "mayor2018": [
+    {
+      "code": "TPE",
+      "name": "臺北市",
+      "winner": "柯文哲",
+      "winParty": "無黨籍及未經政黨推薦",
+      "candidates": [
+        {
+          "name": "吳蕚洋",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 5611,
+          "rate": 0.4
+        },
+        {
+          "name": "丁守中",
+          "party": "中國國民黨",
+          "votes": 577096,
+          "rate": 40.82
+        },
+        {
+          "name": "姚文智",
+          "party": "民主進步黨",
+          "votes": 244342,
+          "rate": 17.28
+        },
+        {
+          "name": "柯文哲",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 580663,
+          "rate": 41.07
+        },
+        {
+          "name": "李錫錕",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 6158,
+          "rate": 0.44
+        }
+      ]
+    },
+    {
+      "code": "NTC",
+      "name": "新北市",
+      "winner": "侯友宜",
+      "winParty": "中國國民黨",
+      "candidates": [
+        {
+          "name": "蘇貞昌",
+          "party": "民主進步黨",
+          "votes": 873692,
+          "rate": 42.85
+        },
+        {
+          "name": "侯友宜",
+          "party": "中國國民黨",
+          "votes": 1165130,
+          "rate": 57.15
+        }
+      ]
+    },
+    {
+      "code": "TYN",
+      "name": "桃園市",
+      "winner": "鄭文燦",
+      "winParty": "民主進步黨",
+      "candidates": [
+        {
+          "name": "朱梅雪",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 18200,
+          "rate": 1.76
+        },
+        {
+          "name": "陳學聖",
+          "party": "中國國民黨",
+          "votes": 407234,
+          "rate": 39.42
+        },
+        {
+          "name": "楊麗環",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 51518,
+          "rate": 4.99
+        },
+        {
+          "name": "吳富彤",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 3867,
+          "rate": 0.37
+        },
+        {
+          "name": "鄭文燦",
+          "party": "民主進步黨",
+          "votes": 552330,
+          "rate": 53.46
+        }
+      ]
+    },
+    {
+      "code": "TXG",
+      "name": "臺中市",
+      "winner": "盧秀燕",
+      "winParty": "中國國民黨",
+      "candidates": [
+        {
+          "name": "宋原通",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 15919,
+          "rate": 1.09
+        },
+        {
+          "name": "林佳龍",
+          "party": "民主進步黨",
+          "votes": 619855,
+          "rate": 42.35
+        },
+        {
+          "name": "盧秀燕",
+          "party": "中國國民黨",
+          "votes": 827996,
+          "rate": 56.57
+        }
+      ]
+    },
+    {
+      "code": "TNN",
+      "name": "臺南市",
+      "winner": "黃偉哲",
+      "winParty": "民主進步黨",
+      "candidates": [
+        {
+          "name": "黃偉哲",
+          "party": "民主進步黨",
+          "votes": 367518,
+          "rate": 38.02
+        },
+        {
+          "name": "高思博",
+          "party": "中國國民黨",
+          "votes": 312874,
+          "rate": 32.37
+        },
+        {
+          "name": "林義豐",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 84153,
+          "rate": 8.71
+        },
+        {
+          "name": "許忠信",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 45168,
+          "rate": 4.67
+        },
+        {
+          "name": "陳永和",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 117179,
+          "rate": 12.12
+        },
+        {
+          "name": "蘇煥智",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 39778,
+          "rate": 4.11
+        }
+      ]
+    },
+    {
+      "code": "KHH",
+      "name": "高雄市",
+      "winner": "韓國瑜",
+      "winParty": "中國國民黨",
+      "candidates": [
+        {
+          "name": "韓國瑜",
+          "party": "中國國民黨",
+          "votes": 892545,
+          "rate": 53.87
+        },
+        {
+          "name": "陳其邁",
+          "party": "民主進步黨",
+          "votes": 742239,
+          "rate": 44.8
+        },
+        {
+          "name": "璩美鳳",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 7998,
+          "rate": 0.48
+        },
+        {
+          "name": "蘇盈貴",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 14125,
+          "rate": 0.85
+        }
+      ]
+    },
+    {
+      "code": "HSC",
+      "name": "新竹市",
+      "winner": "林智堅",
+      "winParty": "民主進步黨",
+      "candidates": [
+        {
+          "name": "謝文進",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 44101,
+          "rate": 20.31
+        },
+        {
+          "name": "李驥羣",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 705,
+          "rate": 0.32
+        },
+        {
+          "name": "黃源甫",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 3603,
+          "rate": 1.66
+        },
+        {
+          "name": "許明財",
+          "party": "中國國民黨",
+          "votes": 60508,
+          "rate": 27.87
+        },
+        {
+          "name": "郭榮睿",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 574,
+          "rate": 0.26
+        },
+        {
+          "name": "林智堅",
+          "party": "民主進步黨",
+          "votes": 107612,
+          "rate": 49.57
+        }
+      ]
+    },
+    {
+      "code": "HSN",
+      "name": "新竹縣",
+      "winner": "楊文科",
+      "winParty": "中國國民黨",
+      "candidates": [
+        {
+          "name": "楊文科",
+          "party": "中國國民黨",
+          "votes": 107877,
+          "rate": 38.2
+        },
+        {
+          "name": "葉芳棟",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 5168,
+          "rate": 1.83
+        },
+        {
+          "name": "鄭朝方",
+          "party": "民主進步黨",
+          "votes": 78170,
+          "rate": 27.68
+        },
+        {
+          "name": "徐欣瑩",
+          "party": "民國黨",
+          "votes": 91190,
+          "rate": 32.29
+        }
+      ]
+    },
+    {
+      "code": "MIA",
+      "name": "苗栗縣",
+      "winner": "徐耀昌",
+      "winParty": "中國國民黨",
+      "candidates": [
+        {
+          "name": "朱泰平",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 6880,
+          "rate": 2.26
+        },
+        {
+          "name": "徐定禎",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 112704,
+          "rate": 37.03
+        },
+        {
+          "name": "黃玉燕",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 9030,
+          "rate": 2.97
+        },
+        {
+          "name": "徐耀昌",
+          "party": "中國國民黨",
+          "votes": 175756,
+          "rate": 57.74
+        }
+      ]
+    },
+    {
+      "code": "CHA",
+      "name": "彰化縣",
+      "winner": "王惠美",
+      "winParty": "中國國民黨",
+      "candidates": [
+        {
+          "name": "魏明谷",
+          "party": "民主進步黨",
+          "votes": 283269,
+          "rate": 39.87
+        },
+        {
+          "name": "王惠美",
+          "party": "中國國民黨",
+          "votes": 377795,
+          "rate": 53.18
+        },
+        {
+          "name": "白雅燦",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 7402,
+          "rate": 1.04
+        },
+        {
+          "name": "黃文玲",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 34690,
+          "rate": 4.88
+        },
+        {
+          "name": "洪敏雄",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 7263,
+          "rate": 1.02
+        }
+      ]
+    },
+    {
+      "code": "NTO",
+      "name": "南投縣",
+      "winner": "林明溱",
+      "winParty": "中國國民黨",
+      "candidates": [
+        {
+          "name": "林明溱",
+          "party": "中國國民黨",
+          "votes": 195385,
+          "rate": 66.72
+        },
+        {
+          "name": "洪國浩",
+          "party": "民主進步黨",
+          "votes": 97460,
+          "rate": 33.28
+        }
+      ]
+    },
+    {
+      "code": "YUN",
+      "name": "雲林縣",
+      "winner": "張麗善",
+      "winParty": "中國國民黨",
+      "candidates": [
+        {
+          "name": "林佳瑜",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 6163,
+          "rate": 1.57
+        },
+        {
+          "name": "李進勇",
+          "party": "民主進步黨",
+          "votes": 163325,
+          "rate": 41.72
+        },
+        {
+          "name": "王麗萍",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 11261,
+          "rate": 2.88
+        },
+        {
+          "name": "張麗善",
+          "party": "中國國民黨",
+          "votes": 210770,
+          "rate": 53.83
+        }
+      ]
+    },
+    {
+      "code": "CYI",
+      "name": "嘉義市",
+      "winner": "黃敏惠",
+      "winParty": "中國國民黨",
+      "candidates": [
+        {
+          "name": "蕭淑麗",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 25572,
+          "rate": 17.98
+        },
+        {
+          "name": "黃敏惠",
+          "party": "中國國民黨",
+          "votes": 58558,
+          "rate": 41.18
+        },
+        {
+          "name": "黃宏成台灣阿成世界偉人財神總統",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 1822,
+          "rate": 1.28
+        },
+        {
+          "name": "涂醒哲",
+          "party": "民主進步黨",
+          "votes": 56256,
+          "rate": 39.56
+        }
+      ]
+    },
+    {
+      "code": "CYN",
+      "name": "嘉義縣",
+      "winner": "翁章梁",
+      "winParty": "民主進步黨",
+      "candidates": [
+        {
+          "name": "翁章梁",
+          "party": "民主進步黨",
+          "votes": 145288,
+          "rate": 50.95
+        },
+        {
+          "name": "吳芳銘",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 51020,
+          "rate": 17.89
+        },
+        {
+          "name": "林國龍",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 4596,
+          "rate": 1.61
+        },
+        {
+          "name": "吳育仁",
+          "party": "中國國民黨",
+          "votes": 84243,
+          "rate": 29.54
+        }
+      ]
+    },
+    {
+      "code": "PIF",
+      "name": "屏東縣",
+      "winner": "潘孟安",
+      "winParty": "民主進步黨",
+      "candidates": [
+        {
+          "name": "李鎔任",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 9819,
+          "rate": 2.09
+        },
+        {
+          "name": "蘇清泉",
+          "party": "中國國民黨",
+          "votes": 197518,
+          "rate": 42.01
+        },
+        {
+          "name": "潘孟安",
+          "party": "民主進步黨",
+          "votes": 262809,
+          "rate": 55.9
+        }
+      ]
+    },
+    {
+      "code": "TTT",
+      "name": "臺東縣",
+      "winner": "饒慶鈴",
+      "winParty": "中國國民黨",
+      "candidates": [
+        {
+          "name": "鄺麗貞",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 3049,
+          "rate": 2.55
+        },
+        {
+          "name": "劉櫂豪",
+          "party": "民主進步黨",
+          "votes": 44264,
+          "rate": 37.04
+        },
+        {
+          "name": "黃裕斌",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 640,
+          "rate": 0.54
+        },
+        {
+          "name": "彭權國",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 988,
+          "rate": 0.83
+        },
+        {
+          "name": "饒慶鈴",
+          "party": "中國國民黨",
+          "votes": 70577,
+          "rate": 59.05
+        }
+      ]
+    },
+    {
+      "code": "HUA",
+      "name": "花蓮縣",
+      "winner": "徐榛蔚",
+      "winParty": "中國國民黨",
+      "candidates": [
+        {
+          "name": "徐榛蔚",
+          "party": "中國國民黨",
+          "votes": 121297,
+          "rate": 71.52
+        },
+        {
+          "name": "劉曉玫",
+          "party": "民主進步黨",
+          "votes": 43879,
+          "rate": 25.87
+        },
+        {
+          "name": "黄師鵬",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 4420,
+          "rate": 2.61
+        }
+      ]
+    },
+    {
+      "code": "ILA",
+      "name": "宜蘭縣",
+      "winner": "林姿妙",
+      "winParty": "中國國民黨",
+      "candidates": [
+        {
+          "name": "林信華",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 27399,
+          "rate": 10.95
+        },
+        {
+          "name": "林姿妙",
+          "party": "中國國民黨",
+          "votes": 123767,
+          "rate": 49.48
+        },
+        {
+          "name": "陳歐珀",
+          "party": "民主進步黨",
+          "votes": 95609,
+          "rate": 38.23
+        },
+        {
+          "name": "林錦坤",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 1922,
+          "rate": 0.77
+        },
+        {
+          "name": "陳秋境",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 1424,
+          "rate": 0.57
+        }
+      ]
+    },
+    {
+      "code": "KEL",
+      "name": "基隆市",
+      "winner": "林右昌",
+      "winParty": "民主進步黨",
+      "candidates": [
+        {
+          "name": "謝立功",
+          "party": "中國國民黨",
+          "votes": 86529,
+          "rate": 45.86
+        },
+        {
+          "name": "林右昌",
+          "party": "民主進步黨",
+          "votes": 102167,
+          "rate": 54.14
+        }
+      ]
+    },
+    {
+      "code": "PEH",
+      "name": "澎湖縣",
+      "winner": "賴峰偉",
+      "winParty": "中國國民黨",
+      "candidates": [
+        {
+          "name": "翁珍聖",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 1379,
+          "rate": 2.61
+        },
+        {
+          "name": "鄭清發",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 4330,
+          "rate": 8.18
+        },
+        {
+          "name": "陳大松",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 5822,
+          "rate": 11.0
+        },
+        {
+          "name": "吳政隆",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 2999,
+          "rate": 5.67
+        },
+        {
+          "name": "賴峰偉",
+          "party": "中國國民黨",
+          "votes": 20570,
+          "rate": 38.87
+        },
+        {
+          "name": "陳光復",
+          "party": "民主進步黨",
+          "votes": 17347,
+          "rate": 32.78
+        },
+        {
+          "name": "呂華苑",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 468,
+          "rate": 0.88
+        }
+      ]
+    },
+    {
+      "code": "KIN",
+      "name": "金門縣",
+      "winner": "楊鎮浯",
+      "winParty": "中國國民黨",
+      "candidates": [
+        {
+          "name": "楊鎮浯",
+          "party": "中國國民黨",
+          "votes": 23520,
+          "rate": 47.78
+        },
+        {
+          "name": "洪志恒",
+          "party": "金門高粱黨",
+          "votes": 832,
+          "rate": 1.69
+        },
+        {
+          "name": "汪承樺",
+          "party": "教科文預算保障e聯盟",
+          "votes": 403,
+          "rate": 0.82
+        },
+        {
+          "name": "陳福海",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 22719,
+          "rate": 46.15
+        },
+        {
+          "name": "謝宜璋",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 1389,
+          "rate": 2.82
+        },
+        {
+          "name": "洪和成",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 366,
+          "rate": 0.74
+        }
+      ]
+    },
+    {
+      "code": "LIE",
+      "name": "連江縣",
+      "winner": "劉增應",
+      "winParty": "中國國民黨",
+      "candidates": [
+        {
+          "name": "蘇柏豪",
+          "party": "樹黨",
+          "votes": 927,
+          "rate": 12.51
+        },
+        {
+          "name": "朱秀珍",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 1284,
+          "rate": 17.33
+        },
+        {
+          "name": "魏耀乾",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 336,
+          "rate": 4.54
+        },
+        {
+          "name": "劉增應",
+          "party": "中國國民黨",
+          "votes": 4861,
+          "rate": 65.62
+        }
+      ]
+    }
+  ],
+  "mayor2022": [
+    {
+      "code": "TPE",
+      "name": "臺北市",
+      "winner": "蔣萬安",
+      "winParty": "中國國民黨",
+      "candidates": [
+        {
+          "name": "張家豪",
+          "party": "台灣動物保護黨",
+          "votes": 2367,
+          "rate": 0.17
+        },
+        {
+          "name": "王文娟",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 451,
+          "rate": 0.03
+        },
+        {
+          "name": "鄭匡宇",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 386,
+          "rate": 0.03
+        },
+        {
+          "name": "黃聖峰",
+          "party": "台澎黨",
+          "votes": 256,
+          "rate": 0.02
+        },
+        {
+          "name": "童文薰",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 2425,
+          "rate": 0.18
+        },
+        {
+          "name": "蔣萬安",
+          "party": "中國國民黨",
+          "votes": 575590,
+          "rate": 42.29
+        },
+        {
+          "name": "蘇煥智",
+          "party": "台灣維新",
+          "votes": 1851,
+          "rate": 0.14
+        },
+        {
+          "name": "黃珊珊",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 342141,
+          "rate": 25.14
+        },
+        {
+          "name": "施奉先",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 383,
+          "rate": 0.03
+        },
+        {
+          "name": "唐新民",
+          "party": "共和黨",
+          "votes": 316,
+          "rate": 0.02
+        },
+        {
+          "name": "謝立康",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 227,
+          "rate": 0.02
+        },
+        {
+          "name": "陳時中",
+          "party": "民主進步黨",
+          "votes": 434558,
+          "rate": 31.93
+        }
+      ]
+    },
+    {
+      "code": "NTC",
+      "name": "新北市",
+      "winner": "侯友宜",
+      "winParty": "中國國民黨",
+      "candidates": [
+        {
+          "name": "林佳龍",
+          "party": "民主進步黨",
+          "votes": 693976,
+          "rate": 37.58
+        },
+        {
+          "name": "侯友宜",
+          "party": "中國國民黨",
+          "votes": 1152555,
+          "rate": 62.42
+        }
+      ]
+    },
+    {
+      "code": "TYN",
+      "name": "桃園市",
+      "winner": "張善政",
+      "winParty": "中國國民黨",
+      "candidates": [
+        {
+          "name": "張善政",
+          "party": "中國國民黨",
+          "votes": 557572,
+          "rate": 52.02
+        },
+        {
+          "name": "賴香伶",
+          "party": "台灣民眾黨",
+          "votes": 54926,
+          "rate": 5.12
+        },
+        {
+          "name": "鄭運鵬",
+          "party": "民主進步黨",
+          "votes": 428983,
+          "rate": 40.03
+        },
+        {
+          "name": "鄭寶清",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 30282,
+          "rate": 2.83
+        }
+      ]
+    },
+    {
+      "code": "TXG",
+      "name": "臺中市",
+      "winner": "盧秀燕",
+      "winParty": "中國國民黨",
+      "candidates": [
+        {
+          "name": "陳美妃",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 23140,
+          "rate": 1.72
+        },
+        {
+          "name": "蔡其昌",
+          "party": "民主進步黨",
+          "votes": 524224,
+          "rate": 38.93
+        },
+        {
+          "name": "盧秀燕",
+          "party": "中國國民黨",
+          "votes": 799107,
+          "rate": 59.35
+        }
+      ]
+    },
+    {
+      "code": "TNN",
+      "name": "臺南市",
+      "winner": "黃偉哲",
+      "winParty": "民主進步黨",
+      "candidates": [
+        {
+          "name": "許忠信",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 38697,
+          "rate": 4.35
+        },
+        {
+          "name": "林義豐",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 24606,
+          "rate": 2.77
+        },
+        {
+          "name": "謝龍介",
+          "party": "中國國民黨",
+          "votes": 387731,
+          "rate": 43.63
+        },
+        {
+          "name": "吳炳輝",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 3956,
+          "rate": 0.45
+        },
+        {
+          "name": "黃偉哲",
+          "party": "民主進步黨",
+          "votes": 433684,
+          "rate": 48.8
+        }
+      ]
+    },
+    {
+      "code": "KHH",
+      "name": "高雄市",
+      "winner": "陳其邁",
+      "winParty": "民主進步黨",
+      "candidates": [
+        {
+          "name": "鄭宇翔",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 8394,
+          "rate": 0.64
+        },
+        {
+          "name": "曾尹儷",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 14585,
+          "rate": 1.11
+        },
+        {
+          "name": "柯志恩",
+          "party": "中國國民黨",
+          "votes": 529607,
+          "rate": 40.16
+        },
+        {
+          "name": "陳其邁",
+          "party": "民主進步黨",
+          "votes": 766147,
+          "rate": 58.1
+        }
+      ]
+    },
+    {
+      "code": "HSC",
+      "name": "新竹市",
+      "winner": "高虹安",
+      "winParty": "台灣民眾黨",
+      "candidates": [
+        {
+          "name": "黃源甫",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 1049,
+          "rate": 0.48
+        },
+        {
+          "name": "龔偉綸",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 508,
+          "rate": 0.23
+        },
+        {
+          "name": "林耕仁",
+          "party": "中國國民黨",
+          "votes": 39391,
+          "rate": 18.07
+        },
+        {
+          "name": "李驥羣",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 1108,
+          "rate": 0.51
+        },
+        {
+          "name": "沈慧虹",
+          "party": "民主進步黨",
+          "votes": 77764,
+          "rate": 35.68
+        },
+        {
+          "name": "高虹安",
+          "party": "台灣民眾黨",
+          "votes": 98121,
+          "rate": 45.02
+        }
+      ]
+    },
+    {
+      "code": "HSN",
+      "name": "新竹縣",
+      "winner": "楊文科",
+      "winParty": "中國國民黨",
+      "candidates": [
+        {
+          "name": "黃秀龍",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 3403,
+          "rate": 1.32
+        },
+        {
+          "name": "范振揆",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 4874,
+          "rate": 1.89
+        },
+        {
+          "name": "周江杰",
+          "party": "民主進步黨",
+          "votes": 83683,
+          "rate": 32.4
+        },
+        {
+          "name": "楊文科",
+          "party": "中國國民黨",
+          "votes": 163662,
+          "rate": 63.36
+        },
+        {
+          "name": "劉復嵐",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 2683,
+          "rate": 1.04
+        }
+      ]
+    },
+    {
+      "code": "MIA",
+      "name": "苗栗縣",
+      "winner": "鍾東錦",
+      "winParty": "無黨籍及未經政黨推薦",
+      "candidates": [
+        {
+          "name": "鍾東錦",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 124603,
+          "rate": 42.66
+        },
+        {
+          "name": "謝福弘",
+          "party": "中國國民黨",
+          "votes": 32026,
+          "rate": 10.96
+        },
+        {
+          "name": "吳盛聖",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 4864,
+          "rate": 1.67
+        },
+        {
+          "name": "徐定禎",
+          "party": "民主進步黨",
+          "votes": 91260,
+          "rate": 31.24
+        },
+        {
+          "name": "宋國鼎",
+          "party": "時代力量",
+          "votes": 39347,
+          "rate": 13.47
+        }
+      ]
+    },
+    {
+      "code": "CHA",
+      "name": "彰化縣",
+      "winner": "王惠美",
+      "winParty": "中國國民黨",
+      "candidates": [
+        {
+          "name": "王惠美",
+          "party": "中國國民黨",
+          "votes": 369133,
+          "rate": 56.75
+        },
+        {
+          "name": "黃秀芳",
+          "party": "民主進步黨",
+          "votes": 272817,
+          "rate": 41.94
+        },
+        {
+          "name": "蕭仁正",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 8474,
+          "rate": 1.3
+        }
+      ]
+    },
+    {
+      "code": "NTO",
+      "name": "南投縣",
+      "winner": "許淑華",
+      "winParty": "中國國民黨",
+      "candidates": [
+        {
+          "name": "蔡培慧",
+          "party": "民主進步黨",
+          "votes": 117993,
+          "rate": 42.83
+        },
+        {
+          "name": "許淑華",
+          "party": "中國國民黨",
+          "votes": 154256,
+          "rate": 55.99
+        },
+        {
+          "name": "王永慶",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 3250,
+          "rate": 1.18
+        }
+      ]
+    },
+    {
+      "code": "YUN",
+      "name": "雲林縣",
+      "winner": "張麗善",
+      "winParty": "中國國民黨",
+      "candidates": [
+        {
+          "name": "張麗善",
+          "party": "中國國民黨",
+          "votes": 207519,
+          "rate": 56.57
+        },
+        {
+          "name": "劉建國",
+          "party": "民主進步黨",
+          "votes": 152620,
+          "rate": 41.6
+        },
+        {
+          "name": "林佳瑜",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 6694,
+          "rate": 1.82
+        }
+      ]
+    },
+    {
+      "code": "CYI",
+      "name": "嘉義市",
+      "winner": "黃敏惠",
+      "winParty": "中國國民黨",
+      "candidates": [
+        {
+          "name": "黃敏惠",
+          "party": "中國國民黨",
+          "votes": 59874,
+          "rate": 63.82
+        },
+        {
+          "name": "李俊俋",
+          "party": "民主進步黨",
+          "votes": 32790,
+          "rate": 34.95
+        },
+        {
+          "name": "陳泰山",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 246,
+          "rate": 0.26
+        },
+        {
+          "name": "黃宏成台灣阿成世界偉人財神總統",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 535,
+          "rate": 0.57
+        },
+        {
+          "name": "鄭凱升",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 368,
+          "rate": 0.39
+        }
+      ]
+    },
+    {
+      "code": "CYN",
+      "name": "嘉義縣",
+      "winner": "翁章梁",
+      "winParty": "民主進步黨",
+      "candidates": [
+        {
+          "name": "王育敏",
+          "party": "中國國民黨",
+          "votes": 101517,
+          "rate": 37.15
+        },
+        {
+          "name": "翁章梁",
+          "party": "民主進步黨",
+          "votes": 171777,
+          "rate": 62.85
+        }
+      ]
+    },
+    {
+      "code": "PIF",
+      "name": "屏東縣",
+      "winner": "周春米",
+      "winParty": "民主進步黨",
+      "candidates": [
+        {
+          "name": "詹智鈞",
+          "party": "時代力量",
+          "votes": 19156,
+          "rate": 4.32
+        },
+        {
+          "name": "蘇清泉",
+          "party": "中國國民黨",
+          "votes": 206460,
+          "rate": 46.59
+        },
+        {
+          "name": "周春米",
+          "party": "民主進步黨",
+          "votes": 217537,
+          "rate": 49.09
+        }
+      ]
+    },
+    {
+      "code": "TTT",
+      "name": "臺東縣",
+      "winner": "饒慶鈴",
+      "winParty": "中國國民黨",
+      "candidates": [
+        {
+          "name": "陳長宏",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 2383,
+          "rate": 2.12
+        },
+        {
+          "name": "饒慶鈴",
+          "party": "中國國民黨",
+          "votes": 68661,
+          "rate": 61.22
+        },
+        {
+          "name": "劉櫂豪",
+          "party": "民主進步黨",
+          "votes": 41104,
+          "rate": 36.65
+        }
+      ]
+    },
+    {
+      "code": "HUA",
+      "name": "花蓮縣",
+      "winner": "徐榛蔚",
+      "winParty": "中國國民黨",
+      "candidates": [
+        {
+          "name": "徐榛蔚",
+          "party": "中國國民黨",
+          "votes": 96645,
+          "rate": 64.73
+        },
+        {
+          "name": "黄師鵬",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 4817,
+          "rate": 3.23
+        },
+        {
+          "name": "谷辣斯．尤達卡 Kolas Yotaka",
+          "party": "民主進步黨",
+          "votes": 47845,
+          "rate": 32.04
+        }
+      ]
+    },
+    {
+      "code": "ILA",
+      "name": "宜蘭縣",
+      "winner": "林姿妙",
+      "winParty": "中國國民黨",
+      "candidates": [
+        {
+          "name": "林姿妙",
+          "party": "中國國民黨",
+          "votes": 119421,
+          "rate": 50.76
+        },
+        {
+          "name": "朱振東",
+          "party": "天一黨",
+          "votes": 919,
+          "rate": 0.39
+        },
+        {
+          "name": "許鋐哲",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 1036,
+          "rate": 0.44
+        },
+        {
+          "name": "陳秋境",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 714,
+          "rate": 0.3
+        },
+        {
+          "name": "江聰淵",
+          "party": "民主進步黨",
+          "votes": 96779,
+          "rate": 41.13
+        },
+        {
+          "name": "陳琬惠",
+          "party": "台灣民眾黨",
+          "votes": 16412,
+          "rate": 6.98
+        }
+      ]
+    },
+    {
+      "code": "KEL",
+      "name": "基隆市",
+      "winner": "謝國樑",
+      "winParty": "中國國民黨",
+      "candidates": [
+        {
+          "name": "謝國樑",
+          "party": "中國國民黨",
+          "votes": 96784,
+          "rate": 52.92
+        },
+        {
+          "name": "陳薇仲",
+          "party": "時代力量",
+          "votes": 12000,
+          "rate": 6.56
+        },
+        {
+          "name": "蔡適應",
+          "party": "民主進步黨",
+          "votes": 71354,
+          "rate": 39.01
+        },
+        {
+          "name": "曾國民",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 619,
+          "rate": 0.34
+        },
+        {
+          "name": "黃希賢",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 2136,
+          "rate": 1.17
+        }
+      ]
+    },
+    {
+      "code": "PEH",
+      "name": "澎湖縣",
+      "winner": "陳光復",
+      "winParty": "民主進步黨",
+      "candidates": [
+        {
+          "name": "陳光復",
+          "party": "民主進步黨",
+          "votes": 18777,
+          "rate": 36.64
+        },
+        {
+          "name": "賴峰偉",
+          "party": "中國國民黨",
+          "votes": 17081,
+          "rate": 33.33
+        },
+        {
+          "name": "葉竹林",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 15384,
+          "rate": 30.02
+        }
+      ]
+    },
+    {
+      "code": "KIN",
+      "name": "金門縣",
+      "winner": "陳福海",
+      "winParty": "無黨籍及未經政黨推薦",
+      "candidates": [
+        {
+          "name": "李應文",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 3459,
+          "rate": 7.34
+        },
+        {
+          "name": "朱紀瑋",
+          "party": "龍黨",
+          "votes": 174,
+          "rate": 0.37
+        },
+        {
+          "name": "林志錦",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 141,
+          "rate": 0.3
+        },
+        {
+          "name": "楊鎮浯",
+          "party": "中國國民黨",
+          "votes": 19340,
+          "rate": 41.05
+        },
+        {
+          "name": "陳福海",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 23248,
+          "rate": 49.34
+        },
+        {
+          "name": "洪志恒",
+          "party": "無黨籍及未經政黨推薦",
+          "votes": 752,
+          "rate": 1.6
+        }
+      ]
+    },
+    {
+      "code": "LIE",
+      "name": "連江縣",
+      "winner": "王忠銘",
+      "winParty": "中國國民黨",
+      "candidates": [
+        {
+          "name": "李問",
+          "party": "民主進步黨",
+          "votes": 586,
+          "rate": 6.89
+        },
+        {
+          "name": "曹爾元",
+          "party": "中國國民黨",
+          "votes": 3582,
+          "rate": 42.12
+        },
+        {
+          "name": "王忠銘",
+          "party": "中國國民黨",
+          "votes": 4337,
+          "rate": 50.99
+        }
+      ]
+    }
+  ],
+  "president2020": [
+    {
+      "code": "TPE",
+      "name": "臺北市",
+      "candidates": [
+        {
+          "name": "宋楚瑜",
+          "party": "親民黨",
+          "votes": 70769,
+          "rate": 4.34
+        },
+        {
+          "name": "韓國瑜",
+          "party": "中國國民黨",
+          "votes": 685830,
+          "rate": 42.01
+        },
+        {
+          "name": "蔡英文",
+          "party": "民主進步黨",
+          "votes": 875854,
+          "rate": 53.65
+        }
+      ]
+    },
+    {
+      "code": "NTC",
+      "name": "新北市",
+      "candidates": [
+        {
+          "name": "宋楚瑜",
+          "party": "親民黨",
+          "votes": 112620,
+          "rate": 4.57
+        },
+        {
+          "name": "韓國瑜",
+          "party": "中國國民黨",
+          "votes": 959631,
+          "rate": 38.91
+        },
+        {
+          "name": "蔡英文",
+          "party": "民主進步黨",
+          "votes": 1393936,
+          "rate": 56.52
+        }
+      ]
+    },
+    {
+      "code": "TYN",
+      "name": "桃園市",
+      "candidates": [
+        {
+          "name": "宋楚瑜",
+          "party": "親民黨",
+          "votes": 63132,
+          "rate": 4.82
+        },
+        {
+          "name": "韓國瑜",
+          "party": "中國國民黨",
+          "votes": 529749,
+          "rate": 40.4
+        },
+        {
+          "name": "蔡英文",
+          "party": "民主進步黨",
+          "votes": 718260,
+          "rate": 54.78
+        }
+      ]
+    },
+    {
+      "code": "TXG",
+      "name": "臺中市",
+      "candidates": [
+        {
+          "name": "宋楚瑜",
+          "party": "親民黨",
+          "votes": 84800,
+          "rate": 4.99
+        },
+        {
+          "name": "韓國瑜",
+          "party": "中國國民黨",
+          "votes": 646366,
+          "rate": 38.06
+        },
+        {
+          "name": "蔡英文",
+          "party": "民主進步黨",
+          "votes": 967304,
+          "rate": 56.95
+        }
+      ]
+    },
+    {
+      "code": "TNN",
+      "name": "臺南市",
+      "candidates": [
+        {
+          "name": "宋楚瑜",
+          "party": "親民黨",
+          "votes": 41075,
+          "rate": 3.52
+        },
+        {
+          "name": "韓國瑜",
+          "party": "中國國民黨",
+          "votes": 339702,
+          "rate": 29.1
+        },
+        {
+          "name": "蔡英文",
+          "party": "民主進步黨",
+          "votes": 786471,
+          "rate": 67.38
+        }
+      ]
+    },
+    {
+      "code": "KHH",
+      "name": "高雄市",
+      "candidates": [
+        {
+          "name": "宋楚瑜",
+          "party": "親民黨",
+          "votes": 55309,
+          "rate": 3.14
+        },
+        {
+          "name": "韓國瑜",
+          "party": "中國國民黨",
+          "votes": 610896,
+          "rate": 34.63
+        },
+        {
+          "name": "蔡英文",
+          "party": "民主進步黨",
+          "votes": 1097621,
+          "rate": 62.23
+        }
+      ]
+    },
+    {
+      "code": "HSC",
+      "name": "新竹市",
+      "candidates": [
+        {
+          "name": "宋楚瑜",
+          "party": "親民黨",
+          "votes": 14103,
+          "rate": 5.4
+        },
+        {
+          "name": "韓國瑜",
+          "party": "中國國民黨",
+          "votes": 102725,
+          "rate": 39.34
+        },
+        {
+          "name": "蔡英文",
+          "party": "民主進步黨",
+          "votes": 144274,
+          "rate": 55.26
+        }
+      ]
+    },
+    {
+      "code": "HSN",
+      "name": "新竹縣",
+      "candidates": [
+        {
+          "name": "宋楚瑜",
+          "party": "親民黨",
+          "votes": 18435,
+          "rate": 5.67
+        },
+        {
+          "name": "韓國瑜",
+          "party": "中國國民黨",
+          "votes": 154224,
+          "rate": 47.45
+        },
+        {
+          "name": "蔡英文",
+          "party": "民主進步黨",
+          "votes": 152380,
+          "rate": 46.88
+        }
+      ]
+    },
+    {
+      "code": "MIA",
+      "name": "苗栗縣",
+      "candidates": [
+        {
+          "name": "宋楚瑜",
+          "party": "親民黨",
+          "votes": 15222,
+          "rate": 4.66
+        },
+        {
+          "name": "韓國瑜",
+          "party": "中國國民黨",
+          "votes": 164345,
+          "rate": 50.32
+        },
+        {
+          "name": "蔡英文",
+          "party": "民主進步黨",
+          "votes": 147034,
+          "rate": 45.02
+        }
+      ]
+    },
+    {
+      "code": "CHA",
+      "name": "彰化縣",
+      "candidates": [
+        {
+          "name": "宋楚瑜",
+          "party": "親民黨",
+          "votes": 35060,
+          "rate": 4.59
+        },
+        {
+          "name": "韓國瑜",
+          "party": "中國國民黨",
+          "votes": 291835,
+          "rate": 38.24
+        },
+        {
+          "name": "蔡英文",
+          "party": "民主進步黨",
+          "votes": 436336,
+          "rate": 57.17
+        }
+      ]
+    },
+    {
+      "code": "NTO",
+      "name": "南投縣",
+      "candidates": [
+        {
+          "name": "宋楚瑜",
+          "party": "親民黨",
+          "votes": 13315,
+          "rate": 4.45
+        },
+        {
+          "name": "韓國瑜",
+          "party": "中國國民黨",
+          "votes": 133791,
+          "rate": 44.72
+        },
+        {
+          "name": "蔡英文",
+          "party": "民主進步黨",
+          "votes": 152046,
+          "rate": 50.83
+        }
+      ]
+    },
+    {
+      "code": "YUN",
+      "name": "雲林縣",
+      "candidates": [
+        {
+          "name": "宋楚瑜",
+          "party": "親民黨",
+          "votes": 15331,
+          "rate": 3.83
+        },
+        {
+          "name": "韓國瑜",
+          "party": "中國國民黨",
+          "votes": 138341,
+          "rate": 34.6
+        },
+        {
+          "name": "蔡英文",
+          "party": "民主進步黨",
+          "votes": 246116,
+          "rate": 61.56
+        }
+      ]
+    },
+    {
+      "code": "CYI",
+      "name": "嘉義市",
+      "candidates": [
+        {
+          "name": "宋楚瑜",
+          "party": "親民黨",
+          "votes": 6204,
+          "rate": 3.84
+        },
+        {
+          "name": "韓國瑜",
+          "party": "中國國民黨",
+          "votes": 56269,
+          "rate": 34.79
+        },
+        {
+          "name": "蔡英文",
+          "party": "民主進步黨",
+          "votes": 99265,
+          "rate": 61.37
+        }
+      ]
+    },
+    {
+      "code": "CYN",
+      "name": "嘉義縣",
+      "candidates": [
+        {
+          "name": "宋楚瑜",
+          "party": "親民黨",
+          "votes": 11138,
+          "rate": 3.62
+        },
+        {
+          "name": "韓國瑜",
+          "party": "中國國民黨",
+          "votes": 98810,
+          "rate": 32.16
+        },
+        {
+          "name": "蔡英文",
+          "party": "民主進步黨",
+          "votes": 197342,
+          "rate": 64.22
+        }
+      ]
+    },
+    {
+      "code": "PIF",
+      "name": "屏東縣",
+      "candidates": [
+        {
+          "name": "宋楚瑜",
+          "party": "親民黨",
+          "votes": 14021,
+          "rate": 2.74
+        },
+        {
+          "name": "韓國瑜",
+          "party": "中國國民黨",
+          "votes": 179353,
+          "rate": 35.1
+        },
+        {
+          "name": "蔡英文",
+          "party": "民主進步黨",
+          "votes": 317676,
+          "rate": 62.16
+        }
+      ]
+    },
+    {
+      "code": "TTT",
+      "name": "臺東縣",
+      "candidates": [
+        {
+          "name": "宋楚瑜",
+          "party": "親民黨",
+          "votes": 4163,
+          "rate": 3.6
+        },
+        {
+          "name": "韓國瑜",
+          "party": "中國國民黨",
+          "votes": 67413,
+          "rate": 58.28
+        },
+        {
+          "name": "蔡英文",
+          "party": "民主進步黨",
+          "votes": 44092,
+          "rate": 38.12
+        }
+      ]
+    },
+    {
+      "code": "HUA",
+      "name": "花蓮縣",
+      "candidates": [
+        {
+          "name": "宋楚瑜",
+          "party": "親民黨",
+          "votes": 6869,
+          "rate": 3.71
+        },
+        {
+          "name": "韓國瑜",
+          "party": "中國國民黨",
+          "votes": 111834,
+          "rate": 60.38
+        },
+        {
+          "name": "蔡英文",
+          "party": "民主進步黨",
+          "votes": 66509,
+          "rate": 35.91
+        }
+      ]
+    },
+    {
+      "code": "ILA",
+      "name": "宜蘭縣",
+      "candidates": [
+        {
+          "name": "宋楚瑜",
+          "party": "親民黨",
+          "votes": 10739,
+          "rate": 3.91
+        },
+        {
+          "name": "韓國瑜",
+          "party": "中國國民黨",
+          "votes": 90010,
+          "rate": 32.8
+        },
+        {
+          "name": "蔡英文",
+          "party": "民主進步黨",
+          "votes": 173657,
+          "rate": 63.28
+        }
+      ]
+    },
+    {
+      "code": "KEL",
+      "name": "基隆市",
+      "candidates": [
+        {
+          "name": "宋楚瑜",
+          "party": "親民黨",
+          "votes": 11878,
+          "rate": 5.25
+        },
+        {
+          "name": "韓國瑜",
+          "party": "中國國民黨",
+          "votes": 99360,
+          "rate": 43.92
+        },
+        {
+          "name": "蔡英文",
+          "party": "民主進步黨",
+          "votes": 114966,
+          "rate": 50.82
+        }
+      ]
+    },
+    {
+      "code": "PEH",
+      "name": "澎湖縣",
+      "candidates": [
+        {
+          "name": "宋楚瑜",
+          "party": "親民黨",
+          "votes": 2583,
+          "rate": 5.07
+        },
+        {
+          "name": "韓國瑜",
+          "party": "中國國民黨",
+          "votes": 20911,
+          "rate": 41.08
+        },
+        {
+          "name": "蔡英文",
+          "party": "民主進步黨",
+          "votes": 27410,
+          "rate": 53.85
+        }
+      ]
+    },
+    {
+      "code": "KIN",
+      "name": "金門縣",
+      "candidates": [
+        {
+          "name": "宋楚瑜",
+          "party": "親民黨",
+          "votes": 1636,
+          "rate": 3.41
+        },
+        {
+          "name": "韓國瑜",
+          "party": "中國國民黨",
+          "votes": 35948,
+          "rate": 74.83
+        },
+        {
+          "name": "蔡英文",
+          "party": "民主進步黨",
+          "votes": 10456,
+          "rate": 21.77
+        }
+      ]
+    },
+    {
+      "code": "LIE",
+      "name": "連江縣",
+      "candidates": [
+        {
+          "name": "宋楚瑜",
+          "party": "親民黨",
+          "votes": 188,
+          "rate": 3.04
+        },
+        {
+          "name": "韓國瑜",
+          "party": "中國國民黨",
+          "votes": 4776,
+          "rate": 77.16
+        },
+        {
+          "name": "蔡英文",
+          "party": "民主進步黨",
+          "votes": 1226,
+          "rate": 19.81
+        }
+      ]
+    }
+  ],
+  "president2024": [
+    {
+      "code": "TPE",
+      "name": "臺北市",
+      "candidates": [
+        {
+          "name": "柯文哲",
+          "party": "台灣民眾黨",
+          "votes": 366854,
+          "rate": 23.79
+        },
+        {
+          "name": "賴清德",
+          "party": "民主進步黨",
+          "votes": 587899,
+          "rate": 38.13
+        },
+        {
+          "name": "侯友宜",
+          "party": "中國國民黨",
+          "votes": 587258,
+          "rate": 38.08
+        }
+      ]
+    },
+    {
+      "code": "NTC",
+      "name": "新北市",
+      "candidates": [
+        {
+          "name": "柯文哲",
+          "party": "台灣民眾黨",
+          "votes": 645105,
+          "rate": 26.24
+        },
+        {
+          "name": "賴清德",
+          "party": "民主進步黨",
+          "votes": 948818,
+          "rate": 38.59
+        },
+        {
+          "name": "侯友宜",
+          "party": "中國國民黨",
+          "votes": 864557,
+          "rate": 35.17
+        }
+      ]
+    },
+    {
+      "code": "TYN",
+      "name": "桃園市",
+      "candidates": [
+        {
+          "name": "柯文哲",
+          "party": "台灣民眾黨",
+          "votes": 413528,
+          "rate": 30.61
+        },
+        {
+          "name": "賴清德",
+          "party": "民主進步黨",
+          "votes": 476441,
+          "rate": 35.27
+        },
+        {
+          "name": "侯友宜",
+          "party": "中國國民黨",
+          "votes": 460823,
+          "rate": 34.12
+        }
+      ]
+    },
+    {
+      "code": "TXG",
+      "name": "臺中市",
+      "candidates": [
+        {
+          "name": "柯文哲",
+          "party": "台灣民眾黨",
+          "votes": 513025,
+          "rate": 30.05
+        },
+        {
+          "name": "賴清德",
+          "party": "民主進步黨",
+          "votes": 641622,
+          "rate": 37.58
+        },
+        {
+          "name": "侯友宜",
+          "party": "中國國民黨",
+          "votes": 552556,
+          "rate": 32.37
+        }
+      ]
+    },
+    {
+      "code": "TNN",
+      "name": "臺南市",
+      "candidates": [
+        {
+          "name": "柯文哲",
+          "party": "台灣民眾黨",
+          "votes": 262560,
+          "rate": 23.44
+        },
+        {
+          "name": "賴清德",
+          "party": "民主進步黨",
+          "votes": 570811,
+          "rate": 50.95
+        },
+        {
+          "name": "侯友宜",
+          "party": "中國國民黨",
+          "votes": 286867,
+          "rate": 25.61
+        }
+      ]
+    },
+    {
+      "code": "KHH",
+      "name": "高雄市",
+      "candidates": [
+        {
+          "name": "柯文哲",
+          "party": "台灣民眾黨",
+          "votes": 358096,
+          "rate": 21.88
+        },
+        {
+          "name": "賴清德",
+          "party": "民主進步黨",
+          "votes": 800390,
+          "rate": 48.89
+        },
+        {
+          "name": "侯友宜",
+          "party": "中國國民黨",
+          "votes": 478476,
+          "rate": 29.23
+        }
+      ]
+    },
+    {
+      "code": "HSC",
+      "name": "新竹市",
+      "candidates": [
+        {
+          "name": "柯文哲",
+          "party": "台灣民眾黨",
+          "votes": 91384,
+          "rate": 34.3
+        },
+        {
+          "name": "賴清德",
+          "party": "民主進步黨",
+          "votes": 92679,
+          "rate": 34.79
+        },
+        {
+          "name": "侯友宜",
+          "party": "中國國民黨",
+          "votes": 82326,
+          "rate": 30.9
+        }
+      ]
+    },
+    {
+      "code": "HSN",
+      "name": "新竹縣",
+      "candidates": [
+        {
+          "name": "柯文哲",
+          "party": "台灣民眾黨",
+          "votes": 120985,
+          "rate": 35.55
+        },
+        {
+          "name": "賴清德",
+          "party": "民主進步黨",
+          "votes": 93309,
+          "rate": 27.42
+        },
+        {
+          "name": "侯友宜",
+          "party": "中國國民黨",
+          "votes": 126016,
+          "rate": 37.03
+        }
+      ]
+    },
+    {
+      "code": "MIA",
+      "name": "苗栗縣",
+      "candidates": [
+        {
+          "name": "柯文哲",
+          "party": "台灣民眾黨",
+          "votes": 95637,
+          "rate": 30.01
+        },
+        {
+          "name": "賴清德",
+          "party": "民主進步黨",
+          "votes": 91798,
+          "rate": 28.81
+        },
+        {
+          "name": "侯友宜",
+          "party": "中國國民黨",
+          "votes": 131230,
+          "rate": 41.18
+        }
+      ]
+    },
+    {
+      "code": "CHA",
+      "name": "彰化縣",
+      "candidates": [
+        {
+          "name": "柯文哲",
+          "party": "台灣民眾黨",
+          "votes": 214714,
+          "rate": 28.96
+        },
+        {
+          "name": "賴清德",
+          "party": "民主進步黨",
+          "votes": 282514,
+          "rate": 38.11
+        },
+        {
+          "name": "侯友宜",
+          "party": "中國國民黨",
+          "votes": 244140,
+          "rate": 32.93
+        }
+      ]
+    },
+    {
+      "code": "NTO",
+      "name": "南投縣",
+      "candidates": [
+        {
+          "name": "柯文哲",
+          "party": "台灣民眾黨",
+          "votes": 74854,
+          "rate": 26.05
+        },
+        {
+          "name": "賴清德",
+          "party": "民主進步黨",
+          "votes": 103279,
+          "rate": 35.95
+        },
+        {
+          "name": "侯友宜",
+          "party": "中國國民黨",
+          "votes": 109163,
+          "rate": 38.0
+        }
+      ]
+    },
+    {
+      "code": "YUN",
+      "name": "雲林縣",
+      "candidates": [
+        {
+          "name": "柯文哲",
+          "party": "台灣民眾黨",
+          "votes": 99470,
+          "rate": 26.13
+        },
+        {
+          "name": "賴清德",
+          "party": "民主進步黨",
+          "votes": 169516,
+          "rate": 44.54
+        },
+        {
+          "name": "侯友宜",
+          "party": "中國國民黨",
+          "votes": 111633,
+          "rate": 29.33
+        }
+      ]
+    },
+    {
+      "code": "CYI",
+      "name": "嘉義市",
+      "candidates": [
+        {
+          "name": "柯文哲",
+          "party": "台灣民眾黨",
+          "votes": 39950,
+          "rate": 25.34
+        },
+        {
+          "name": "賴清德",
+          "party": "民主進步黨",
+          "votes": 68199,
+          "rate": 43.26
+        },
+        {
+          "name": "侯友宜",
+          "party": "中國國民黨",
+          "votes": 49507,
+          "rate": 31.4
+        }
+      ]
+    },
+    {
+      "code": "CYN",
+      "name": "嘉義縣",
+      "candidates": [
+        {
+          "name": "柯文哲",
+          "party": "台灣民眾黨",
+          "votes": 67382,
+          "rate": 23.03
+        },
+        {
+          "name": "賴清德",
+          "party": "民主進步黨",
+          "votes": 139510,
+          "rate": 47.69
+        },
+        {
+          "name": "侯友宜",
+          "party": "中國國民黨",
+          "votes": 85642,
+          "rate": 29.28
+        }
+      ]
+    },
+    {
+      "code": "PIF",
+      "name": "屏東縣",
+      "candidates": [
+        {
+          "name": "柯文哲",
+          "party": "台灣民眾黨",
+          "votes": 103028,
+          "rate": 21.65
+        },
+        {
+          "name": "賴清德",
+          "party": "民主進步黨",
+          "votes": 226110,
+          "rate": 47.51
+        },
+        {
+          "name": "侯友宜",
+          "party": "中國國民黨",
+          "votes": 146789,
+          "rate": 30.84
+        }
+      ]
+    },
+    {
+      "code": "TTT",
+      "name": "臺東縣",
+      "candidates": [
+        {
+          "name": "柯文哲",
+          "party": "台灣民眾黨",
+          "votes": 25590,
+          "rate": 23.28
+        },
+        {
+          "name": "賴清德",
+          "party": "民主進步黨",
+          "votes": 30131,
+          "rate": 27.41
+        },
+        {
+          "name": "侯友宜",
+          "party": "中國國民黨",
+          "votes": 54220,
+          "rate": 49.32
+        }
+      ]
+    },
+    {
+      "code": "HUA",
+      "name": "花蓮縣",
+      "candidates": [
+        {
+          "name": "柯文哲",
+          "party": "台灣民眾黨",
+          "votes": 43047,
+          "rate": 24.72
+        },
+        {
+          "name": "賴清德",
+          "party": "民主進步黨",
+          "votes": 43157,
+          "rate": 24.78
+        },
+        {
+          "name": "侯友宜",
+          "party": "中國國民黨",
+          "votes": 87953,
+          "rate": 50.5
+        }
+      ]
+    },
+    {
+      "code": "ILA",
+      "name": "宜蘭縣",
+      "candidates": [
+        {
+          "name": "柯文哲",
+          "party": "台灣民眾黨",
+          "votes": 70171,
+          "rate": 26.27
+        },
+        {
+          "name": "賴清德",
+          "party": "民主進步黨",
+          "votes": 119517,
+          "rate": 44.74
+        },
+        {
+          "name": "侯友宜",
+          "party": "中國國民黨",
+          "votes": 77441,
+          "rate": 28.99
+        }
+      ]
+    },
+    {
+      "code": "KEL",
+      "name": "基隆市",
+      "candidates": [
+        {
+          "name": "柯文哲",
+          "party": "台灣民眾黨",
+          "votes": 58195,
+          "rate": 26.6
+        },
+        {
+          "name": "賴清德",
+          "party": "民主進步黨",
+          "votes": 76079,
+          "rate": 34.77
+        },
+        {
+          "name": "侯友宜",
+          "party": "中國國民黨",
+          "votes": 84507,
+          "rate": 38.63
+        }
+      ]
+    },
+    {
+      "code": "PEH",
+      "name": "澎湖縣",
+      "candidates": [
+        {
+          "name": "柯文哲",
+          "party": "台灣民眾黨",
+          "votes": 12202,
+          "rate": 24.76
+        },
+        {
+          "name": "賴清德",
+          "party": "民主進步黨",
+          "votes": 19023,
+          "rate": 38.6
+        },
+        {
+          "name": "侯友宜",
+          "party": "中國國民黨",
+          "votes": 18052,
+          "rate": 36.63
+        }
+      ]
+    },
+    {
+      "code": "KIN",
+      "name": "金門縣",
+      "candidates": [
+        {
+          "name": "柯文哲",
+          "party": "台灣民眾黨",
+          "votes": 13038,
+          "rate": 28.58
+        },
+        {
+          "name": "賴清德",
+          "party": "民主進步黨",
+          "votes": 4569,
+          "rate": 10.02
+        },
+        {
+          "name": "侯友宜",
+          "party": "中國國民黨",
+          "votes": 28005,
+          "rate": 61.4
+        }
+      ]
+    },
+    {
+      "code": "LIE",
+      "name": "連江縣",
+      "candidates": [
+        {
+          "name": "柯文哲",
+          "party": "台灣民眾黨",
+          "votes": 1651,
+          "rate": 26.81
+        },
+        {
+          "name": "賴清德",
+          "party": "民主進步黨",
+          "votes": 648,
+          "rate": 10.52
+        },
+        {
+          "name": "侯友宜",
+          "party": "中國國民黨",
+          "votes": 3860,
+          "rate": 62.67
+        }
+      ]
+    }
+  ]
 };
+
+// ════════════════════════════════════════
+//  候選人顯示規則（呈現層專用，不影響 DIST/HIST 資料本身）
+//  DIST/HIST 一律保留全部候選人的完整驗證票數；
+//  這支函式只在畫面渲染時決定「要顯示哪幾位」。
+// ════════════════════════════════════════
+function pickDisplayCandidates(candidates, opts) {
+  opts = opts || {};
+  var sorted = candidates.slice().sort(function (a, b) { return b.votes - a.votes; });
+  var picked = sorted.slice(0, 2);
+  if (sorted.length > 2 && sorted[2].rate >= 10) {
+    picked.push(sorted[2]);
+  }
+  if (opts.alwaysInclude && opts.alwaysInclude.length) {
+    opts.alwaysInclude.forEach(function (name) {
+      if (!picked.some(function (c) { return c.name === name; })) {
+        var found = sorted.find(function (c) { return c.name === name; });
+        if (found) picked.push(found);
+      }
+    });
+    picked.sort(function (a, b) { return b.votes - a.votes; });
+  }
+  return picked;
+}
 
 var curElec = 'mayor2022';
 var curHistMode = 'single';
@@ -1582,11 +4048,12 @@ function renderCountySummary(){
   var el = document.getElementById('dist-county-summary');
   if(!histEntry){ el.innerHTML='<div style="color:var(--text3);font-size:13px;">無縣市整體資料</div>'; return; }
   var isMayor = elecKey.indexOf('mayor')>=0;
-  var maxR = Math.max.apply(null, histEntry.candidates.map(function(c){ return c.rate; }));
+  var displayCands = pickDisplayCandidates(histEntry.candidates);
+  var maxR = Math.max.apply(null, displayCands.map(function(c){ return c.rate; }));
   el.innerHTML =
     '<div style="font-size:13px;font-weight:700;margin-bottom:10px;color:var(--text2);">'+COUNTIES[code]+'整體</div>'+
     '<div style="display:flex;flex-wrap:wrap;gap:16px;">'+
-    histEntry.candidates.map(function(c){
+    displayCands.map(function(c){
       var isWin = isMayor && histEntry.winner===c.name;
       var w = Math.round(c.rate/maxR*100);
       return '<div style="min-width:160px;flex:1;">'+
@@ -1663,6 +4130,7 @@ function drillToVillage(distName){
 
 function makeDistCard(cands, title, isMayor, globalMax){
   if(!cands || !cands.length) return '';
+  cands = pickDisplayCandidates(cands);
   var rates = cands.map(function(c){ return c.rate; });
   var maxR = globalMax || Math.max.apply(null, rates);
   var sorted = cands.slice().sort(function(a,b){ return b.rate-a.rate; });
@@ -1720,7 +4188,7 @@ function makeCompareCard(code, name){
   var rows = EKEYS.map(function(key){ var d=HIST[key]||[]; return d.find(function(x){ return x.code===code; }); });
   var partyOrder = [];
   var mainParties = ['國民黨','民進黨','民眾黨'];
-  rows.forEach(function(r){ if(!r) return; r.candidates.forEach(function(cc){ if(partyOrder.indexOf(cc.party)<0) partyOrder.push(cc.party); }); });
+  rows.forEach(function(r){ if(!r) return; pickDisplayCandidates(r.candidates).forEach(function(cc){ if(partyOrder.indexOf(cc.party)<0) partyOrder.push(cc.party); }); });
   partyOrder.sort(function(a,b){ var ai=mainParties.indexOf(a),bi=mainParties.indexOf(b); if(ai<0)ai=99; if(bi<0)bi=99; return ai-bi; });
 
   var tableRows = partyOrder.map(function(party){
@@ -1780,8 +4248,9 @@ function renderHistory(){
   var byC = groupBy();
 
   document.getElementById('histGrid').innerHTML = filtered2.map(function(d){
-    var maxR = Math.max.apply(null, d.candidates.map(function(cc){ return cc.rate; }));
-    var bars = d.candidates.map(function(cc){ return makeBar(cc, maxR, isMayor&&d.winner===cc.name); }).join('');
+    var displayCands = pickDisplayCandidates(d.candidates);
+    var maxR = Math.max.apply(null, displayCands.map(function(cc){ return cc.rate; }));
+    var bars = displayCands.map(function(cc){ return makeBar(cc, maxR, isMayor&&d.winner===cc.name); }).join('');
     var lp = byC[d.code]&&byC[d.code].length ? byC[d.code][byC[d.code].length-1] : null;
     var cmpHtml = '';
     if(lp&&isMayor){
@@ -1900,8 +4369,9 @@ function genReport(code){
     var label = {'mayor2022':'2022縣市長','mayor2018':'2018縣市長','president2024':'2024總統','president2020':'2020總統'}[key];
     var d = (HIST[key]||[]).find(function(x){ return x.code===code; });
     if(!d) return '';
-    var maxR = Math.max.apply(null, d.candidates.map(function(c){ return c.rate; }));
-    var bars = d.candidates.map(function(c){
+    var displayCands = pickDisplayCandidates(d.candidates);
+    var maxR = Math.max.apply(null, displayCands.map(function(c){ return c.rate; }));
+    var bars = displayCands.map(function(c){
       var isW = d.winner && d.winner===c.name;
       return '<div class="br"><span class="br-n" style="'+(isW?'font-weight:700;':'')+'">'+c.name+'</span>'+
         '<span class="br-p" style="color:'+pc(c.party)+'">'+c.party+'</span>'+

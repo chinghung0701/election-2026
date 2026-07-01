@@ -1,4 +1,4 @@
-// 2020 總統選舉 鄉鎮市區得票資料
+// 2020 總統選舉 鄉鎮市區得票資料（完整候選人，未套用顯示規則）
 var DIST2020 = {
   NTO: {
     county: "南投縣",
@@ -235,6 +235,18 @@ var DIST2020 = {
       {d:"復興區",c:[{"name": "宋楚瑜", "votes": 233, "rate": 3.69}, {"name": "韓國瑜", "votes": 4043, "rate": 64.03}, {"name": "蔡英文", "votes": 2038, "rate": 32.28}]},
     ]
   },
+  PEH: {
+    county: "澎湖縣",
+    cands: ["宋楚瑜", "韓國瑜", "蔡英文"],
+    districts: [
+      {d:"馬公市",c:[{"name": "宋楚瑜", "votes": 1664, "rate": 5.11}, {"name": "韓國瑜", "votes": 13672, "rate": 42.02}, {"name": "蔡英文", "votes": 17203, "rate": 52.87}]},
+      {d:"湖西鄉",c:[{"name": "宋楚瑜", "votes": 394, "rate": 5.23}, {"name": "韓國瑜", "votes": 2636, "rate": 35.0}, {"name": "蔡英文", "votes": 4501, "rate": 59.77}]},
+      {d:"白沙鄉",c:[{"name": "宋楚瑜", "votes": 169, "rate": 3.92}, {"name": "韓國瑜", "votes": 1896, "rate": 44.03}, {"name": "蔡英文", "votes": 2241, "rate": 52.04}]},
+      {d:"西嶼鄉",c:[{"name": "宋楚瑜", "votes": 177, "rate": 4.69}, {"name": "韓國瑜", "votes": 1555, "rate": 41.22}, {"name": "蔡英文", "votes": 2040, "rate": 54.08}]},
+      {d:"望安鄉",c:[{"name": "宋楚瑜", "votes": 89, "rate": 5.71}, {"name": "韓國瑜", "votes": 542, "rate": 34.77}, {"name": "蔡英文", "votes": 928, "rate": 59.53}]},
+      {d:"七美鄉",c:[{"name": "宋楚瑜", "votes": 90, "rate": 7.52}, {"name": "韓國瑜", "votes": 610, "rate": 50.96}, {"name": "蔡英文", "votes": 497, "rate": 41.52}]},
+    ]
+  },
   TXG: {
     county: "臺中市",
     cands: ["宋楚瑜", "韓國瑜", "蔡英文"],
@@ -396,6 +408,16 @@ var DIST2020 = {
       {d:"泰安鄉",c:[{"name": "宋楚瑜", "votes": 102, "rate": 2.82}, {"name": "韓國瑜", "votes": 2743, "rate": 75.84}, {"name": "蔡英文", "votes": 772, "rate": 21.34}]},
     ]
   },
+  LIE: {
+    county: "連江縣",
+    cands: ["宋楚瑜", "韓國瑜", "蔡英文"],
+    districts: [
+      {d:"南竿鄉",c:[{"name": "宋楚瑜", "votes": 114, "rate": 3.02}, {"name": "韓國瑜", "votes": 2875, "rate": 76.2}, {"name": "蔡英文", "votes": 784, "rate": 20.78}]},
+      {d:"北竿鄉",c:[{"name": "宋楚瑜", "votes": 25, "rate": 2.25}, {"name": "韓國瑜", "votes": 883, "rate": 79.62}, {"name": "蔡英文", "votes": 201, "rate": 18.12}]},
+      {d:"莒光鄉",c:[{"name": "宋楚瑜", "votes": 14, "rate": 2.22}, {"name": "韓國瑜", "votes": 513, "rate": 81.17}, {"name": "蔡英文", "votes": 105, "rate": 16.61}]},
+      {d:"東引鄉",c:[{"name": "宋楚瑜", "votes": 35, "rate": 5.18}, {"name": "韓國瑜", "votes": 505, "rate": 74.7}, {"name": "蔡英文", "votes": 136, "rate": 20.12}]},
+    ]
+  },
   KIN: {
     county: "金門縣",
     cands: ["宋楚瑜", "韓國瑜", "蔡英文"],
@@ -476,28 +498,6 @@ var DIST2020 = {
       {d:"茂林區",c:[{"name": "宋楚瑜", "votes": 20, "rate": 1.72}, {"name": "韓國瑜", "votes": 877, "rate": 75.34}, {"name": "蔡英文", "votes": 267, "rate": 22.94}]},
       {d:"桃源區",c:[{"name": "宋楚瑜", "votes": 64, "rate": 2.8}, {"name": "韓國瑜", "votes": 1674, "rate": 73.32}, {"name": "蔡英文", "votes": 545, "rate": 23.87}]},
       {d:"那瑪夏區",c:[{"name": "宋楚瑜", "votes": 27, "rate": 1.69}, {"name": "韓國瑜", "votes": 1145, "rate": 71.47}, {"name": "蔡英文", "votes": 430, "rate": 26.84}]},
-    ]
-  },
-  PEH: {
-    county: "澎湖縣",
-    cands: ["宋楚瑜", "韓國瑜", "蔡英文"],
-    districts: [
-      {d:"馬公市",c:[{"name": "宋楚瑜", "votes": 1664, "rate": 5.11}, {"name": "韓國瑜", "votes": 13672, "rate": 42.02}, {"name": "蔡英文", "votes": 17203, "rate": 52.87}]},
-      {d:"湖西鄉",c:[{"name": "宋楚瑜", "votes": 394, "rate": 5.23}, {"name": "韓國瑜", "votes": 2636, "rate": 35.0}, {"name": "蔡英文", "votes": 4501, "rate": 59.77}]},
-      {d:"白沙鄉",c:[{"name": "宋楚瑜", "votes": 169, "rate": 3.92}, {"name": "韓國瑜", "votes": 1896, "rate": 44.03}, {"name": "蔡英文", "votes": 2241, "rate": 52.04}]},
-      {d:"西嶼鄉",c:[{"name": "宋楚瑜", "votes": 177, "rate": 4.69}, {"name": "韓國瑜", "votes": 1555, "rate": 41.22}, {"name": "蔡英文", "votes": 2040, "rate": 54.08}]},
-      {d:"望安鄉",c:[{"name": "宋楚瑜", "votes": 89, "rate": 5.71}, {"name": "韓國瑜", "votes": 542, "rate": 34.77}, {"name": "蔡英文", "votes": 928, "rate": 59.53}]},
-      {d:"七美鄉",c:[{"name": "宋楚瑜", "votes": 90, "rate": 7.52}, {"name": "韓國瑜", "votes": 610, "rate": 50.96}, {"name": "蔡英文", "votes": 497, "rate": 41.52}]},
-    ]
-  },
-  LIE: {
-    county: "連江縣",
-    cands: ["宋楚瑜", "韓國瑜", "蔡英文"],
-    districts: [
-      {d:"南竿鄉",c:[{"name": "宋楚瑜", "votes": 114, "rate": 3.02}, {"name": "韓國瑜", "votes": 2875, "rate": 76.2}, {"name": "蔡英文", "votes": 784, "rate": 20.78}]},
-      {d:"北竿鄉",c:[{"name": "宋楚瑜", "votes": 25, "rate": 2.25}, {"name": "韓國瑜", "votes": 883, "rate": 79.62}, {"name": "蔡英文", "votes": 201, "rate": 18.12}]},
-      {d:"莒光鄉",c:[{"name": "宋楚瑜", "votes": 14, "rate": 2.22}, {"name": "韓國瑜", "votes": 513, "rate": 81.17}, {"name": "蔡英文", "votes": 105, "rate": 16.61}]},
-      {d:"東引鄉",c:[{"name": "宋楚瑜", "votes": 35, "rate": 5.18}, {"name": "韓國瑜", "votes": 505, "rate": 74.7}, {"name": "蔡英文", "votes": 136, "rate": 20.12}]},
     ]
   },
 };
