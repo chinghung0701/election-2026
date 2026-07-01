@@ -4194,7 +4194,9 @@ function makeCompareCard(code, name){
   var tableRows = partyOrder.map(function(party){
     var cells = rows.map(function(r){
       if(!r) return '<td style="color:var(--text3);text-align:center;">—</td>';
-      var cc = r.candidates.find(function(x){ return x.party===party; });
+      // 同一政黨可能有多位候選人（例如多位「無黨籍」），只在「顯示規則」篩選過的名單裡找，
+      // 避免抓到零星小額候選人、而不是真正有意義的那一位
+      var cc = pickDisplayCandidates(r.candidates).find(function(x){ return x.party===party; });
       var isWin = r.winner && r.candidates.find(function(x){ return x.name===r.winner&&x.party===party; });
       if(!cc) return '<td style="color:var(--text3);text-align:center;">—</td>';
       return '<td style="text-align:center;font-weight:'+(isWin?'700':'400')+';color:'+pc(party)+'">'+cc.rate+'%'+(isWin?' 🏆':'')+'</td>';
