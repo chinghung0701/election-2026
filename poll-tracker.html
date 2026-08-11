@@ -479,6 +479,9 @@ body.auth-locked #toast { display:none !important; }
 var DIST_LOADED = {};
 function loadDistFile(elecKey, callback){
   var varName = DIST_MAP[elecKey];
+  loadDistFileByVar(varName, callback);
+}
+function loadDistFileByVar(varName, callback){
   if(!varName) { if(callback) callback(false); return; }
   // 已載入
   if(window[varName]) { if(callback) callback(true); return; }
@@ -494,7 +497,9 @@ function loadDistFile(elecKey, callback){
     'DIST2022':'district-2022.js',
     'DIST2018':'district-2018.js',
     'DIST2024':'district-2024.js',
-    'DIST2020':'district-2020.js'
+    'DIST2020':'district-2020.js',
+    'VILL2018':'village-2018.js',
+    'VILL2022':'village-2022.js'
   };
   var fname = fileMap[varName];
   if(!fname) { if(callback) callback(false); return; }
@@ -3982,6 +3987,12 @@ var DIST_MAP = {
   'president2024': 'DIST2024',
   'president2020': 'DIST2020'
 };
+
+// 村里層級資料檔（僅 2018/2022 縣市長選舉有；總統選舉檔無村里資料）
+var VILL_MAP = {
+  'mayor2022': 'VILL2022',
+  'mayor2018': 'VILL2018'
+};
 var ELEC_LABELS = {
   'mayor2022':'2022 縣市長',
   'mayor2018':'2018 縣市長',
@@ -4001,7 +4012,7 @@ function openDistrictView(code, elecKey){
   document.getElementById('distSearch').value = '';
   document.getElementById('dist-village-breadcrumb').style.display = 'none';
   // 設定層級按鈕
-  var hasVil = getDistData(code, elecKey, 'villages').length > 0;
+  var hasVil = hasVillageData(code, elecKey);
   document.getElementById('dlvl-village').style.display = hasVil ? '' : 'none';
   document.getElementById('dlvl-district').className = 'viewbtn on';
   document.getElementById('dlvl-village').className = 'viewbtn off';
@@ -4021,6 +4032,15 @@ function switchDistLevel(lv){
   document.getElementById('dlvl-village').className = 'viewbtn '+(lv==='village'?'on':'off');
   document.getElementById('dist-village-breadcrumb').style.display = 'none';
   document.getElementById('distSearch').value = '';
+  if(lv==='village'){
+    var grid = document.getElementById('dist-grid');
+    if(grid) grid.innerHTML = '<div style="padding:40px;text-align:center;color:var(--text3);">載入村里資料中…</div>';
+    ensureVillages(distViewElec, function(ok){
+      if(!ok && grid) grid.innerHTML = '<div class="ccempty">村里資料載入失敗</div>';
+      else renderDistrictDetail();
+    });
+    return;
+  }
   renderDistrictDetail();
 }
 
@@ -4035,11 +4055,34 @@ function backToDistricts(){
 }
 
 function getDistData(code, elecKey, type){
+  if(type==='villages'){
+    var vName = VILL_MAP[elecKey];
+    if(!vName) return [];
+    var vObj = window[vName];
+    if(!vObj || !vObj[code]) return [];
+    return vObj[code];
+  }
   var varName = DIST_MAP[elecKey];
   if(!varName) return [];
   var distObj = window[varName];
   if(!distObj || !distObj[code]) return [];
   return distObj[code][type] || [];
+}
+
+// 該選舉的該縣市是否有村里資料（讀 district 檔的 hasVil 旗標，不需載入村里檔）
+function hasVillageData(code, elecKey){
+  var varName = DIST_MAP[elecKey];
+  if(!varName || !VILL_MAP[elecKey]) return false;
+  var distObj = window[varName];
+  return !!(distObj && distObj[code] && distObj[code].hasVil);
+}
+
+// 確保村里檔已載入後再執行 cb
+function ensureVillages(elecKey, cb){
+  var vName = VILL_MAP[elecKey];
+  if(!vName){ cb(false); return; }
+  if(window[vName]){ cb(true); return; }
+  loadDistFileByVar(vName, cb);
 }
 
 function renderCountySummary(){
