@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>歷史投票資料庫</title>
+<style>
+:root{
+  --ink:#1b1e24; --sub:#5d6470; --line:#e3e5e9; --bg:#f4f5f7; --card:#fff;
+  --band:#161a22; --band2:#232936; --chip:#2e3545; --chipOn:#f2f3f5;
+  --kmt:#000095; --kmt2:#5b6bd6; --dpp:#009A44; --dpp2:#5cc48a;
+  --tpp:#28C8C8; --npp:#FBBE01; --pfp:#FF6310; --ind:#8a8f98; --oth:#c9ccd1; --warn:#d9480f;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;font-size:14px;line-height:1.5}
+header{background:var(--band);color:#e9ebef;padding:16px 20px 12px}
+header h1{margin:0 0 10px;font-size:18px;font-weight:600;letter-spacing:.04em}
+header h1 small{font-weight:400;color:#8f97a6;font-size:12px;margin-left:8px}
+.row{display:flex;align-items:center;gap:10px;margin:6px 0;flex-wrap:wrap}
+.row>label{width:64px;flex:none;color:#8f97a6;font-size:12px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:0;background:var(--chip);color:#d5d9e1;padding:5px 12px;border-radius:999px;font:inherit;font-size:13px;cursor:pointer}
+.chip:hover{background:#3a4357}
+.chip.on{background:var(--chipOn);color:var(--band);font-weight:600}
+.chip:disabled{opacity:.28;cursor:default;background:var(--chip)}
+main{display:grid;grid-template-columns:220px 1fr;gap:16px;padding:16px 20px;align-items:start}
+aside{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto}
+aside h2{margin:0 0 6px;font-size:13px;color:var(--sub);font-weight:600}
+aside .tools{display:flex;gap:6px;margin-bottom:8px}
+aside .tools button{flex:1;border:1px solid var(--line);background:#fafbfc;border-radius:6px;padding:3px 0;font:inherit;font-size:12px;cursor:pointer}
+.dlist label{display:flex;align-items:center;gap:6px;padding:3px 4px;border-radius:5px;cursor:pointer;font-size:13px}
+.dlist label:hover{background:#f1f3f6}
+.dlist input{margin:0}
+.dlist .lean{margin-left:auto;width:8px;height:8px;border-radius:50%}
+section.summary{margin-bottom:16px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.card.county{border-color:#c9cfdb;box-shadow:0 1px 0 #d6dae2}
+.card h3{margin:0;font-size:16px;display:flex;align-items:baseline;gap:8px}
+.card h3 .meta{font-size:12px;color:var(--sub);font-weight:400;margin-left:auto}
+.card h4{margin:14px 0 6px;font-size:12px;color:var(--sub);font-weight:600;letter-spacing:.05em}
+.bar{position:relative;display:flex;height:26px;border-radius:5px;overflow:hidden;background:#eef0f3}
+.bar>span{height:100%}
+.barlab{display:flex;justify-content:space-between;font-size:12px;margin-top:4px;font-variant-numeric:tabular-nums}
+.barlab .b{color:var(--kmt);font-weight:600}.barlab .g{color:var(--dpp);font-weight:600}
+.barlab .m{color:var(--sub)}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+td{padding:3px 0;border-bottom:1px solid #f0f1f3;vertical-align:top}
+td.n{text-align:right;white-space:nowrap;padding-left:8px}
+td .sw{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:6px;vertical-align:0}
+td .det{display:block;font-size:11.5px;color:var(--sub);padding-left:15px}
+.raw td{font-size:13px}
+.raw .p{color:var(--sub);font-size:12px}
+.raw .mini{height:4px;border-radius:2px;margin-top:3px}
+.note{font-size:12px;color:var(--sub);background:#f6f7f9;border-radius:6px;padding:6px 8px;margin-top:8px}
+.note.warn{color:var(--warn);background:#fff3ec}
+.seat{font-size:12px;color:var(--sub);border:1px dashed #cdd2da;border-radius:6px;padding:6px 8px;margin-top:8px}
+.empty{color:var(--sub);padding:28px;text-align:center;background:var(--card);border:1px dashed var(--line);border-radius:10px}
+.status{color:var(--sub);padding:20px}
+footer{color:var(--sub);font-size:11.5px;padding:4px 20px 24px}
+@media (max-width:760px){
+  main{grid-template-columns:1fr;padding:12px}
+  aside{position:static;max-height:260px}
+  header{padding:12px}
+  .row>label{width:100%}
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>歷史投票資料庫<small>行政區層級・中選會資料</small></h1>
+  <div class="row"><label>年度</label><div class="chips" id="years"></div></div>
+  <div class="row"><label>選舉類型</label><div class="chips" id="types"></div></div>
+  <div class="row"><label>縣市</label><div class="chips" id="counties"></div></div>
+</header>
+<main>
+  <aside>
+    <h2 id="dhead">行政區</h2>
+    <div class="tools"><button id="selAll">全選</button><button id="selNone">清除</button></div>
+    <div class="dlist" id="dlist"></div>
+  </aside>
+  <div id="view"><div class="status">載入中…</div></div>
+</main>
+<footer>
+  資料來源：中央選舉委員會「選舉資料庫」，依政府資料開放授權條款第 1 版利用；整理：chinghung0701/election-2026。
+  藍營＝國民黨＋親民黨＋新黨；綠營＝民進黨＋台聯＋台灣基進（總統選舉的親民黨、民眾黨候選人單獨列出）。
+</footer>
+
+<script id="engine">
+/* ===== 計算核心：純函式，不碰 DOM ===== */
+var REPO = 'https://cdn.jsdelivr.net/gh/chinghung0701/election-2026@main/';
+var COUNTIES = [
+  ['TPE','臺北市'],['NTC','新北市'],['TYN','桃園市'],['TXG','臺中市'],['TNN','臺南市'],['KHH','高雄市'],
+  ['CHA','彰化縣'],['HSN','新竹縣'],['HSC','新竹市'],['CYI','嘉義市'],['ILA','宜蘭縣'],['KEL','基隆市']
+];
+var TYPES = {president:'總統', mayor:'縣市長', partylist:'不分區政黨票', legislator:'區域立委', councilor:'縣市議員'};
+var TYPE_ORDER = ['president','mayor','partylist','legislator','councilor'];
+var ELECTIONS = {
+  2014:{mayor:{v:'DIST2014',f:'district-2014.js',kind:'cand',only:['NTC','KHH']}},
+  2016:{president:{v:'DIST2016',f:'district-2016.js',kind:'cand'},
+        partylist:{v:'PARTY2016',f:'partylist-2016.js',kind:'party'},
+        legislator:{v:'LEGIS2016',f:'legislator-2016.js',kind:'party'}},
+  2018:{mayor:{v:'DIST2018',f:'district-2018.js',kind:'cand'},
+        councilor:{v:'COUNCIL2018',f:'councilor-2018.js',kind:'party'}},
+  2020:{president:{v:'DIST2020',f:'district-2020.js',kind:'cand'},
+        partylist:{v:'PARTY2020',f:'partylist-2020.js',kind:'party'},
+        legislator:{v:'LEGIS2020',f:'legislator-2020.js',kind:'party'}},
+  2022:{mayor:{v:'DIST2022',f:'district-2022.js',kind:'cand'},
+        councilor:{v:'COUNCIL2022',f:'councilor-2022.js',kind:'party'}},
+  2024:{president:{v:'DIST2024',f:'district-2024.js',kind:'cand'},
+        partylist:{v:'PARTY2024',f:'partylist-2024.js',kind:'party'},
+        legislator:{v:'LEGIS2024',f:'legislator-2024.js',kind:'party'}}
+};
+// 2020／2024 總統檔沒有 parties 欄，在此補上；2016 檔已有，作為備援
+var PRES_PARTY = {
+  2016:{'朱立倫':'中國國民黨','蔡英文':'民主進步黨','宋楚瑜':'親民黨'},
+  2020:{'宋楚瑜':'親民黨','韓國瑜':'中國國民黨','蔡英文':'民主進步黨'},
+  2024:{'柯文哲':'台灣民眾黨','賴清德':'民主進步黨','侯友宜':'中國國民黨'}
+};
+var BLUE = {'中國國民黨':1,'親民黨':1,'新黨':1};
+var GREEN = {'民主進步黨':1,'台灣團結聯盟':1,'台灣基進':1,'基進黨':1};
+var ALWAYS_SEP = {'台灣民眾黨':1,'時代力量':1};     // 政黨型選舉一律單列
+var THRESH = {mayor:10, legislator:10, partylist:5, councilor:5, president:10};
+var COLOR = {'中國國民黨':'#000095','民主進步黨':'#009A44','台灣民眾黨':'#28C8C8','時代力量':'#FBBE01',
+  '親民黨':'#FF6310','新黨':'#5b6bd6','台灣團結聯盟':'#5cc48a','台灣基進':'#5cc48a','基進黨':'#5cc48a','無黨籍':'#8a8f98'};
+var SHORT = {'中國國民黨':'國民黨','民主進步黨':'民進黨','台灣民眾黨':'民眾黨','台灣團結聯盟':'台聯',
+  '無黨籍及未經政黨推薦':'無黨籍'};
+
+function normParty(p){ if(!p) return '無黨籍'; if(p.indexOf('無黨籍')===0) return '無黨籍'; return p; }
+function short(p){ return SHORT[p] || p; }
+function pct(v,t){ return t ? v*100/t : 0; }
+
+// 一個行政區（或縣市彙總）的原始項目：[{name, party, votes}]
+function itemsOf(meta, year, type, countyObj, d){
+  if(meta.kind==='party') return d.all.map(function(x){ return {name:x.name, party:normParty(x.name), votes:x.votes}; });
+  var pm = countyObj.parties || (type==='president' ? PRES_PARTY[year] : {}) || {};
+  return d.c.map(function(x){ return {name:x.name, party:normParty(pm[x.name] || (PRES_PARTY[year]||{})[x.name]), votes:x.votes}; });
+}
+
+// 縣市層級彙總項目（依名稱加總）
+function countyItems(meta, year, type, countyObj){
+  var acc = {}, order = [];
+  countyObj.districts.forEach(function(d){
+    itemsOf(meta, year, type, countyObj, d).forEach(function(it){
+      if(!acc[it.name]){ acc[it.name] = {name:it.name, party:it.party, votes:0}; order.push(it.name); }
+      acc[it.name].votes += it.votes;
+    });
+  });
+  var arr = order.map(function(n){ return acc[n]; });
+  if(meta.kind==='party') arr.sort(function(a,b){ return b.votes-a.votes; });
+  return arr;
+}
+
+// 單列名單：門檻以上的非藍綠項目（縣市長、不分區、議員用縣市層級；立委用行政區層級）
+function standaloneSet(items, type){
+  var tot = items.reduce(function(s,x){ return s+x.votes; },0), set = {};
+  items.forEach(function(it){ if(pct(it.votes,tot) >= THRESH[type]) set[it.name] = 1; });
+  return set;
+}
+
+function bucketOf(it, kind, type, sep){
+  var p = it.party;
+  if(kind==='cand'){
+    if(type==='president' && (p==='親民黨' || p==='台灣民眾黨')) return 'sep';
+    if(BLUE[p]) return 'blue';
+    if(GREEN[p]) return 'green';
+    return sep[it.name] ? 'sep' : 'other';
+  }
+  if(BLUE[p]) return 'blue';
+  if(GREEN[p]) return 'green';
+  if(ALWAYS_SEP[p]) return 'sep';
+  if(p==='無黨籍' && type==='councilor') return 'sep';
+  return sep[it.name] ? 'sep' : 'other';
+}
+
+function classify(items, kind, type, sep){
+  var total = items.reduce(function(s,x){ return s+x.votes; },0);
+  var r = {total:total, blue:0, green:0, other:0, blueParts:[], greenParts:[], seps:[], others:[]};
+  items.forEach(function(it){
+    var b = bucketOf(it, kind, type, sep);
+    if(b==='blue'){ r.blue += it.votes; r.blueParts.push(it); }
+    else if(b==='green'){ r.green += it.votes; r.greenParts.push(it); }
+    else if(b==='sep'){
+      r.seps.push({label: kind==='cand' ? it.name+'（'+short(it.party)+'）' : short(it.name),
+                   party: it.party, votes: it.votes, color: COLOR[it.party] || '#8a8f98'});
+    }
+    else { r.other += it.votes; r.others.push(it); }
+  });
+  var desc = function(a,b){ return b.votes-a.votes; };
+  r.blueParts.sort(desc); r.greenParts.sort(desc); r.others.sort(desc);
+  // 中段順序：民眾黨、時代力量、親民黨，其餘依得票
+  var rank = {'台灣民眾黨':0,'時代力量':1,'親民黨':2};
+  r.seps.sort(function(a,b){ var ra = rank[a.party]==null?9:rank[a.party], rb = rank[b.party]==null?9:rank[b.party]; return ra-rb || b.votes-a.votes; });
+  return r;
+}
+
+function analyzeCounty(meta, year, type, countyObj){
+  var items = countyItems(meta, year, type, countyObj);
+  return classify(items, meta.kind, type, standaloneSet(items, type));
+}
+function analyzeDistrict(meta, year, type, countyObj, d, countySep){
+  var items = itemsOf(meta, year, type, countyObj, d);
+  var sep = type==='legislator' ? standaloneSet(items, type) : countySep;
+  return classify(items, meta.kind, type, sep);
+}
+function countySepSet(meta, year, type, countyObj){
+  return standaloneSet(countyItems(meta, year, type, countyObj), type);
+}
+</script>
+
+<script>
+/* ===== 介面 ===== */
+var DATA = {}, state = {year:'2024', type:'president', county:'NTC', sel:{}};
+var $ = function(id){ return document.getElementById(id); };
+var esc = function(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); };
+var f1 = function(x){ return (Math.round(x*10)/10).toFixed(1); };
+var num = function(n){ return n.toLocaleString('en-US'); };
+
+// 同目錄優先（GitHub Pages 為最新版），失敗再用 CDN
+function loadScript(src, cb){
+  var s = document.createElement('script'); s.src = src;
+  s.onload = function(){ cb(true); }; s.onerror = function(){ s.remove(); cb(false); };
+  document.head.appendChild(s);
+}
+function ensure(meta, cb){
+  if(DATA[meta.v]) return cb(DATA[meta.v]);
+  var done = function(){ DATA[meta.v] = window[meta.v]; cb(DATA[meta.v]); };
+  loadScript(meta.f, function(ok){
+    if(ok && window[meta.v]) return done();
+    loadScript(REPO + meta.f, function(ok2){
+      if(ok2 && window[meta.v]) return done();
+      cb(null);
+    });
+  });
+}
+
+function chip(label, on, disabled, onclick){
+  var b = document.createElement('button'); b.className = 'chip' + (on ? ' on' : ''); b.textContent = label;
+  b.disabled = !!disabled; b.onclick = onclick; return b;
+}
+function available(year, type, county){
+  var m = ELECTIONS[year] && ELECTIONS[year][type];
+  if(!m) return false;
+  return !county || !m.only || m.only.indexOf(county) >= 0;
+}
+function fixState(){
+  if(!available(state.year, state.type)){
+    for(var i=0;i<TYPE_ORDER.length;i++) if(available(state.year, TYPE_ORDER[i])){ state.type = TYPE_ORDER[i]; break; }
+  }
+  if(!available(state.year, state.type, state.county)){
+    var m = ELECTIONS[state.year][state.type]; state.county = (m.only || ['NTC'])[0];
+  }
+}
+function drawChips(){
+  var y = $('years'); y.innerHTML = '';
+  Object.keys(ELECTIONS).forEach(function(k){
+    y.appendChild(chip(k, k===state.year, false, function(){ state.year = k; fixState(); refresh(); }));
+  });
+  var t = $('types'); t.innerHTML = '';
+  TYPE_ORDER.forEach(function(k){
+    t.appendChild(chip(TYPES[k], k===state.type, !available(state.year,k), function(){ state.type = k; fixState(); refresh(); }));
+  });
+  var c = $('counties'); c.innerHTML = '';
+  COUNTIES.forEach(function(p){
+    c.appendChild(chip(p[1], p[0]===state.county, !available(state.year,state.type,p[0]), function(){
+      if(state.county !== p[0]){ state.county = p[0]; state.sel = {}; } refresh(); }));
+  });
+}
+
+function leanColor(r){
+  var t = r.blue + r.green; if(!t) return '#c9ccd1';
+  var m = pct(r.blue - r.green, r.total);
+  return m >= 5 ? 'var(--kmt)' : m <= -5 ? 'var(--dpp)' : '#b9bec7';
+}
+
+function barHTML(r){
+  var segs = [];
+  var add = function(v, color, title){ if(v > 0) segs.push('<span style="width:'+pct(v,r.total)+'%;background:'+color+'" title="'+esc(title)+' '+f1(pct(v,r.total))+'%"></span>'); };
+  r.blueParts.forEach(function(p,i){ add(p.votes, p.party==='中國國民黨' ? 'var(--kmt)' : 'var(--kmt2)', short(p.name)); });
+  r.seps.forEach(function(s){ add(s.votes, s.color, s.label); });
+  add(r.other, 'var(--oth)', '其他');
+  r.greenParts.slice().reverse().forEach(function(p){ add(p.votes, p.party==='民主進步黨' ? 'var(--dpp)' : 'var(--dpp2)', short(p.name)); });
+  var b = pct(r.blue, r.total), g = pct(r.green, r.total), m = b - g;
+  return '<div class="bar">'+segs.join('')+'</div>'+
+    '<div class="barlab"><span class="b">藍 '+f1(b)+'%</span><span class="m">藍綠差 '+(m>=0?'+':'')+f1(m)+'｜非藍綠 '+f1(100-b-g)+'%</span><span class="g">綠 '+f1(g)+'%</span></div>';
+}
+
+function partsDet(parts){
+  if(parts.length <= 1) return '';
+  return '<span class="det">'+parts.map(function(p){ return short(p.name)+' '+f1(p._r); }).join('＋')+'</span>';
+}
+function shareTable(r){
+  var t = r.total, rows = [];
+  [r.blueParts, r.greenParts, r.others].forEach(function(a){ a.forEach(function(p){ p._r = pct(p.votes,t); }); });
+  rows.push('<tr><td><span class="sw" style="background:var(--kmt)"></span>藍營'+partsDet(r.blueParts)+'</td><td class="n">'+f1(pct(r.blue,t))+'%</td></tr>');
+  rows.push('<tr><td><span class="sw" style="background:var(--dpp)"></span>綠營'+partsDet(r.greenParts)+'</td><td class="n">'+f1(pct(r.green,t))+'%</td></tr>');
+  r.seps.forEach(function(s){
+    rows.push('<tr><td><span class="sw" style="background:'+s.color+'"></span>'+esc(s.label)+'</td><td class="n">'+f1(pct(s.votes,t))+'%</td></tr>');
+  });
+  if(r.other > 0){
+    var top = r.others.slice(0,3).map(function(p){ return esc(short(p.name))+' '+f1(p._r); }).join('、');
+    rows.push('<tr><td><span class="sw" style="background:var(--oth)"></span>其他'+
+      '<span class="det">'+top+(r.others.length>3?' 等 '+r.others.length+' 項':'')+'</span></td><td class="n">'+f1(pct(r.other,t))+'%</td></tr>');
+  }
+  return '<table>'+rows.join('')+'</table>';
+}
+function rawTable(meta, items, total){
+  var max = items.reduce(function(m,x){ return Math.max(m,x.votes); },0) || 1;
+  return '<table class="raw">'+items.map(function(it){
+    var col = COLOR[it.party] || '#a9aeb7';
+    var label = meta.kind==='cand' ? esc(it.name)+' <span class="p">'+esc(short(it.party))+'</span>' : esc(it.name);
+    return '<tr><td>'+label+'<div class="mini" style="width:'+(it.votes*100/max)+'%;background:'+col+'"></div></td>'+
+      '<td class="n">'+num(it.votes)+'</td><td class="n">'+f1(pct(it.votes,total))+'%</td></tr>';
+  }).join('')+'</table>';
+}
+function notes(meta, d, isCounty){
+  var out = [], t = state.type;
+  if(t==='legislator' && d && d.split > 1)
+    out.push('<div class="note warn">本區橫跨 '+d.areas.join('、')+'，得票混合不同選區的候選人組合，比較時宜另行標註。</div>');
+  if(t==='councilor' && d && d.indep >= 30)
+    out.push('<div class="note warn">無黨籍得票 '+f1(d.indep)+'%，藍綠差距代表性弱。</div>');
+  if(isCounty && (t==='legislator' || t==='mayor'))
+    out.push('<div class="note">'+TYPES[t]+'選舉反映候選人強度，不等於政黨基本盤；基本盤請參考不分區政黨票。</div>');
+  return out.join('');
+}
+
+function cardHTML(meta, title, metaText, r, items, d, isCounty, extra){
+  return '<div class="card'+(isCounty?' county':'')+'"><h3>'+esc(title)+'<span class="meta">'+metaText+'</span></h3>'+
+    '<h4>藍綠得票占比</h4>'+barHTML(r)+shareTable(r)+notes(meta, d, isCounty)+(extra||'')+
+    '<h4>原始得票（全部'+(meta.kind==='cand'?'候選人':'政黨')+'）</h4>'+rawTable(meta, items, r.total)+'</div>';
+}
+
+function render(X){
+  var meta = ELECTIONS[state.year][state.type], co = X && X[state.county];
+  if(!co){ $('view').innerHTML = '<div class="empty">此組合沒有資料。</div>'; $('dlist').innerHTML=''; return; }
+  var y = state.year, t = state.type;
+  var sep = countySepSet(meta, y, t, co);
+  // 行政區清單
+  var dl = $('dlist'); dl.innerHTML = '';
+  $('dhead').textContent = co.county + '・' + co.districts.length + ' 區';
+  co.districts.forEach(function(d){
+    var r = analyzeDistrict(meta, y, t, co, d, sep);
+    var l = document.createElement('label');
+    l.innerHTML = '<input type="checkbox"'+(state.sel[d.d]?' checked':'')+'>'+esc(d.d)+'<span class="lean" style="background:'+leanColor(r)+'"></span>';
+    l.firstChild.onchange = function(e){ if(e.target.checked) state.sel[d.d]=1; else delete state.sel[d.d]; drawView(X); };
+    dl.appendChild(l);
+  });
+  drawView(X);
+}
+function drawView(X){
+  var meta = ELECTIONS[state.year][state.type], co = X[state.county], y = state.year, t = state.type;
+  var sep = countySepSet(meta, y, t, co);
+  var cr = analyzeCounty(meta, y, t, co), citems = countyItems(meta, y, t, co);
+  var extra = '';
+  if(t==='councilor'){
+    var ind = citems.filter(function(x){ return x.party==='無黨籍'; }).reduce(function(s,x){ return s+x.votes; },0);
+    extra = '<div class="seat">無黨籍占比 '+f1(pct(ind,cr.total))+'%｜當選席次（藍／綠／無黨籍）：席次資料尚未匯入</div>';
+  }
+  var head = y+' '+TYPES[t];
+  var html = '<section class="summary">'+cardHTML(meta, co.county+' 全縣市', head+'・有效票 '+num(cr.total), cr, citems, null, true, extra)+'</section>';
+  var picked = co.districts.filter(function(d){ return state.sel[d.d]; });
+  if(!picked.length) html += '<div class="empty">從左側勾選一個或多個行政區，即可並列比較。</div>';
+  else html += '<div class="cards">'+picked.map(function(d){
+    var r = analyzeDistrict(meta, y, t, co, d, sep), items = itemsOf(meta, y, t, co, d);
+    if(meta.kind==='party') items.sort(function(a,b){ return b.votes-a.votes; });
+    return cardHTML(meta, d.d, '有效票 '+num(r.total), r, items, d, false);
+  }).join('')+'</div>';
+  $('view').innerHTML = html;
+}
+var reqSeq = 0;
+function refresh(){
+  drawChips();
+  var meta = ELECTIONS[state.year][state.type], my = ++reqSeq;
+  $('view').innerHTML = '<div class="status">載入 '+esc(meta.f)+' …</div>';
+  ensure(meta, function(X){
+    if(my !== reqSeq) return;   // 之後又切換了選項，丟棄這次結果
+    if(!X){ $('view').innerHTML = '<div class="empty">無法載入 '+esc(meta.f)+'，請確認檔案與本頁位於同一目錄。</div>'; return; }
+    render(X);
+  });
+}
+$('selAll').onclick = function(){
+  var X = DATA[ELECTIONS[state.year][state.type].v]; if(!X||!X[state.county]) return;
+  X[state.county].districts.forEach(function(d){ state.sel[d.d]=1; }); render(X);
+};
+$('selNone').onclick = function(){ state.sel = {}; var X = DATA[ELECTIONS[state.year][state.type].v]; if(X) render(X); };
+fixState(); refresh();
+</script>
+</body>
+</html>
