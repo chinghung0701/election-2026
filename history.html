@@ -97,7 +97,8 @@ var COUNTIES = [
 var TYPES = {president:'總統', mayor:'縣市長', partylist:'不分區政黨票', legislator:'區域立委', councilor:'縣市議員'};
 var TYPE_ORDER = ['president','mayor','partylist','legislator','councilor'];
 var ELECTIONS = {
-  2014:{mayor:{v:'DIST2014',f:'district-2014.js',kind:'cand',only:['NTC','KHH']}},
+  2014:{mayor:{v:'DIST2014',f:'district-2014.js',kind:'cand'},
+        councilor:{v:'COUNCIL2014',f:'councilor-2014.js',kind:'party'}},
   2016:{president:{v:'DIST2016',f:'district-2016.js',kind:'cand'},
         partylist:{v:'PARTY2016',f:'partylist-2016.js',kind:'party'},
         legislator:{v:'LEGIS2016',f:'legislator-2016.js',kind:'party'}},
