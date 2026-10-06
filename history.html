@@ -358,7 +358,19 @@ function drawView(X){
   var extra = '';
   if(t==='councilor'){
     var ind = citems.filter(function(x){ return x.party==='無黨籍'; }).reduce(function(s,x){ return s+x.votes; },0);
-    extra = '<div class="seat">無黨籍占比 '+f1(pct(ind,cr.total))+'%｜當選席次（藍／綠／無黨籍）：席次資料尚未匯入</div>';
+    var seatStr = '席次資料尚未匯入';
+    if(co.seats){
+      var s = co.seats;
+      var parts = [];
+      parts.push('藍 <strong style="color:var(--kmt)">'+s.blue+'</strong>');
+      parts.push('綠 <strong style="color:var(--dpp)">'+s.green+'</strong>');
+      if(s.tpp) parts.push('民眾黨 <strong style="color:var(--tpp)">'+s.tpp+'</strong>');
+      if(s.npp) parts.push('時代力量 <strong style="color:var(--npp)">'+s.npp+'</strong>');
+      if(s.other) parts.push('其他 <strong>'+s.other+'</strong>');
+      parts.push('無黨籍 <strong>'+s.ind+'</strong>');
+      seatStr = '共 '+s.total+' 席：'+parts.join('、');
+    }
+    extra = '<div class="seat">無黨籍得票占比 '+f1(pct(ind,cr.total))+'%｜當選席次：'+seatStr+'</div>';
   }
   var head = y+' '+TYPES[t];
   var html = '<section class="summary">'+cardHTML(meta, co.county+' 全縣市', head+'・有效票 '+num(cr.total), cr, citems, null, true, extra)+'</section>';

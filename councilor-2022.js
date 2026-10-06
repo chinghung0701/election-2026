@@ -9,6 +9,7 @@
 var COUNCIL2022 = {
   TPE: {
     county: "臺北市",
+    seats: {blue:30,green:21,tpp:4,npp:0,other:1,ind:4,total:60},
     cands: ["中國國民黨", "民主進步黨", "台灣民眾黨", "時代力量", "台灣基進", "無黨籍", "其他"],
     districts: [
       {d:"北投區",valid:129634,indep:20.4,c:[{"name": "中國國民黨", "votes": 34061, "rate": 26.27}, {"name": "民主進步黨", "votes": 39599, "rate": 30.55}, {"name": "台灣民眾黨", "votes": 18639, "rate": 14.38}, {"name": "時代力量", "votes": 2279, "rate": 1.76}, {"name": "台灣基進", "votes": 0, "rate": 0.0}, {"name": "無黨籍", "votes": 26443, "rate": 20.4}, {"name": "其他", "votes": 8613, "rate": 6.64}],all:[{"name": "民主進步黨", "votes": 39599, "rate": 30.55}, {"name": "中國國民黨", "votes": 34061, "rate": 26.27}, {"name": "無黨籍", "votes": 26443, "rate": 20.4}, {"name": "台灣民眾黨", "votes": 18639, "rate": 14.38}, {"name": "新黨", "votes": 8105, "rate": 6.25}, {"name": "時代力量", "votes": 2279, "rate": 1.76}, {"name": "金色力量黨", "votes": 433, "rate": 0.33}, {"name": "中國國家社會主義勞工黨", "votes": 44, "rate": 0.03}, {"name": "共和黨", "votes": 31, "rate": 0.02}]},
@@ -27,6 +28,7 @@ var COUNCIL2022 = {
   },
   NTC: {
     county: "新北市",
+    seats: {blue:32,green:28,tpp:1,npp:0,other:2,ind:3,total:66},
     cands: ["中國國民黨", "民主進步黨", "台灣民眾黨", "時代力量", "台灣基進", "無黨籍", "其他"],
     districts: [
       {d:"石門區",valid:6084,indep:0.0,c:[{"name": "中國國民黨", "votes": 1891, "rate": 31.08}, {"name": "民主進步黨", "votes": 2145, "rate": 35.26}, {"name": "台灣民眾黨", "votes": 122, "rate": 2.01}, {"name": "時代力量", "votes": 0, "rate": 0.0}, {"name": "台灣基進", "votes": 0, "rate": 0.0}, {"name": "無黨籍", "votes": 0, "rate": 0.0}, {"name": "其他", "votes": 1926, "rate": 31.66}],all:[{"name": "民主進步黨", "votes": 2145, "rate": 35.26}, {"name": "無黨團結聯盟", "votes": 1926, "rate": 31.66}, {"name": "中國國民黨", "votes": 1891, "rate": 31.08}, {"name": "台灣民眾黨", "votes": 122, "rate": 2.01}]},
@@ -62,6 +64,7 @@ var COUNCIL2022 = {
   },
   TYN: {
     county: "桃園市",
+    seats: {blue:29,green:24,tpp:0,npp:0,other:0,ind:10,total:63},
     cands: ["中國國民黨", "民主進步黨", "台灣民眾黨", "時代力量", "台灣基進", "無黨籍", "其他"],
     districts: [
       {d:"桃園區",valid:206932,indep:14.95,c:[{"name": "中國國民黨", "votes": 92982, "rate": 44.93}, {"name": "民主進步黨", "votes": 61891, "rate": 29.91}, {"name": "台灣民眾黨", "votes": 5503, "rate": 2.66}, {"name": "時代力量", "votes": 6379, "rate": 3.08}, {"name": "台灣基進", "votes": 5995, "rate": 2.9}, {"name": "無黨籍", "votes": 30932, "rate": 14.95}, {"name": "其他", "votes": 3250, "rate": 1.57}],all:[{"name": "中國國民黨", "votes": 92982, "rate": 44.93}, {"name": "民主進步黨", "votes": 61891, "rate": 29.91}, {"name": "無黨籍", "votes": 30932, "rate": 14.95}, {"name": "時代力量", "votes": 6379, "rate": 3.08}, {"name": "台灣基進", "votes": 5995, "rate": 2.9}, {"name": "台灣民眾黨", "votes": 5503, "rate": 2.66}, {"name": "小民參政歐巴桑聯盟", "votes": 3250, "rate": 1.57}]},
@@ -81,6 +84,7 @@ var COUNCIL2022 = {
   },
   TXG: {
     county: "臺中市",
+    seats: {blue:32,green:24,tpp:1,npp:1,other:0,ind:7,total:65},
     cands: ["中國國民黨", "民主進步黨", "台灣民眾黨", "時代力量", "台灣基進", "無黨籍", "其他"],
     districts: [
       {d:"大甲區",valid:38240,indep:0.0,c:[{"name": "中國國民黨", "votes": 20631, "rate": 53.95}, {"name": "民主進步黨", "votes": 17609, "rate": 46.05}, {"name": "台灣民眾黨", "votes": 0, "rate": 0.0}, {"name": "時代力量", "votes": 0, "rate": 0.0}, {"name": "台灣基進", "votes": 0, "rate": 0.0}, {"name": "無黨籍", "votes": 0, "rate": 0.0}, {"name": "其他", "votes": 0, "rate": 0.0}],all:[{"name": "中國國民黨", "votes": 20631, "rate": 53.95}, {"name": "民主進步黨", "votes": 17609, "rate": 46.05}]},
@@ -116,6 +120,7 @@ var COUNCIL2022 = {
   },
   TNN: {
     county: "臺南市",
+    seats: {blue:15,green:29,tpp:0,npp:0,other:2,ind:10,total:56},
     cands: ["中國國民黨", "民主進步黨", "台灣民眾黨", "時代力量", "台灣基進", "無黨籍", "其他"],
     districts: [
       {d:"後壁區",valid:12081,indep:11.78,c:[{"name": "中國國民黨", "votes": 4807, "rate": 39.79}, {"name": "民主進步黨", "votes": 5851, "rate": 48.43}, {"name": "台灣民眾黨", "votes": 0, "rate": 0.0}, {"name": "時代力量", "votes": 0, "rate": 0.0}, {"name": "台灣基進", "votes": 0, "rate": 0.0}, {"name": "無黨籍", "votes": 1423, "rate": 11.78}, {"name": "其他", "votes": 0, "rate": 0.0}],all:[{"name": "民主進步黨", "votes": 5851, "rate": 48.43}, {"name": "中國國民黨", "votes": 4807, "rate": 39.79}, {"name": "無黨籍", "votes": 1423, "rate": 11.78}]},
@@ -159,6 +164,7 @@ var COUNCIL2022 = {
   },
   KHH: {
     county: "高雄市",
+    seats: {blue:29,green:28,tpp:0,npp:0,other:2,ind:5,total:64},
     cands: ["中國國民黨", "民主進步黨", "台灣民眾黨", "時代力量", "台灣基進", "無黨籍", "其他"],
     districts: [
       {d:"桃源區",valid:190,indep:0.0,c:[{"name": "中國國民黨", "votes": 52, "rate": 27.37}, {"name": "民主進步黨", "votes": 100, "rate": 52.63}, {"name": "台灣民眾黨", "votes": 0, "rate": 0.0}, {"name": "時代力量", "votes": 0, "rate": 0.0}, {"name": "台灣基進", "votes": 0, "rate": 0.0}, {"name": "無黨籍", "votes": 0, "rate": 0.0}, {"name": "其他", "votes": 38, "rate": 20.0}],all:[{"name": "民主進步黨", "votes": 100, "rate": 52.63}, {"name": "中國國民黨", "votes": 52, "rate": 27.37}, {"name": "無黨團結聯盟", "votes": 38, "rate": 20.0}]},
@@ -203,6 +209,7 @@ var COUNCIL2022 = {
   },
   KEL: {
     county: "基隆市",
+    seats: {blue:13,green:12,tpp:0,npp:0,other:2,ind:4,total:31},
     cands: ["中國國民黨", "民主進步黨", "台灣民眾黨", "時代力量", "台灣基進", "無黨籍", "其他"],
     districts: [
       {d:"中正區",valid:23309,indep:0.0,c:[{"name": "中國國民黨", "votes": 13817, "rate": 59.28}, {"name": "民主進步黨", "votes": 8889, "rate": 38.14}, {"name": "台灣民眾黨", "votes": 603, "rate": 2.59}, {"name": "時代力量", "votes": 0, "rate": 0.0}, {"name": "台灣基進", "votes": 0, "rate": 0.0}, {"name": "無黨籍", "votes": 0, "rate": 0.0}, {"name": "其他", "votes": 0, "rate": 0.0}],all:[{"name": "中國國民黨", "votes": 13817, "rate": 59.28}, {"name": "民主進步黨", "votes": 8889, "rate": 38.14}, {"name": "台灣民眾黨", "votes": 603, "rate": 2.59}]},
@@ -216,6 +223,7 @@ var COUNCIL2022 = {
   },
   HSC: {
     county: "新竹市",
+    seats: {blue:12,green:8,tpp:2,npp:3,other:1,ind:8,total:34},
     cands: ["中國國民黨", "民主進步黨", "台灣民眾黨", "時代力量", "台灣基進", "無黨籍", "其他"],
     districts: [
       {d:"東區",valid:99842,indep:16.95,c:[{"name": "中國國民黨", "votes": 33808, "rate": 33.86}, {"name": "民主進步黨", "votes": 23718, "rate": 23.76}, {"name": "台灣民眾黨", "votes": 14221, "rate": 14.24}, {"name": "時代力量", "votes": 7127, "rate": 7.14}, {"name": "台灣基進", "votes": 0, "rate": 0.0}, {"name": "無黨籍", "votes": 16926, "rate": 16.95}, {"name": "其他", "votes": 4042, "rate": 4.05}],all:[{"name": "中國國民黨", "votes": 33808, "rate": 33.86}, {"name": "民主進步黨", "votes": 23718, "rate": 23.76}, {"name": "無黨籍", "votes": 16926, "rate": 16.95}, {"name": "台灣民眾黨", "votes": 14221, "rate": 14.24}, {"name": "時代力量", "votes": 7127, "rate": 7.14}, {"name": "綠黨", "votes": 3797, "rate": 3.8}, {"name": "小民參政歐巴桑聯盟", "votes": 245, "rate": 0.25}]},
@@ -225,6 +233,7 @@ var COUNCIL2022 = {
   },
   CYI: {
     county: "嘉義市",
+    seats: {blue:6,green:6,tpp:0,npp:1,other:0,ind:10,total:23},
     cands: ["中國國民黨", "民主進步黨", "台灣民眾黨", "時代力量", "台灣基進", "無黨籍", "其他"],
     districts: [
       {d:"東區",valid:50512,indep:33.14,c:[{"name": "中國國民黨", "votes": 18367, "rate": 36.36}, {"name": "民主進步黨", "votes": 10998, "rate": 21.77}, {"name": "台灣民眾黨", "votes": 870, "rate": 1.72}, {"name": "時代力量", "votes": 0, "rate": 0.0}, {"name": "台灣基進", "votes": 1350, "rate": 2.67}, {"name": "無黨籍", "votes": 16739, "rate": 33.14}, {"name": "其他", "votes": 2188, "rate": 4.33}],all:[{"name": "中國國民黨", "votes": 18367, "rate": 36.36}, {"name": "無黨籍", "votes": 16739, "rate": 33.14}, {"name": "民主進步黨", "votes": 10998, "rate": 21.77}, {"name": "台灣團結聯盟", "votes": 2188, "rate": 4.33}, {"name": "台灣基進", "votes": 1350, "rate": 2.67}, {"name": "台灣民眾黨", "votes": 870, "rate": 1.72}]},
@@ -233,6 +242,7 @@ var COUNCIL2022 = {
   },
   HSN: {
     county: "新竹縣",
+    seats: {blue:19,green:6,tpp:1,npp:0,other:1,ind:10,total:37},
     cands: ["中國國民黨", "民主進步黨", "台灣民眾黨", "時代力量", "台灣基進", "無黨籍", "其他"],
     districts: [
       {d:"竹北市",valid:79902,indep:34.77,c:[{"name": "中國國民黨", "votes": 27864, "rate": 34.87}, {"name": "民主進步黨", "votes": 12500, "rate": 15.64}, {"name": "台灣民眾黨", "votes": 5651, "rate": 7.07}, {"name": "時代力量", "votes": 3203, "rate": 4.01}, {"name": "台灣基進", "votes": 0, "rate": 0.0}, {"name": "無黨籍", "votes": 27785, "rate": 34.77}, {"name": "其他", "votes": 2899, "rate": 3.63}],all:[{"name": "中國國民黨", "votes": 27864, "rate": 34.87}, {"name": "無黨籍", "votes": 27785, "rate": 34.77}, {"name": "民主進步黨", "votes": 12500, "rate": 15.64}, {"name": "台灣民眾黨", "votes": 5651, "rate": 7.07}, {"name": "時代力量", "votes": 3203, "rate": 4.01}, {"name": "綠黨", "votes": 1872, "rate": 2.34}, {"name": "勞動黨", "votes": 1027, "rate": 1.29}]},
@@ -252,6 +262,7 @@ var COUNCIL2022 = {
   },
   MIA: {
     county: "苗栗縣",
+    seats: {blue:7,green:7,tpp:0,npp:1,other:0,ind:23,total:38},
     cands: ["中國國民黨", "民主進步黨", "台灣民眾黨", "時代力量", "台灣基進", "無黨籍", "其他"],
     districts: [
       {d:"苗栗市",valid:43306,indep:52.15,c:[{"name": "中國國民黨", "votes": 6538, "rate": 15.1}, {"name": "民主進步黨", "votes": 7672, "rate": 17.72}, {"name": "台灣民眾黨", "votes": 3473, "rate": 8.02}, {"name": "時代力量", "votes": 3041, "rate": 7.02}, {"name": "台灣基進", "votes": 0, "rate": 0.0}, {"name": "無黨籍", "votes": 22582, "rate": 52.15}, {"name": "其他", "votes": 0, "rate": 0.0}],all:[{"name": "無黨籍", "votes": 22582, "rate": 52.15}, {"name": "民主進步黨", "votes": 7672, "rate": 17.72}, {"name": "中國國民黨", "votes": 6538, "rate": 15.1}, {"name": "台灣民眾黨", "votes": 3473, "rate": 8.02}, {"name": "時代力量", "votes": 3041, "rate": 7.02}]},
@@ -276,6 +287,7 @@ var COUNCIL2022 = {
   },
   CHA: {
     county: "彰化縣",
+    seats: {blue:27,green:16,tpp:2,npp:0,other:0,ind:9,total:54},
     cands: ["中國國民黨", "民主進步黨", "台灣民眾黨", "時代力量", "台灣基進", "無黨籍", "其他"],
     districts: [
       {d:"彰化市",valid:110539,indep:20.86,c:[{"name": "中國國民黨", "votes": 40181, "rate": 36.35}, {"name": "民主進步黨", "votes": 37655, "rate": 34.06}, {"name": "台灣民眾黨", "votes": 4394, "rate": 3.98}, {"name": "時代力量", "votes": 5139, "rate": 4.65}, {"name": "台灣基進", "votes": 0, "rate": 0.0}, {"name": "無黨籍", "votes": 23056, "rate": 20.86}, {"name": "其他", "votes": 114, "rate": 0.1}],all:[{"name": "中國國民黨", "votes": 40181, "rate": 36.35}, {"name": "民主進步黨", "votes": 37655, "rate": 34.06}, {"name": "無黨籍", "votes": 23056, "rate": 20.86}, {"name": "時代力量", "votes": 5139, "rate": 4.65}, {"name": "台灣民眾黨", "votes": 4394, "rate": 3.98}, {"name": "台灣維新", "votes": 114, "rate": 0.1}]},
@@ -308,6 +320,7 @@ var COUNCIL2022 = {
   },
   NTO: {
     county: "南投縣",
+    seats: {blue:13,green:8,tpp:1,npp:0,other:0,ind:15,total:37},
     cands: ["中國國民黨", "民主進步黨", "台灣民眾黨", "時代力量", "台灣基進", "無黨籍", "其他"],
     districts: [
       {d:"南投市",valid:54054,indep:47.26,c:[{"name": "中國國民黨", "votes": 15839, "rate": 29.3}, {"name": "民主進步黨", "votes": 9197, "rate": 17.01}, {"name": "台灣民眾黨", "votes": 3473, "rate": 6.43}, {"name": "時代力量", "votes": 0, "rate": 0.0}, {"name": "台灣基進", "votes": 0, "rate": 0.0}, {"name": "無黨籍", "votes": 25545, "rate": 47.26}, {"name": "其他", "votes": 0, "rate": 0.0}],all:[{"name": "無黨籍", "votes": 25545, "rate": 47.26}, {"name": "中國國民黨", "votes": 15839, "rate": 29.3}, {"name": "民主進步黨", "votes": 9197, "rate": 17.01}, {"name": "台灣民眾黨", "votes": 3473, "rate": 6.43}]},
@@ -327,6 +340,7 @@ var COUNCIL2022 = {
   },
   YUN: {
     county: "雲林縣",
+    seats: {blue:9,green:11,tpp:1,npp:0,other:1,ind:21,total:43},
     cands: ["中國國民黨", "民主進步黨", "台灣民眾黨", "時代力量", "台灣基進", "無黨籍", "其他"],
     districts: [
       {d:"莿桐鄉",valid:15802,indep:52.65,c:[{"name": "中國國民黨", "votes": 2809, "rate": 17.78}, {"name": "民主進步黨", "votes": 4063, "rate": 25.71}, {"name": "台灣民眾黨", "votes": 611, "rate": 3.87}, {"name": "時代力量", "votes": 0, "rate": 0.0}, {"name": "台灣基進", "votes": 0, "rate": 0.0}, {"name": "無黨籍", "votes": 8319, "rate": 52.65}, {"name": "其他", "votes": 0, "rate": 0.0}],all:[{"name": "無黨籍", "votes": 8319, "rate": 52.65}, {"name": "民主進步黨", "votes": 4063, "rate": 25.71}, {"name": "中國國民黨", "votes": 2809, "rate": 17.78}, {"name": "台灣民眾黨", "votes": 611, "rate": 3.87}]},
@@ -353,6 +367,7 @@ var COUNCIL2022 = {
   },
   CYN: {
     county: "嘉義縣",
+    seats: {blue:8,green:18,tpp:0,npp:0,other:0,ind:11,total:37},
     cands: ["中國國民黨", "民主進步黨", "台灣民眾黨", "時代力量", "台灣基進", "無黨籍", "其他"],
     districts: [
       {d:"太保市",valid:20887,indep:23.99,c:[{"name": "中國國民黨", "votes": 3301, "rate": 15.8}, {"name": "民主進步黨", "votes": 12576, "rate": 60.21}, {"name": "台灣民眾黨", "votes": 0, "rate": 0.0}, {"name": "時代力量", "votes": 0, "rate": 0.0}, {"name": "台灣基進", "votes": 0, "rate": 0.0}, {"name": "無黨籍", "votes": 5010, "rate": 23.99}, {"name": "其他", "votes": 0, "rate": 0.0}],all:[{"name": "民主進步黨", "votes": 12576, "rate": 60.21}, {"name": "無黨籍", "votes": 5010, "rate": 23.99}, {"name": "中國國民黨", "votes": 3301, "rate": 15.8}]},
@@ -377,6 +392,7 @@ var COUNCIL2022 = {
   },
   PIF: {
     county: "屏東縣",
+    seats: {blue:13,green:19,tpp:0,npp:0,other:0,ind:23,total:55},
     cands: ["中國國民黨", "民主進步黨", "台灣民眾黨", "時代力量", "台灣基進", "無黨籍", "其他"],
     districts: [
       {d:"屏東市",valid:93976,indep:37.57,c:[{"name": "中國國民黨", "votes": 27857, "rate": 29.64}, {"name": "民主進步黨", "votes": 26160, "rate": 27.84}, {"name": "台灣民眾黨", "votes": 2500, "rate": 2.66}, {"name": "時代力量", "votes": 747, "rate": 0.79}, {"name": "台灣基進", "votes": 1407, "rate": 1.5}, {"name": "無黨籍", "votes": 35305, "rate": 37.57}, {"name": "其他", "votes": 0, "rate": 0.0}],all:[{"name": "無黨籍", "votes": 35305, "rate": 37.57}, {"name": "中國國民黨", "votes": 27857, "rate": 29.64}, {"name": "民主進步黨", "votes": 26160, "rate": 27.84}, {"name": "台灣民眾黨", "votes": 2500, "rate": 2.66}, {"name": "台灣基進", "votes": 1407, "rate": 1.5}, {"name": "時代力量", "votes": 747, "rate": 0.79}]},
@@ -416,6 +432,7 @@ var COUNCIL2022 = {
   },
   ILA: {
     county: "宜蘭縣",
+    seats: {blue:13,green:11,tpp:0,npp:0,other:1,ind:9,total:34},
     cands: ["中國國民黨", "民主進步黨", "台灣民眾黨", "時代力量", "台灣基進", "無黨籍", "其他"],
     districts: [
       {d:"宜蘭市",valid:45425,indep:25.76,c:[{"name": "中國國民黨", "votes": 14236, "rate": 31.34}, {"name": "民主進步黨", "votes": 9596, "rate": 21.12}, {"name": "台灣民眾黨", "votes": 2085, "rate": 4.59}, {"name": "時代力量", "votes": 1929, "rate": 4.25}, {"name": "台灣基進", "votes": 2186, "rate": 4.81}, {"name": "無黨籍", "votes": 11702, "rate": 25.76}, {"name": "其他", "votes": 3691, "rate": 8.13}],all:[{"name": "中國國民黨", "votes": 14236, "rate": 31.34}, {"name": "無黨籍", "votes": 11702, "rate": 25.76}, {"name": "民主進步黨", "votes": 9596, "rate": 21.12}, {"name": "正神名黨", "votes": 3691, "rate": 8.13}, {"name": "台灣基進", "votes": 2186, "rate": 4.81}, {"name": "台灣民眾黨", "votes": 2085, "rate": 4.59}, {"name": "時代力量", "votes": 1929, "rate": 4.25}]},
@@ -434,6 +451,7 @@ var COUNCIL2022 = {
   },
   HUA: {
     county: "花蓮縣",
+    seats: {blue:18,green:3,tpp:1,npp:0,other:0,ind:11,total:33},
     cands: ["中國國民黨", "民主進步黨", "台灣民眾黨", "時代力量", "台灣基進", "無黨籍", "其他"],
     districts: [
       {d:"花蓮市",valid:36628,indep:29.73,c:[{"name": "中國國民黨", "votes": 16068, "rate": 43.87}, {"name": "民主進步黨", "votes": 7108, "rate": 19.41}, {"name": "台灣民眾黨", "votes": 2561, "rate": 6.99}, {"name": "時代力量", "votes": 0, "rate": 0.0}, {"name": "台灣基進", "votes": 0, "rate": 0.0}, {"name": "無黨籍", "votes": 10891, "rate": 29.73}, {"name": "其他", "votes": 0, "rate": 0.0}],all:[{"name": "中國國民黨", "votes": 16068, "rate": 43.87}, {"name": "無黨籍", "votes": 10891, "rate": 29.73}, {"name": "民主進步黨", "votes": 7108, "rate": 19.41}, {"name": "台灣民眾黨", "votes": 2561, "rate": 6.99}]},
@@ -453,6 +471,7 @@ var COUNCIL2022 = {
   },
   TTT: {
     county: "臺東縣",
+    seats: {blue:18,green:2,tpp:0,npp:0,other:0,ind:10,total:30},
     cands: ["中國國民黨", "民主進步黨", "台灣民眾黨", "時代力量", "台灣基進", "無黨籍", "其他"],
     districts: [
       {d:"臺東市",valid:42036,indep:28.81,c:[{"name": "中國國民黨", "votes": 21619, "rate": 51.43}, {"name": "民主進步黨", "votes": 7721, "rate": 18.37}, {"name": "台灣民眾黨", "votes": 584, "rate": 1.39}, {"name": "時代力量", "votes": 0, "rate": 0.0}, {"name": "台灣基進", "votes": 0, "rate": 0.0}, {"name": "無黨籍", "votes": 12112, "rate": 28.81}, {"name": "其他", "votes": 0, "rate": 0.0}],all:[{"name": "中國國民黨", "votes": 21619, "rate": 51.43}, {"name": "無黨籍", "votes": 12112, "rate": 28.81}, {"name": "民主進步黨", "votes": 7721, "rate": 18.37}, {"name": "台灣民眾黨", "votes": 584, "rate": 1.39}]},
@@ -475,6 +494,7 @@ var COUNCIL2022 = {
   },
   PEH: {
     county: "澎湖縣",
+    seats: {blue:4,green:3,tpp:0,npp:0,other:1,ind:11,total:19},
     cands: ["中國國民黨", "民主進步黨", "台灣民眾黨", "時代力量", "台灣基進", "無黨籍", "其他"],
     districts: [
       {d:"馬公市",valid:29936,indep:42.14,c:[{"name": "中國國民黨", "votes": 9369, "rate": 31.3}, {"name": "民主進步黨", "votes": 4965, "rate": 16.59}, {"name": "台灣民眾黨", "votes": 1291, "rate": 4.31}, {"name": "時代力量", "votes": 0, "rate": 0.0}, {"name": "台灣基進", "votes": 0, "rate": 0.0}, {"name": "無黨籍", "votes": 12615, "rate": 42.14}, {"name": "其他", "votes": 1696, "rate": 5.67}],all:[{"name": "無黨籍", "votes": 12615, "rate": 42.14}, {"name": "中國國民黨", "votes": 9369, "rate": 31.3}, {"name": "民主進步黨", "votes": 4965, "rate": 16.59}, {"name": "無黨團結聯盟", "votes": 1696, "rate": 5.67}, {"name": "台灣民眾黨", "votes": 1291, "rate": 4.31}]},
@@ -487,6 +507,7 @@ var COUNCIL2022 = {
   },
   KIN: {
     county: "金門縣",
+    seats: {blue:7,green:1,tpp:0,npp:0,other:0,ind:11,total:19},
     cands: ["中國國民黨", "民主進步黨", "台灣民眾黨", "時代力量", "台灣基進", "無黨籍", "其他"],
     districts: [
       {d:"金城鎮",valid:14092,indep:65.51,c:[{"name": "中國國民黨", "votes": 3282, "rate": 23.29}, {"name": "民主進步黨", "votes": 1026, "rate": 7.28}, {"name": "台灣民眾黨", "votes": 553, "rate": 3.92}, {"name": "時代力量", "votes": 0, "rate": 0.0}, {"name": "台灣基進", "votes": 0, "rate": 0.0}, {"name": "無黨籍", "votes": 9231, "rate": 65.51}, {"name": "其他", "votes": 0, "rate": 0.0}],all:[{"name": "無黨籍", "votes": 9231, "rate": 65.51}, {"name": "中國國民黨", "votes": 3282, "rate": 23.29}, {"name": "民主進步黨", "votes": 1026, "rate": 7.28}, {"name": "台灣民眾黨", "votes": 553, "rate": 3.92}]},
@@ -499,6 +520,7 @@ var COUNCIL2022 = {
   },
   LIE: {
     county: "連江縣",
+    seats: {blue:7,green:0,tpp:0,npp:0,other:0,ind:2,total:9},
     cands: ["中國國民黨", "民主進步黨", "台灣民眾黨", "時代力量", "台灣基進", "無黨籍", "其他"],
     districts: [
       {d:"南竿鄉",valid:4506,indep:45.56,c:[{"name": "中國國民黨", "votes": 2302, "rate": 51.09}, {"name": "民主進步黨", "votes": 151, "rate": 3.35}, {"name": "台灣民眾黨", "votes": 0, "rate": 0.0}, {"name": "時代力量", "votes": 0, "rate": 0.0}, {"name": "台灣基進", "votes": 0, "rate": 0.0}, {"name": "無黨籍", "votes": 2053, "rate": 45.56}, {"name": "其他", "votes": 0, "rate": 0.0}],all:[{"name": "中國國民黨", "votes": 2302, "rate": 51.09}, {"name": "無黨籍", "votes": 2053, "rate": 45.56}, {"name": "民主進步黨", "votes": 151, "rate": 3.35}]},

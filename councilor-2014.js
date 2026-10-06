@@ -10,6 +10,7 @@
 var COUNCIL2014 = {
   TPE: {
     county: "臺北市",
+    seats: {blue:32,green:28,tpp:0,npp:0,other:0,ind:3,total:63},
     cands: ["中國國民黨", "民主進步黨", "親民黨", "台灣團結聯盟", "無黨籍", "其他"],
     districts: [
       {d:"北投區",valid:141562,indep:19.56,c:[{"name": "中國國民黨", "votes": 31228, "rate": 22.06}, {"name": "民主進步黨", "votes": 56983, "rate": 40.25}, {"name": "親民黨", "votes": 982, "rate": 0.69}, {"name": "台灣團結聯盟", "votes": 7790, "rate": 5.5}, {"name": "無黨籍", "votes": 27688, "rate": 19.56}, {"name": "其他", "votes": 16891, "rate": 11.93}],all:[{"name": "民主進步黨", "votes": 56983, "rate": 40.25}, {"name": "中國國民黨", "votes": 31228, "rate": 22.06}, {"name": "無黨籍", "votes": 27688, "rate": 19.56}, {"name": "新黨", "votes": 16031, "rate": 11.32}, {"name": "台灣團結聯盟", "votes": 7790, "rate": 5.5}, {"name": "親民黨", "votes": 982, "rate": 0.69}, {"name": "人民民主陣線", "votes": 860, "rate": 0.61}]},
@@ -28,6 +29,7 @@ var COUNCIL2014 = {
   },
   NTC: {
     county: "新北市",
+    seats: {blue:26,green:33,tpp:0,npp:0,other:0,ind:7,total:66},
     cands: ["中國國民黨", "民主進步黨", "親民黨", "台灣團結聯盟", "無黨籍", "其他"],
     districts: [
       {d:"石門區",valid:6763,indep:24.13,c:[{"name": "中國國民黨", "votes": 2231, "rate": 32.99}, {"name": "民主進步黨", "votes": 2740, "rate": 40.51}, {"name": "親民黨", "votes": 0, "rate": 0}, {"name": "台灣團結聯盟", "votes": 0, "rate": 0}, {"name": "無黨籍", "votes": 1632, "rate": 24.13}, {"name": "其他", "votes": 160, "rate": 2.37}],all:[{"name": "民主進步黨", "votes": 2740, "rate": 40.51}, {"name": "中國國民黨", "votes": 2231, "rate": 32.99}, {"name": "無黨籍", "votes": 1632, "rate": 24.13}, {"name": "綠黨", "votes": 160, "rate": 2.37}]},
@@ -63,6 +65,7 @@ var COUNCIL2014 = {
   },
   TYN: {
     county: "桃園市",
+    seats: {blue:29,green:21,tpp:0,npp:0,other:0,ind:10,total:60},
     cands: ["中國國民黨", "民主進步黨", "親民黨", "台灣團結聯盟", "無黨籍", "其他"],
     districts: [
       {d:"桃園區",valid:179921,indep:6.03,c:[{"name": "中國國民黨", "votes": 81323, "rate": 45.2}, {"name": "民主進步黨", "votes": 55666, "rate": 30.94}, {"name": "親民黨", "votes": 6305, "rate": 3.5}, {"name": "台灣團結聯盟", "votes": 9371, "rate": 5.21}, {"name": "無黨籍", "votes": 10853, "rate": 6.03}, {"name": "其他", "votes": 16403, "rate": 9.12}],all:[{"name": "中國國民黨", "votes": 81323, "rate": 45.2}, {"name": "民主進步黨", "votes": 55666, "rate": 30.94}, {"name": "無黨籍", "votes": 10853, "rate": 6.03}, {"name": "台灣團結聯盟", "votes": 9371, "rate": 5.21}, {"name": "無黨團結聯盟", "votes": 8183, "rate": 4.55}, {"name": "親民黨", "votes": 6305, "rate": 3.5}, {"name": "綠黨", "votes": 5835, "rate": 3.24}, {"name": "新黨", "votes": 2095, "rate": 1.16}, {"name": "人民民主陣線", "votes": 290, "rate": 0.16}]},
@@ -82,6 +85,7 @@ var COUNCIL2014 = {
   },
   TXG: {
     county: "臺中市",
+    seats: {blue:30,green:27,tpp:0,npp:0,other:0,ind:6,total:63},
     cands: ["中國國民黨", "民主進步黨", "親民黨", "台灣團結聯盟", "無黨籍", "其他"],
     districts: [
       {d:"大甲區",valid:43649,indep:21.92,c:[{"name": "中國國民黨", "votes": 20314, "rate": 46.54}, {"name": "民主進步黨", "votes": 13767, "rate": 31.54}, {"name": "親民黨", "votes": 0, "rate": 0}, {"name": "台灣團結聯盟", "votes": 0, "rate": 0}, {"name": "無黨籍", "votes": 9568, "rate": 21.92}, {"name": "其他", "votes": 0, "rate": 0}],all:[{"name": "中國國民黨", "votes": 20314, "rate": 46.54}, {"name": "民主進步黨", "votes": 13767, "rate": 31.54}, {"name": "無黨籍", "votes": 9568, "rate": 21.92}]},
@@ -117,6 +121,7 @@ var COUNCIL2014 = {
   },
   TNN: {
     county: "臺南市",
+    seats: {blue:16,green:29,tpp:0,npp:0,other:0,ind:12,total:57},
     cands: ["中國國民黨", "民主進步黨", "親民黨", "台灣團結聯盟", "無黨籍", "其他"],
     districts: [
       {d:"後壁區",valid:14556,indep:0,c:[{"name": "中國國民黨", "votes": 4427, "rate": 30.41}, {"name": "民主進步黨", "votes": 10129, "rate": 69.59}, {"name": "親民黨", "votes": 0, "rate": 0}, {"name": "台灣團結聯盟", "votes": 0, "rate": 0}, {"name": "無黨籍", "votes": 0, "rate": 0}, {"name": "其他", "votes": 0, "rate": 0}],all:[{"name": "民主進步黨", "votes": 10129, "rate": 69.59}, {"name": "中國國民黨", "votes": 4427, "rate": 30.41}]},
@@ -160,6 +165,7 @@ var COUNCIL2014 = {
   },
   KHH: {
     county: "高雄市",
+    seats: {blue:25,green:34,tpp:0,npp:0,other:0,ind:7,total:66},
     cands: ["中國國民黨", "民主進步黨", "親民黨", "台灣團結聯盟", "無黨籍", "其他"],
     districts: [
       {d:"桃源區",valid:186,indep:33.33,c:[{"name": "中國國民黨", "votes": 49, "rate": 26.34}, {"name": "民主進步黨", "votes": 75, "rate": 40.32}, {"name": "親民黨", "votes": 0, "rate": 0}, {"name": "台灣團結聯盟", "votes": 0, "rate": 0}, {"name": "無黨籍", "votes": 62, "rate": 33.33}, {"name": "其他", "votes": 0, "rate": 0}],all:[{"name": "民主進步黨", "votes": 75, "rate": 40.32}, {"name": "無黨籍", "votes": 62, "rate": 33.33}, {"name": "中國國民黨", "votes": 49, "rate": 26.34}]},
@@ -204,6 +210,7 @@ var COUNCIL2014 = {
   },
   HSN: {
     county: "新竹縣",
+    seats: {blue:23,green:2,tpp:0,npp:0,other:0,ind:11,total:36},
     cands: ["中國國民黨", "民主進步黨", "親民黨", "台灣團結聯盟", "無黨籍", "其他"],
     districts: [
       {d:"竹北市",valid:69679,indep:28.74,c:[{"name": "中國國民黨", "votes": 35770, "rate": 51.34}, {"name": "民主進步黨", "votes": 8058, "rate": 11.56}, {"name": "親民黨", "votes": 0, "rate": 0}, {"name": "台灣團結聯盟", "votes": 0, "rate": 0}, {"name": "無黨籍", "votes": 20024, "rate": 28.74}, {"name": "其他", "votes": 5827, "rate": 8.36}],all:[{"name": "中國國民黨", "votes": 35770, "rate": 51.34}, {"name": "無黨籍", "votes": 20024, "rate": 28.74}, {"name": "民主進步黨", "votes": 8058, "rate": 11.56}, {"name": "勞動黨", "votes": 5827, "rate": 8.36}]},
@@ -223,6 +230,7 @@ var COUNCIL2014 = {
   },
   MIA: {
     county: "苗栗縣",
+    seats: {blue:19,green:4,tpp:0,npp:0,other:0,ind:15,total:38},
     cands: ["中國國民黨", "民主進步黨", "親民黨", "台灣團結聯盟", "無黨籍", "其他"],
     districts: [
       {d:"苗栗市",valid:47827,indep:51.55,c:[{"name": "中國國民黨", "votes": 14991, "rate": 31.34}, {"name": "民主進步黨", "votes": 8182, "rate": 17.11}, {"name": "親民黨", "votes": 0, "rate": 0}, {"name": "台灣團結聯盟", "votes": 0, "rate": 0}, {"name": "無黨籍", "votes": 24654, "rate": 51.55}, {"name": "其他", "votes": 0, "rate": 0}],all:[{"name": "無黨籍", "votes": 24654, "rate": 51.55}, {"name": "中國國民黨", "votes": 14991, "rate": 31.34}, {"name": "民主進步黨", "votes": 8182, "rate": 17.11}]},
@@ -247,6 +255,7 @@ var COUNCIL2014 = {
   },
   CHA: {
     county: "彰化縣",
+    seats: {blue:24,green:17,tpp:0,npp:0,other:0,ind:13,total:54},
     cands: ["中國國民黨", "民主進步黨", "親民黨", "台灣團結聯盟", "無黨籍", "其他"],
     districts: [
       {d:"彰化市",valid:123242,indep:32.54,c:[{"name": "中國國民黨", "votes": 37746, "rate": 30.63}, {"name": "民主進步黨", "votes": 44681, "rate": 36.25}, {"name": "親民黨", "votes": 0, "rate": 0}, {"name": "台灣團結聯盟", "votes": 712, "rate": 0.58}, {"name": "無黨籍", "votes": 40103, "rate": 32.54}, {"name": "其他", "votes": 0, "rate": 0}],all:[{"name": "民主進步黨", "votes": 44681, "rate": 36.25}, {"name": "無黨籍", "votes": 40103, "rate": 32.54}, {"name": "中國國民黨", "votes": 37746, "rate": 30.63}, {"name": "台灣團結聯盟", "votes": 712, "rate": 0.58}]},
@@ -279,6 +288,7 @@ var COUNCIL2014 = {
   },
   NTO: {
     county: "南投縣",
+    seats: {blue:17,green:8,tpp:0,npp:0,other:0,ind:12,total:37},
     cands: ["中國國民黨", "民主進步黨", "親民黨", "台灣團結聯盟", "無黨籍", "其他"],
     districts: [
       {d:"南投市",valid:57015,indep:45.11,c:[{"name": "中國國民黨", "votes": 19499, "rate": 34.2}, {"name": "民主進步黨", "votes": 10381, "rate": 18.21}, {"name": "親民黨", "votes": 0, "rate": 0}, {"name": "台灣團結聯盟", "votes": 1305, "rate": 2.29}, {"name": "無黨籍", "votes": 25718, "rate": 45.11}, {"name": "其他", "votes": 112, "rate": 0.2}],all:[{"name": "無黨籍", "votes": 25718, "rate": 45.11}, {"name": "中國國民黨", "votes": 19499, "rate": 34.2}, {"name": "民主進步黨", "votes": 10381, "rate": 18.21}, {"name": "台灣團結聯盟", "votes": 1305, "rate": 2.29}, {"name": "大道人民黨", "votes": 112, "rate": 0.2}]},
@@ -298,6 +308,7 @@ var COUNCIL2014 = {
   },
   YUN: {
     county: "雲林縣",
+    seats: {blue:7,green:14,tpp:0,npp:0,other:0,ind:22,total:43},
     cands: ["中國國民黨", "民主進步黨", "親民黨", "台灣團結聯盟", "無黨籍", "其他"],
     districts: [
       {d:"麥寮鄉",valid:24251,indep:56.18,c:[{"name": "中國國民黨", "votes": 1203, "rate": 4.96}, {"name": "民主進步黨", "votes": 9425, "rate": 38.86}, {"name": "親民黨", "votes": 0, "rate": 0}, {"name": "台灣團結聯盟", "votes": 0, "rate": 0}, {"name": "無黨籍", "votes": 13623, "rate": 56.18}, {"name": "其他", "votes": 0, "rate": 0}],all:[{"name": "無黨籍", "votes": 13623, "rate": 56.18}, {"name": "民主進步黨", "votes": 9425, "rate": 38.86}, {"name": "中國國民黨", "votes": 1203, "rate": 4.96}]},
@@ -324,6 +335,7 @@ var COUNCIL2014 = {
   },
   CYN: {
     county: "嘉義縣",
+    seats: {blue:9,green:18,tpp:0,npp:0,other:0,ind:10,total:37},
     cands: ["中國國民黨", "民主進步黨", "親民黨", "台灣團結聯盟", "無黨籍", "其他"],
     districts: [
       {d:"太保市",valid:20986,indep:36.1,c:[{"name": "中國國民黨", "votes": 1869, "rate": 8.91}, {"name": "民主進步黨", "votes": 11542, "rate": 55}, {"name": "親民黨", "votes": 0, "rate": 0}, {"name": "台灣團結聯盟", "votes": 0, "rate": 0}, {"name": "無黨籍", "votes": 7575, "rate": 36.1}, {"name": "其他", "votes": 0, "rate": 0}],all:[{"name": "民主進步黨", "votes": 11542, "rate": 55}, {"name": "無黨籍", "votes": 7575, "rate": 36.1}, {"name": "中國國民黨", "votes": 1869, "rate": 8.91}]},
@@ -348,6 +360,7 @@ var COUNCIL2014 = {
   },
   PIF: {
     county: "屏東縣",
+    seats: {blue:19,green:19,tpp:0,npp:0,other:0,ind:17,total:55},
     cands: ["中國國民黨", "民主進步黨", "親民黨", "台灣團結聯盟", "無黨籍", "其他"],
     districts: [
       {d:"屏東市",valid:103259,indep:38.18,c:[{"name": "中國國民黨", "votes": 28145, "rate": 27.26}, {"name": "民主進步黨", "votes": 34481, "rate": 33.39}, {"name": "親民黨", "votes": 1213, "rate": 1.17}, {"name": "台灣團結聯盟", "votes": 0, "rate": 0}, {"name": "無黨籍", "votes": 39420, "rate": 38.18}, {"name": "其他", "votes": 0, "rate": 0}],all:[{"name": "無黨籍", "votes": 39420, "rate": 38.18}, {"name": "民主進步黨", "votes": 34481, "rate": 33.39}, {"name": "中國國民黨", "votes": 28145, "rate": 27.26}, {"name": "親民黨", "votes": 1213, "rate": 1.17}]},
@@ -387,6 +400,7 @@ var COUNCIL2014 = {
   },
   ILA: {
     county: "宜蘭縣",
+    seats: {blue:12,green:12,tpp:0,npp:0,other:0,ind:10,total:34},
     cands: ["中國國民黨", "民主進步黨", "親民黨", "台灣團結聯盟", "無黨籍", "其他"],
     districts: [
       {d:"宜蘭市",valid:47930,indep:19.5,c:[{"name": "中國國民黨", "votes": 24767, "rate": 51.67}, {"name": "民主進步黨", "votes": 13314, "rate": 27.78}, {"name": "親民黨", "votes": 0, "rate": 0}, {"name": "台灣團結聯盟", "votes": 501, "rate": 1.05}, {"name": "無黨籍", "votes": 9348, "rate": 19.5}, {"name": "其他", "votes": 0, "rate": 0}],all:[{"name": "中國國民黨", "votes": 24767, "rate": 51.67}, {"name": "民主進步黨", "votes": 13314, "rate": 27.78}, {"name": "無黨籍", "votes": 9348, "rate": 19.5}, {"name": "台灣團結聯盟", "votes": 501, "rate": 1.05}]},
@@ -405,6 +419,7 @@ var COUNCIL2014 = {
   },
   HUA: {
     county: "花蓮縣",
+    seats: {blue:20,green:6,tpp:0,npp:0,other:0,ind:7,total:33},
     cands: ["中國國民黨", "民主進步黨", "親民黨", "台灣團結聯盟", "無黨籍", "其他"],
     districts: [
       {d:"花蓮市",valid:42134,indep:5.64,c:[{"name": "中國國民黨", "votes": 25689, "rate": 60.97}, {"name": "民主進步黨", "votes": 13108, "rate": 31.11}, {"name": "親民黨", "votes": 959, "rate": 2.28}, {"name": "台灣團結聯盟", "votes": 0, "rate": 0}, {"name": "無黨籍", "votes": 2378, "rate": 5.64}, {"name": "其他", "votes": 0, "rate": 0}],all:[{"name": "中國國民黨", "votes": 25689, "rate": 60.97}, {"name": "民主進步黨", "votes": 13108, "rate": 31.11}, {"name": "無黨籍", "votes": 2378, "rate": 5.64}, {"name": "親民黨", "votes": 959, "rate": 2.28}]},
@@ -424,6 +439,7 @@ var COUNCIL2014 = {
   },
   TTT: {
     county: "臺東縣",
+    seats: {blue:22,green:1,tpp:0,npp:0,other:0,ind:7,total:30},
     cands: ["中國國民黨", "民主進步黨", "親民黨", "台灣團結聯盟", "無黨籍", "其他"],
     districts: [
       {d:"臺東市",valid:44376,indep:38.89,c:[{"name": "中國國民黨", "votes": 22503, "rate": 50.71}, {"name": "民主進步黨", "votes": 4615, "rate": 10.4}, {"name": "親民黨", "votes": 0, "rate": 0}, {"name": "台灣團結聯盟", "votes": 0, "rate": 0}, {"name": "無黨籍", "votes": 17258, "rate": 38.89}, {"name": "其他", "votes": 0, "rate": 0}],all:[{"name": "中國國民黨", "votes": 22503, "rate": 50.71}, {"name": "無黨籍", "votes": 17258, "rate": 38.89}, {"name": "民主進步黨", "votes": 4615, "rate": 10.4}]},
@@ -446,6 +462,7 @@ var COUNCIL2014 = {
   },
   PEH: {
     county: "澎湖縣",
+    seats: {blue:8,green:2,tpp:0,npp:0,other:0,ind:9,total:19},
     cands: ["中國國民黨", "民主進步黨", "親民黨", "台灣團結聯盟", "無黨籍", "其他"],
     districts: [
       {d:"馬公市",valid:31328,indep:36.88,c:[{"name": "中國國民黨", "votes": 14602, "rate": 46.61}, {"name": "民主進步黨", "votes": 3821, "rate": 12.2}, {"name": "親民黨", "votes": 0, "rate": 0}, {"name": "台灣團結聯盟", "votes": 0, "rate": 0}, {"name": "無黨籍", "votes": 11553, "rate": 36.88}, {"name": "其他", "votes": 1352, "rate": 4.32}],all:[{"name": "中國國民黨", "votes": 14602, "rate": 46.61}, {"name": "無黨籍", "votes": 11553, "rate": 36.88}, {"name": "民主進步黨", "votes": 3821, "rate": 12.2}, {"name": "綠黨", "votes": 773, "rate": 2.47}, {"name": "無黨團結聯盟", "votes": 579, "rate": 1.85}]},
@@ -458,6 +475,7 @@ var COUNCIL2014 = {
   },
   KEL: {
     county: "基隆市",
+    seats: {blue:17,green:10,tpp:0,npp:0,other:0,ind:4,total:31},
     cands: ["中國國民黨", "民主進步黨", "親民黨", "台灣團結聯盟", "無黨籍", "其他"],
     districts: [
       {d:"中正區",valid:24841,indep:0,c:[{"name": "中國國民黨", "votes": 15906, "rate": 64.03}, {"name": "民主進步黨", "votes": 4944, "rate": 19.9}, {"name": "親民黨", "votes": 3636, "rate": 14.64}, {"name": "台灣團結聯盟", "votes": 0, "rate": 0}, {"name": "無黨籍", "votes": 0, "rate": 0}, {"name": "其他", "votes": 355, "rate": 1.43}],all:[{"name": "中國國民黨", "votes": 15906, "rate": 64.03}, {"name": "民主進步黨", "votes": 4944, "rate": 19.9}, {"name": "親民黨", "votes": 3636, "rate": 14.64}, {"name": "人民民主陣線", "votes": 355, "rate": 1.43}]},
@@ -471,6 +489,7 @@ var COUNCIL2014 = {
   },
   HSC: {
     county: "新竹市",
+    seats: {blue:15,green:8,tpp:0,npp:0,other:0,ind:10,total:33},
     cands: ["中國國民黨", "民主進步黨", "親民黨", "台灣團結聯盟", "無黨籍", "其他"],
     districts: [
       {d:"東區",valid:89664,indep:25.77,c:[{"name": "中國國民黨", "votes": 35199, "rate": 39.26}, {"name": "民主進步黨", "votes": 19493, "rate": 21.74}, {"name": "親民黨", "votes": 3057, "rate": 3.41}, {"name": "台灣團結聯盟", "votes": 5127, "rate": 5.72}, {"name": "無黨籍", "votes": 23102, "rate": 25.77}, {"name": "其他", "votes": 3686, "rate": 4.11}],all:[{"name": "中國國民黨", "votes": 35199, "rate": 39.26}, {"name": "無黨籍", "votes": 23102, "rate": 25.77}, {"name": "民主進步黨", "votes": 19493, "rate": 21.74}, {"name": "台灣團結聯盟", "votes": 5127, "rate": 5.72}, {"name": "綠黨", "votes": 3279, "rate": 3.66}, {"name": "親民黨", "votes": 3057, "rate": 3.41}, {"name": "新黨", "votes": 407, "rate": 0.45}]},
@@ -480,6 +499,7 @@ var COUNCIL2014 = {
   },
   CYI: {
     county: "嘉義市",
+    seats: {blue:6,green:6,tpp:0,npp:0,other:0,ind:12,total:24},
     cands: ["中國國民黨", "民主進步黨", "親民黨", "台灣團結聯盟", "無黨籍", "其他"],
     districts: [
       {d:"東區",valid:64403,indep:36.57,c:[{"name": "中國國民黨", "votes": 21825, "rate": 33.89}, {"name": "民主進步黨", "votes": 13145, "rate": 20.41}, {"name": "親民黨", "votes": 0, "rate": 0}, {"name": "台灣團結聯盟", "votes": 4666, "rate": 7.25}, {"name": "無黨籍", "votes": 23551, "rate": 36.57}, {"name": "其他", "votes": 1216, "rate": 1.89}],all:[{"name": "無黨籍", "votes": 23551, "rate": 36.57}, {"name": "中國國民黨", "votes": 21825, "rate": 33.89}, {"name": "民主進步黨", "votes": 13145, "rate": 20.41}, {"name": "台灣團結聯盟", "votes": 4666, "rate": 7.25}, {"name": "樹黨", "votes": 1216, "rate": 1.89}]},
@@ -488,6 +508,7 @@ var COUNCIL2014 = {
   },
   KIN: {
     county: "金門縣",
+    seats: {blue:15,green:1,tpp:0,npp:0,other:0,ind:3,total:19},
     cands: ["中國國民黨", "民主進步黨", "親民黨", "台灣團結聯盟", "無黨籍", "其他"],
     districts: [
       {d:"金城鎮",valid:14766,indep:27.87,c:[{"name": "中國國民黨", "votes": 9873, "rate": 66.86}, {"name": "民主進步黨", "votes": 778, "rate": 5.27}, {"name": "親民黨", "votes": 0, "rate": 0}, {"name": "台灣團結聯盟", "votes": 0, "rate": 0}, {"name": "無黨籍", "votes": 4115, "rate": 27.87}, {"name": "其他", "votes": 0, "rate": 0}],all:[{"name": "中國國民黨", "votes": 9873, "rate": 66.86}, {"name": "無黨籍", "votes": 4115, "rate": 27.87}, {"name": "民主進步黨", "votes": 778, "rate": 5.27}]},
@@ -500,6 +521,7 @@ var COUNCIL2014 = {
   },
   LIE: {
     county: "連江縣",
+    seats: {blue:6,green:0,tpp:0,npp:0,other:0,ind:3,total:9},
     cands: ["中國國民黨", "民主進步黨", "親民黨", "台灣團結聯盟", "無黨籍", "其他"],
     districts: [
       {d:"南竿鄉",valid:3747,indep:31.28,c:[{"name": "中國國民黨", "votes": 2575, "rate": 68.72}, {"name": "民主進步黨", "votes": 0, "rate": 0}, {"name": "親民黨", "votes": 0, "rate": 0}, {"name": "台灣團結聯盟", "votes": 0, "rate": 0}, {"name": "無黨籍", "votes": 1172, "rate": 31.28}, {"name": "其他", "votes": 0, "rate": 0}],all:[{"name": "中國國民黨", "votes": 2575, "rate": 68.72}, {"name": "無黨籍", "votes": 1172, "rate": 31.28}]},
