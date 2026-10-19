@@ -4826,12 +4826,22 @@ function wikiParse(){
   res.innerHTML = '<div style="color:var(--text2);padding:16px 0;">解析中…</div>';
   setTimeout(function(){
     try{
+      var parser2=new DOMParser();
+      var doc2=parser2.parseFromString(raw,'text/html');
+      var dbgH2=doc2.querySelectorAll('.mw-heading h2, h2').length;
+      var dbgTbl=doc2.querySelectorAll('table.wikitable').length;
+      var dbgAbbr=doc2.querySelectorAll('abbr[title]').length;
+      console.log('[Wiki Debug] h2:'+dbgH2+' wikitables:'+dbgTbl+' abbr:'+dbgAbbr);
       wikiParsedPolls = wikiParseHTML(raw);
       wikiChecked = {};
       wikiParsedPolls.forEach(function(_,i){ wikiChecked[i]=true; });
+      if(!wikiParsedPolls.length){
+        res.innerHTML='<div style="color:#e85c5c;padding:12px 0;font-size:13px;">⚠️ 未解析到資料。<br>診斷：找到 '+dbgH2+' 個縣市標題、'+dbgTbl+' 個民調表格、'+dbgAbbr+' 個黨名標記。<br>請開啟開發工具（F12）查看 Console 取得詳細資訊。</div>';
+        return;
+      }
       wikiRenderResult();
     }catch(e){
-      res.innerHTML = '<div style="color:#e85c5c;padding:16px 0;">解析失敗：'+e.message+'</div>';
+      res.innerHTML = '<div style="color:#e85c5c;padding:16px 0;">解析失敗：'+e.message+'<br>'+e.stack+'</div>';
     }
   },50);
 }
