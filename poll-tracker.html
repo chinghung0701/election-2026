@@ -147,7 +147,8 @@ body.guest-mode .addbtn,
 body.guest-mode #sbtn,
 body.guest-mode .nb[onclick*="input"],
 body.guest-mode .nb[onclick*="showSetup"],
-body.guest-mode #page-input { display:none !important; }
+body.guest-mode #page-input,
+body.guest-mode .wiki-import-btn { display:none !important; }
 </style>
 </head>
 <body>
@@ -196,6 +197,7 @@ body.guest-mode #page-input { display:none !important; }
     <button class="nb" onclick="goPage('history',this)">歷史投票</button>
     <button class="nb" onclick="goPage('analysis',this)">選情分析</button>
     <button class="nb" onclick="goPage('input',this)">新增民調</button>
+    <button class="nb wiki-import-btn" onclick="goPage('wiki',this)">📥 Wiki 匯入</button>
     <button class="nb" onclick="showSetup()" style="font-size:12px;color:var(--text3);">⚙ 重新設定</button>
     <button class="nb" onclick="doLogout()" style="font-size:12px;color:var(--text3);">登出</button>
   </nav>
@@ -479,6 +481,27 @@ body.guest-mode #page-input { display:none !important; }
       <div style="font-size:13px;font-weight:600;margin-bottom:14px;color:var(--text2);">即時預覽</div>
       <div id="prevContent"><div class="prev-empty">貼入 Project 格式後按解析<br>或填寫左側表單預覽</div></div>
     </div>
+  </div>
+</div>
+
+<!-- Wiki 匯入 -->
+<div class="page" id="page-wiki">
+  <div style="padding:20px 0 8px;max-width:900px;margin:0 auto;">
+    <div style="font-size:18px;font-weight:700;margin-bottom:4px;">📥 Wiki 民調匯入</div>
+    <div style="font-size:13px;color:var(--text3);margin-bottom:16px;">從維基百科頁面原始碼批次解析民調資料</div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:16px;font-size:13px;color:var(--text2);line-height:1.7;">
+      <b>操作步驟：</b><br>
+      1. 開啟 <a href="https://zh.wikipedia.org/zh-tw/2026年中華民國直轄市長及縣市長選舉民意調查" target="_blank" style="color:var(--accent);">維基百科民調頁面</a><br>
+      2. 按 <kbd style="background:var(--bg3);border:1px solid var(--border2);padding:1px 6px;border-radius:3px;font-size:12px;">Ctrl+U</kbd>（或右鍵→檢視頁面原始碼）<br>
+      3. 全選（<kbd style="background:var(--bg3);border:1px solid var(--border2);padding:1px 6px;border-radius:3px;font-size:12px;">Ctrl+A</kbd>）並複製（<kbd style="background:var(--bg3);border:1px solid var(--border2);padding:1px 6px;border-radius:3px;font-size:12px;">Ctrl+C</kbd>）<br>
+      4. 貼入下方文字框，按「解析」
+    </div>
+    <textarea id="wikiRaw" placeholder="貼入維基百科頁面原始碼（HTML）..." style="width:100%;height:160px;padding:10px;border:1px solid var(--border2);border-radius:var(--r);background:var(--bg2);color:var(--text);font-size:12px;font-family:monospace;resize:vertical;box-sizing:border-box;"></textarea>
+    <div style="display:flex;gap:10px;margin:12px 0;">
+      <button class="savebtn" onclick="wikiParse()" style="flex:1;">🔍 解析民調</button>
+      <button onclick="document.getElementById('wikiRaw').value='';document.getElementById('wikiResult').innerHTML=''" style="padding:8px 16px;border:1px solid var(--border2);border-radius:var(--r);background:var(--bg2);cursor:pointer;font-size:13px;">清除</button>
+    </div>
+    <div id="wikiResult"></div>
   </div>
 </div>
 
@@ -4618,6 +4641,305 @@ function genReport(code){
     '</div>';
 
   document.getElementById('analysisReport').innerHTML = report;
+}
+
+
+// ════════════════════════════════════════
+//  Wiki 民調匯入
+// ════════════════════════════════════════
+
+// 黨籍對應
+var WIKI_PARTY_MAP = {
+  '國民':'國民黨','中國國民黨':'國民黨','國民黨':'國民黨',
+  '民進':'民進黨','民主進步黨':'民進黨','民進黨':'民進黨',
+  '民眾':'民眾黨','台灣民眾黨':'民眾黨','民眾黨':'民眾黨',
+  '無黨':'無黨籍','無黨籍':'無黨籍','無所屬':'無黨籍',
+  '台灣基進':'台灣基進','基進':'台灣基進',
+  '藍白':'藍白共推','藍白共推':'藍白共推'
+};
+
+function wikiNormalizeParty(raw){
+  if(!raw) return '無黨籍';
+  raw = raw.replace(/\[.*?\]/g,'').trim();
+  for(var k in WIKI_PARTY_MAP){ if(raw.indexOf(k)>=0) return WIKI_PARTY_MAP[k]; }
+  return raw||'無黨籍';
+}
+
+function wikiParseDate(raw){
+  if(!raw) return '';
+  raw = raw.replace(/\[.*?\]/g,'').trim();
+  // 2026年10月3日、5日至7日 → 取最後日期
+  var m;
+  // 含年份
+  m = raw.match(/(\d{4})年(\d{1,2})月(\d{1,2})(?:日)?(?:.*?(\d{1,2})日)?/);
+  if(m){
+    var y=m[1], mo=String(m[2]).padStart(2,'0');
+    var d=String(m[4]||m[3]).padStart(2,'0');
+    return y+'-'+mo+'-'+d;
+  }
+  // 無年份，補 2026
+  m = raw.match(/(\d{1,2})月(\d{1,2})(?:日)?(?:.*?(\d{1,2})日)?/);
+  if(m){
+    var mo2=String(m[1]).padStart(2,'0');
+    var d2=String(m[3]||m[2]).padStart(2,'0');
+    return '2026-'+mo2+'-'+d2;
+  }
+  // 只有月份
+  m = raw.match(/(\d{1,2})月/);
+  if(m) return '2026-'+String(m[1]).padStart(2,'0')+'-01';
+  return '';
+}
+
+function wikiParseRate(raw){
+  if(!raw) return null;
+  raw = raw.replace(/\[.*?\]/g,'').replace(/[%％]/g,'').trim();
+  if(raw==='-'||raw==='–'||raw===''||raw==='—') return null;
+  var v=parseFloat(raw);
+  return isNaN(v)?null:v;
+}
+
+function wikiGuessCounty(headerText){
+  if(!headerText) return null;
+  // 去除 HTML tags
+  var txt = headerText.replace(/<[^>]+>/g,' ').replace(/\[.*?\]/g,'').trim();
+  // 先找完整縣市名
+  for(var k in COUNTY_MAP){
+    if(txt.indexOf(k)>=0) return COUNTY_MAP[k];
+  }
+  return null;
+}
+
+function wikiParseHTML(html){
+  var parser = new DOMParser();
+  var doc = parser.parseFromString(html, 'text/html');
+  var results = [];
+
+  // 找所有 wikitable
+  var tables = doc.querySelectorAll('table.wikitable');
+  tables.forEach(function(tbl){
+    // 往上找最近的 h2/h3/h4 或段落標題，判斷縣市
+    var countyCode = null;
+    var el = tbl.previousElementSibling;
+    var scanCount = 0;
+    while(el && scanCount < 12){
+      var tag = el.tagName.toLowerCase();
+      if(['h2','h3','h4','h5'].indexOf(tag)>=0){
+        countyCode = wikiGuessCounty(el.innerHTML);
+        if(countyCode) break;
+      }
+      // 也看 span.mw-headline
+      var hl = el.querySelector && el.querySelector('.mw-headline');
+      if(hl){ countyCode = wikiGuessCounty(hl.textContent); if(countyCode) break; }
+      el = el.previousElementSibling;
+      scanCount++;
+    }
+    if(!countyCode) return; // 找不到縣市就略過
+
+    // 解析表頭：找候選人欄位
+    var headers = tbl.querySelectorAll('tr');
+    if(headers.length < 2) return;
+
+    // 取第一列 th 作為欄位定義
+    var thRow = headers[0];
+    var ths = Array.from(thRow.querySelectorAll('th'));
+    if(!ths.length) return;
+
+    // 解析候選人欄位（含黨籍+姓名）
+    var candCols = []; // [{colIndex, name, party}]
+    var dateColIdx = -1, sourceColIdx = -1, otherColIdx = -1, sampleColIdx = -1;
+    var colOffset = 0;
+
+    ths.forEach(function(th, i){
+      var txt = th.textContent.replace(/\[.*?\]/g,'').trim();
+      var colspan = parseInt(th.getAttribute('colspan')||'1');
+      // 日期欄
+      if(txt.indexOf('日期')>=0||txt.indexOf('調查日')>=0){ dateColIdx=colOffset; }
+      // 來源欄
+      else if(txt.indexOf('來源')>=0||txt.indexOf('民調')>=0||txt.indexOf('機構')>=0){ sourceColIdx=colOffset; }
+      // 樣本欄
+      else if(txt.indexOf('樣本')>=0||txt.indexOf('n=')>=0){ sampleColIdx=colOffset; }
+      // 未表態/其他欄
+      else if(txt.indexOf('未表態')>=0||txt.indexOf('其他')>=0){ otherColIdx=colOffset; }
+      // 候選人欄：含黨籍色塊（看 span 顏色）或候選人名字
+      else {
+        // 嘗試從 th 內部找黨名 span 和候選人名
+        var partySpan = th.querySelector('span[style*="background"],span[class],.party');
+        var partyRaw = '';
+        if(partySpan) partyRaw = partySpan.textContent.trim();
+        // 移除黨名找候選人
+        var candName = th.textContent.replace(/\[.*?\]/g,'').replace(partyRaw,'').trim();
+        // 若長度合理且有中文姓名
+        if(candName.length>=2 && /[\u4e00-\u9fff]/.test(candName)){
+          candCols.push({colIndex:colOffset, name:candName, party:wikiNormalizeParty(partyRaw)});
+        } else if(/[\u4e00-\u9fff]{2,4}/.test(txt) && txt.length<=6){
+          // 短中文，可能是候選人
+          candCols.push({colIndex:colOffset, name:txt, party:'無黨籍'});
+        }
+      }
+      colOffset += colspan;
+    });
+
+    if(!candCols.length || dateColIdx<0) return;
+
+    // 解析資料列
+    Array.from(tbl.querySelectorAll('tr')).slice(1).forEach(function(tr){
+      var tds = Array.from(tr.querySelectorAll('td'));
+      if(tds.length < 2) return;
+
+      function cellText(idx){
+        if(idx<0||idx>=tds.length) return '';
+        return tds[idx].textContent.replace(/\[.*?\]/g,'').replace(/\u00a0/g,' ').trim();
+      }
+
+      var dateRaw = cellText(dateColIdx);
+      var sourceRaw = sourceColIdx>=0 ? cellText(sourceColIdx) : '';
+      var date = wikiParseDate(dateRaw);
+      if(!date) return;
+
+      var source = sourceRaw.replace(/\s+/g,' ').trim() || '不詳';
+      // 清理來源（去上標）
+      source = source.replace(/\[\d+\]/g,'').trim();
+
+      var candidates = [];
+      candCols.forEach(function(cc){
+        var rateRaw = cellText(cc.colIndex);
+        var rate = wikiParseRate(rateRaw);
+        if(rate !== null){
+          candidates.push({name:cc.name, party:cc.party, rate:rate});
+        }
+      });
+
+      if(candidates.length < 2) return;
+
+      // 建立 scenario（候選人組合）
+      var scenario = candidates.map(function(c){ return c.name; }).join('－');
+
+      results.push({
+        countyCode: countyCode,
+        date: date,
+        source: source,
+        quality: 'warn',
+        candidates: candidates,
+        scenario: scenario,
+        _raw: {dateRaw:dateRaw, sourceRaw:sourceRaw}
+      });
+    });
+  });
+
+  return results;
+}
+
+var wikiParsedPolls = [];
+var wikiChecked = {};
+
+function wikiParse(){
+  var raw = document.getElementById('wikiRaw').value.trim();
+  if(!raw){ toast('請貼入維基百科頁面原始碼','err'); return; }
+  var res = document.getElementById('wikiResult');
+  res.innerHTML = '<div style="color:var(--text2);padding:16px 0;">解析中…</div>';
+  setTimeout(function(){
+    try{
+      wikiParsedPolls = wikiParseHTML(raw);
+      wikiChecked = {};
+      wikiParsedPolls.forEach(function(_,i){ wikiChecked[i]=true; });
+      wikiRenderResult();
+    }catch(e){
+      res.innerHTML = '<div style="color:#e85c5c;padding:16px 0;">解析失敗：'+e.message+'</div>';
+    }
+  },50);
+}
+
+function wikiRenderResult(){
+  var res = document.getElementById('wikiResult');
+  var polls = wikiParsedPolls;
+  if(!polls.length){
+    res.innerHTML = '<div style="color:var(--text3);padding:16px 0;">⚠️ 未解析到任何民調資料。請確認貼入的是維基百科頁面的完整 HTML 原始碼。</div>';
+    return;
+  }
+
+  // 依縣市分組顯示
+  var byCounty = {};
+  polls.forEach(function(p,i){
+    var k = p.countyCode;
+    if(!byCounty[k]) byCounty[k]=[];
+    byCounty[k].push({p:p,i:i});
+  });
+
+  var html = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">'
+    +'<div style="font-size:14px;font-weight:700;">共解析 '+polls.length+' 筆民調</div>'
+    +'<div style="display:flex;gap:8px;">'
+    +'<button onclick="wikiSelectAll(true)" style="padding:4px 10px;border:1px solid var(--border2);border-radius:var(--r);background:var(--bg2);cursor:pointer;font-size:12px;">全選</button>'
+    +'<button onclick="wikiSelectAll(false)" style="padding:4px 10px;border:1px solid var(--border2);border-radius:var(--r);background:var(--bg2);cursor:pointer;font-size:12px;">全不選</button>'
+    +'<button class="savebtn" onclick="wikiImport()" style="padding:6px 18px;">💾 匯入選取項目</button>'
+    +'</div></div>';
+
+  COUNTY_ORDER.forEach(function(code){
+    if(!byCounty[code]) return;
+    html += '<div style="margin-bottom:16px;">'
+      +'<div style="font-size:13px;font-weight:700;color:var(--text2);margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid var(--border);">'+COUNTIES[code]+'</div>';
+    byCounty[code].forEach(function(item){
+      var p=item.p, i=item.i;
+      var checked = wikiChecked[i] ? 'checked' : '';
+      var candStr = p.candidates.map(function(c){
+        return '<span style="color:'+pc(c.party)+';font-weight:600;">'+c.name+'</span> '+c.rate+'%';
+      }).join('　');
+      html += '<label style="display:flex;align-items:flex-start;gap:10px;padding:8px 10px;border:1px solid var(--border);border-radius:var(--r);margin-bottom:6px;cursor:pointer;background:var(--bg2);" onclick="wikiToggle('+i+',this)">'
+        +'<input type="checkbox" '+checked+' style="margin-top:2px;flex-shrink:0;" onchange="wikiChecked['+i+']=this.checked">'
+        +'<div style="flex:1;">'
+        +'<div style="display:flex;gap:10px;font-size:12px;color:var(--text3);margin-bottom:3px;">'
+        +'<span>'+p.date+'</span><span>'+p.source+'</span>'
+        +(p.scenario?'<span style="color:var(--text2);">'+p.scenario+'</span>':'')
+        +'</div>'
+        +'<div style="font-size:13px;">'+candStr+'</div>'
+        +'</div>'
+        +'</label>';
+    });
+    html += '</div>';
+  });
+
+  res.innerHTML = html;
+}
+
+function wikiToggle(i, label){
+  var cb = label.querySelector('input[type=checkbox]');
+  if(cb){ cb.checked = !cb.checked; wikiChecked[i]=cb.checked; }
+}
+
+function wikiSelectAll(val){
+  wikiParsedPolls.forEach(function(_,i){ wikiChecked[i]=val; });
+  document.querySelectorAll('#wikiResult input[type=checkbox]').forEach(function(cb,i){ cb.checked=val; });
+}
+
+function wikiImport(){
+  var toImport = wikiParsedPolls.filter(function(_,i){ return wikiChecked[i]; });
+  if(!toImport.length){ toast('請至少勾選一筆民調','err'); return; }
+  if(!db){ toast('請先連線 Firebase','err'); return; }
+  showLoad('匯入中（'+toImport.length+' 筆）…');
+  var batch = db.batch();
+  toImport.forEach(function(p){
+    var ref = db.collection('polls').doc();
+    var data = {
+      countyCode: p.countyCode,
+      date: p.date,
+      source: p.source,
+      quality: p.quality,
+      candidates: p.candidates,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+    if(p.scenario) data.scenario = p.scenario;
+    batch.set(ref, data);
+  });
+  batch.commit().then(function(){
+    hideLoad();
+    toast('成功匯入 '+toImport.length+' 筆民調','ok');
+    loadAll();
+    // 取消已匯入的勾選
+    wikiParsedPolls.forEach(function(_,i){ if(wikiChecked[i]) wikiChecked[i]=false; });
+    wikiRenderResult();
+  }).catch(function(e){
+    hideLoad();
+    toast('匯入失敗：'+e.message,'err');
+  });
 }
 
 // ════════════════════════════════════════
