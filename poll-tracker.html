@@ -620,7 +620,7 @@ var MEDIA_MAP={
   '震傳媒':'震傳媒','上報':'上報','年代民調':'年代','公信力民調':'公信力',
   '趨勢民調':'趨勢','東森新聞':'東森','東森':'東森'
 };
-var PARTY_COLOR={'國民黨':'#29b6d1','民進黨':'#e85c5c','民眾黨':'#9b8fe8','無黨籍':'#d4a84b','藍白共推':'#7db5cc','台灣基進':'#c84b31'};
+var PARTY_COLOR={'國民黨':'#29b6d1','民進黨':'#e85c5c','民眾黨':'#9b8fe8','無黨籍':'#d4a84b','無黨籍（國）':'#9fb38a','藍白共推':'#7db5cc','台灣基進':'#c84b31'};
 var QL={good:'✅ 可信',warn:'⚠️ 注意',bad:'❌ 存疑'};
 var PARTIES=['國民黨','民進黨','民眾黨','無黨籍','藍白共推','台灣基進'];
 function pc(p){ return PARTY_COLOR[p]||'#6e9e6e'; }
@@ -4656,6 +4656,46 @@ var WIKI_PARTY_MAP = {
   '藍白共推':'藍白共推','無黨籍':'無黨籍','無所屬':'無黨籍'
 };
 
+// ── 資料正規化規則（與 2026-11-10 資料庫清理採用同一套規則，修改時兩邊要一致）──
+// 姓名：去掉維基連結附註「（頁面不存在）」「(政治人物)」等，並統一異體字
+var WIKI_NAME_FIX = {'張啓楷':'張啟楷'};
+function wikiCleanName(n){
+  n = String(n||'').replace(/\[.*?\]/g,'').replace(/（頁面不存在）/g,'');
+  for(var i=0;i<2;i++) n = n.replace(/\s*[\(（][^)）]*[\)）]\s*$/,'');
+  n = n.trim();
+  return WIKI_NAME_FIX[n] || n;
+}
+// 特定候選人的政黨標示（國民黨背景的無黨籍）
+var WIKI_PARTY_OVERRIDE = {'何志勇':'無黨籍（國）','葉竹林':'無黨籍（國）'};
+// 來源：拼寫統一
+var WIKI_SRC_SPELL = {
+  'NewTalk':'Newtalk','ETToday':'ETtoday','美麗島':'美麗島電子報','公信力民調':'全國公信力',
+  '年代':'年代民調','艾普羅':'艾普羅民調','鋒燦民調':'鋒燦傳媒','東森民調':'東森','東森新聞':'東森',
+  '世新民調':'世新大學','CNEWS匯流':'匯流民調','民進黨':'民進黨內參','國民黨':'國民黨內參','關鍵調查':'關鍵民調'
+};
+// 來源：拆出委託／合作單位 → [民調機構, sponsor]
+var WIKI_SRC_SPLIT = {
+  'TVBS（國民黨黨團委託）':['TVBS','國民黨團'],'TVBS／國民黨團':['TVBS','國民黨團'],
+  '震傳媒／山水':['山水民調','震傳媒'],'上報／山水':['山水民調','上報'],
+  '鏡新聞／大地':['大地民意','鏡新聞'],'鏡新聞／大地民意':['大地民意','鏡新聞'],
+  '趨勢民調／凱達格蘭基金會':['趨勢民調','凱達格蘭基金會'],
+  '凱達格蘭／新台灣國策智庫':['新台灣國策智庫','凱達格蘭基金會'],
+  '臺中市市議會國民黨團委託佛光大學、世新大學':['佛光大學、世新大學','臺中市議會國民黨團'],
+  '信民協會／戴立安':['戴立安','信民協會']
+};
+function wikiNormalizeSource(raw){
+  var s = String(raw||'').replace(/\s+/g,' ').trim() || '不詳';
+  if(WIKI_SRC_SPLIT[s]) return {source:WIKI_SRC_SPLIT[s][0], sponsor:WIKI_SRC_SPLIT[s][1]};
+  return {source:WIKI_SRC_SPELL[s]||s, sponsor:null};
+}
+function wikiSortedNames(cands){
+  return cands.map(function(c){ return c.name; }).sort();
+}
+// 內容比對鍵：縣市＋日期＋候選人姓名與數字（不看來源與 ID）
+function pollContentKey(p){
+  return [p.countyCode, p.date, p.candidates.map(function(c){ return c.name+':'+Number(c.rate); }).sort().join('|')].join('_');
+}
+
 function wikiNormalizeParty(raw){
   if(!raw) return '無黨籍';
   raw = raw.replace(/\[.*?\]/g,'').trim();
@@ -4674,14 +4714,17 @@ function wikiParseDate(raw){
     var d=String(m[4]||m[3]).padStart(2,'0');
     return y+'-'+mo+'-'+d;
   }
-  // 無年份補 2026
+  // 無年份：先補今年，若落在今天之後，代表是去年的民調 → 年份減一
+  var mo2, d2;
   m = raw.match(/(\d{1,2})月(\d{1,2})(?:日)?(?:.*?(\d{1,2})日)?/);
-  if(m){
-    return '2026-'+String(m[1]).padStart(2,'0')+'-'+String(m[3]||m[2]).padStart(2,'0');
-  }
-  m = raw.match(/(\d{1,2})月/);
-  if(m) return '2026-'+String(m[1]).padStart(2,'0')+'-01';
-  return '';
+  if(m){ mo2=m[1]; d2=m[3]||m[2]; }
+  else { m = raw.match(/(\d{1,2})月/); if(m){ mo2=m[1]; d2=1; } }
+  if(!mo2) return '';
+  var now = new Date();
+  var today = now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate());
+  var md = '-'+pad(mo2)+'-'+pad(d2);
+  var guess = now.getFullYear()+md;
+  return guess>today ? (now.getFullYear()-1)+md : guess;
 }
 
 function wikiParseRate(raw){
@@ -4741,10 +4784,11 @@ function wikiParseHTML(html){
         var abbr = th.querySelector('abbr');
         var aTag = th.querySelector('a[title]');
         var partyRaw = abbr ? abbr.getAttribute('title')||abbr.textContent : '';
-        var candName = aTag ? aTag.getAttribute('title')||aTag.textContent : '';
-        candName = candName.replace(/\[.*?\]/g,'').trim();
+        // 用連結上顯示的文字當姓名；頁面標題會帶「（頁面不存在）」「(政治人物)」等附註
+        var candName = aTag ? (aTag.textContent.trim()||aTag.getAttribute('title')) : '';
+        candName = wikiCleanName(candName);
         if(candName.length>=2 && /[一-鿿]/.test(candName)){
-          candCols.push({colIndex:colIdx, name:candName, party:wikiNormalizeParty(partyRaw)});
+          candCols.push({colIndex:colIdx, name:candName, party:WIKI_PARTY_OVERRIDE[candName]||wikiNormalizeParty(partyRaw)});
         }
       }
       colIdx += colspan;
@@ -4787,7 +4831,7 @@ function wikiParseHTML(html){
       var date = wikiParseDate(dateRaw);
       if(!date) return;
 
-      var source = sourceRaw.replace(/\s+/g,' ').trim()||'不詳';
+      var src = wikiNormalizeSource(sourceRaw);
 
       var candidates = [];
       candCols.forEach(function(cc){
@@ -4800,12 +4844,14 @@ function wikiParseHTML(html){
 
       if(candidates.length < 2) return;
 
-      var scenario = candidates.map(function(c){ return c.name; }).join('－');
+      // 同一組對決只有一種寫法：姓名排序後串接
+      var scenario = wikiSortedNames(candidates).join('－');
 
       results.push({
         countyCode: currentCounty,
         date: date,
-        source: source,
+        source: src.source,
+        sponsor: src.sponsor,
         quality: 'warn',
         candidates: candidates,
         scenario: scenario
@@ -4834,7 +4880,10 @@ function wikiParse(){
       console.log('[Wiki Debug] h2:'+dbgH2+' wikitables:'+dbgTbl+' abbr:'+dbgAbbr);
       wikiParsedPolls = wikiParseHTML(raw);
       wikiChecked = {};
-      wikiParsedPolls.forEach(function(_,i){ wikiChecked[i]=true; });
+      // 資料庫裡已有同內容的民調 → 預設不勾選
+      var have={};
+      allPolls.forEach(function(e){ if(e.candidates) have[pollContentKey(e)]=true; });
+      wikiParsedPolls.forEach(function(p,i){ p._exists=!!have[pollContentKey(p)]; wikiChecked[i]=!p._exists; });
       if(!wikiParsedPolls.length){
         res.innerHTML='<div style="color:#e85c5c;padding:12px 0;font-size:13px;">⚠️ 未解析到資料。<br>診斷：找到 '+dbgH2+' 個縣市標題、'+dbgTbl+' 個民調表格、'+dbgAbbr+' 個黨名標記。<br>請開啟開發工具（F12）查看 Console 取得詳細資訊。</div>';
         return;
@@ -4880,8 +4929,9 @@ function wikiRenderResult(){
         +'<input type="checkbox" '+checked+' style="margin-top:2px;flex-shrink:0;" onchange="wikiChecked['+i+']=this.checked">'
         +'<div style="flex:1;">'
         +'<div style="display:flex;gap:10px;font-size:12px;color:var(--text3);margin-bottom:3px;">'
-        +'<span>'+p.date+'</span><span>'+p.source+'</span>'
+        +'<span>'+p.date+'</span><span>'+p.source+(p.sponsor?'（委託：'+p.sponsor+'）':'')+'</span>'
         +(p.scenario?'<span style="color:var(--text2);">'+p.scenario+'</span>':'')
+        +(p._exists?'<span style="color:var(--warn);">已在資料庫</span>':'')
         +'</div>'
         +'<div style="font-size:13px;">'+candStr+'</div>'
         +'</div>'
@@ -4899,7 +4949,8 @@ function wikiSelectAll(val){
 
 function wikiMakeId(p){
   // 確定性 ID：縣市_來源_日期_候選人組合 → 相同民調永遠對應同一份文件
-  var candKey = p.candidates.map(function(c){ return c.name; }).join('-');
+  // 姓名先排序：維基表格欄位順序改變時，ID 仍然相同
+  var candKey = wikiSortedNames(p.candidates).join('-');
   var raw = [p.countyCode, p.source, p.date, candKey].join('_');
   // 只保留合法字元（Firestore document ID 不可含 / 及部分特殊符號）
   return raw.replace(/[\/\\.#$\[\]]/g,'_').substring(0,500);
@@ -4909,21 +4960,39 @@ function wikiImport(){
   var toImport=wikiParsedPolls.filter(function(_,i){ return wikiChecked[i]; });
   if(!toImport.length){ toast('請至少勾選一筆民調','err'); return; }
   if(!db){ toast('請先連線 Firebase','err'); return; }
-  showLoad('匯入中（'+toImport.length+' 筆）…');
-  var batch=db.batch();
-  var newCount=0, overCount=0;
-  toImport.forEach(function(p){
-    var docId = wikiMakeId(p);
-    var ref = db.collection('polls').doc(docId);
-    var data={countyCode:p.countyCode,date:p.date,source:p.source,quality:p.quality,candidates:p.candidates,updatedAt:firebase.firestore.FieldValue.serverTimestamp()};
-    if(p.scenario) data.scenario=p.scenario;
-    // merge:false → 完整覆蓋（等同新增，但 ID 相同時不產生重複文件）
-    batch.set(ref, data, {merge:false});
-    newCount++;
+  // 已有同內容、但 ID 不同的民調（例如手動輸入過）→ 跳過，避免重複
+  var existingByKey={};
+  allPolls.forEach(function(e){ if(e.candidates) existingByKey[pollContentKey(e)]=e.id; });
+  var skipped=0;
+  toImport=toImport.filter(function(p){
+    var other=existingByKey[pollContentKey(p)];
+    if(other && other!==wikiMakeId(p)){ skipped++; return false; }
+    return true;
   });
-  batch.commit().then(function(){
+  if(!toImport.length){ toast('勾選的 '+skipped+' 筆都已存在，未寫入','info'); return; }
+  showLoad('匯入中（'+toImport.length+' 筆）…');
+  var refs=toImport.map(function(p){ return db.collection('polls').doc(wikiMakeId(p)); });
+  Promise.all(refs.map(function(r){ return r.get(); })).then(function(snaps){
+    var batch=db.batch();
+    var newCount=0, overCount=0;
+    var ts=firebase.firestore.FieldValue.serverTimestamp();
+    toImport.forEach(function(p,i){
+      // 維基提供的欄位：每次匯入都以維基為準
+      var data={countyCode:p.countyCode,date:p.date,source:p.source,sponsor:p.sponsor||null,candidates:p.candidates,scenario:p.scenario,updatedAt:ts};
+      if(snaps[i].exists){
+        // 已存在：只更新維基欄位，保留手動補的可信度、樣本數、備註等
+        batch.set(refs[i], data, {merge:true});
+        overCount++;
+      } else {
+        data.quality=p.quality; data.createdAt=ts;
+        batch.set(refs[i], data);
+        newCount++;
+      }
+    });
+    return batch.commit().then(function(){ return [newCount,overCount]; });
+  }).then(function(r){
     hideLoad();
-    toast('已寫入 '+newCount+' 筆（重複者已覆蓋更新）','ok');
+    toast('新增 '+r[0]+' 筆、更新 '+r[1]+' 筆'+(skipped?'、跳過已存在 '+skipped+' 筆':''),'ok');
     loadAll();
     wikiParsedPolls.forEach(function(_,i){ if(wikiChecked[i]) wikiChecked[i]=false; });
     wikiRenderResult();
