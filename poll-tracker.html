@@ -92,6 +92,49 @@ nav{display:flex;gap:2px;}
 .d-dn{background:var(--good-bg);color:var(--good);}
 .delbtn{float:right;background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:2px 8px;font-size:11px;color:var(--text3);cursor:pointer;}
 .delbtn:hover{border-color:var(--bad);color:var(--bad);}
+/* trend chart */
+.tfilters{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px;}
+.tflabel{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);}
+.tfsel{width:auto;min-width:200px;max-width:100%;margin:0;}
+.rgroup{display:inline-flex;border:1px solid var(--border2);border-radius:6px;overflow:hidden;}
+.rbtn{background:var(--bg2);border:none;border-left:1px solid var(--border);padding:5px 12px;font-size:12px;color:var(--text2);cursor:pointer;}
+.rbtn:first-child{border-left:none;}
+.rbtn:hover{background:var(--bg3);color:var(--text);}
+.rbtn.on{background:var(--text);color:var(--bg2);font-weight:600;}
+.tcard{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:18px 18px 12px;margin-bottom:16px;position:relative;}
+.thead{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:10px;}
+.ttitle{font-size:15px;font-weight:700;}
+.tlegend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--text2);}
+.tlegend span{display:inline-flex;align-items:center;gap:6px;}
+.tkey{display:inline-block;width:16px;height:0;border-top:2px solid;}
+.tsvg{display:block;width:100%;height:auto;touch-action:pan-y;}
+.tsvg .ax{fill:var(--text3);font-size:11px;}
+.tsvg .grid{stroke:var(--border);stroke-width:1;}
+.tsvg .base{stroke:var(--border2);stroke-width:1;}
+.tsvg .elec{stroke:var(--text3);stroke-width:1;stroke-dasharray:4 4;}
+.tsvg .lbl{fill:var(--text);font-size:12px;font-weight:600;}
+.tsvg .lbl2{fill:var(--text2);font-size:11px;}
+.tsvg .xhair{stroke:var(--text3);stroke-width:1;}
+.tnote{font-size:11px;color:var(--text3);margin-top:6px;}
+.ttip{position:absolute;pointer-events:none;background:var(--bg2);border:1px solid var(--border2);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.12);padding:8px 10px;font-size:12px;min-width:170px;max-width:260px;z-index:5;display:none;}
+.ttip .td{font-weight:700;margin-bottom:4px;}
+.ttip .tp{margin-top:6px;}
+.ttip .ts{color:var(--text3);font-size:11px;margin-bottom:2px;}
+.ttip .tr{display:flex;align-items:center;gap:6px;line-height:1.7;}
+.ttip .tr b{min-width:42px;text-align:right;}
+.ttip .tr i{font-style:normal;color:var(--text2);}
+/* wiki auto check */
+.wkbanner{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--warn-bg);border:1px solid rgba(154,103,0,.3);border-radius:var(--r);padding:10px 14px;margin-bottom:16px;font-size:13px;}
+.wkbanner b{color:var(--warn);}
+.wkbanner button{background:var(--bg2);border:1px solid var(--border2);border-radius:6px;padding:5px 12px;font-size:12px;cursor:pointer;}
+.wkbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:8px;}
+.wkonly{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text2);cursor:pointer;}
+.wkstatus{font-size:12px;color:var(--text3);}
+.wktag{font-size:11px;padding:1px 6px;border-radius:4px;}
+.wk-new{background:var(--good-bg);color:var(--good);font-weight:600;}
+.wk-upd{background:var(--warn-bg);color:var(--warn);font-weight:600;}
+.wk-old{background:var(--bg3);color:var(--text3);}
+.wkbtn{padding:4px 10px;border:1px solid var(--border2);border-radius:var(--r);background:var(--bg2);cursor:pointer;font-size:12px;}
 /* input page */
 .inplayout{display:grid;grid-template-columns:440px 1fr;gap:20px;}
 .inppanel{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:20px;display:flex;flex-direction:column;gap:14px;}
@@ -205,6 +248,7 @@ body.guest-mode .wiki-import-btn { display:none !important; }
 
 <!-- 選情總覽 -->
 <div class="page active" id="page-dashboard">
+  <div id="wikiBanner" class="wkbanner" style="display:none;"></div>
   <div id="vlist">
     <div class="ovg" id="ovGrid"></div>
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
@@ -488,19 +532,21 @@ body.guest-mode .wiki-import-btn { display:none !important; }
 <div class="page" id="page-wiki">
   <div style="padding:20px 0 8px;max-width:900px;margin:0 auto;">
     <div style="font-size:18px;font-weight:700;margin-bottom:4px;">📥 Wiki 民調匯入</div>
-    <div style="font-size:13px;color:var(--text3);margin-bottom:16px;">從維基百科頁面原始碼批次解析民調資料</div>
-    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:16px;font-size:13px;color:var(--text2);line-height:1.7;">
-      <b>操作步驟：</b><br>
-      1. 開啟 <a href="https://zh.wikipedia.org/zh-tw/2026年中華民國直轄市長及縣市長選舉民意調查" target="_blank" style="color:var(--accent);">維基百科民調頁面</a><br>
-      2. 按 <kbd style="background:var(--bg3);border:1px solid var(--border2);padding:1px 6px;border-radius:3px;font-size:12px;">Ctrl+U</kbd>（或右鍵→檢視頁面原始碼）<br>
-      3. 全選（<kbd style="background:var(--bg3);border:1px solid var(--border2);padding:1px 6px;border-radius:3px;font-size:12px;">Ctrl+A</kbd>）並複製（<kbd style="background:var(--bg3);border:1px solid var(--border2);padding:1px 6px;border-radius:3px;font-size:12px;">Ctrl+C</kbd>）<br>
-      4. 貼入下方文字框，按「解析」
+    <div style="font-size:13px;color:var(--text3);margin-bottom:16px;">直接讀取<a href="https://zh.wikipedia.org/zh-tw/2026年中華民國直轄市長及縣市長選舉民意調查" target="_blank" rel="noopener" style="color:inherit;">維基百科民調頁面</a>，列出還沒處理過的民調</div>
+    <div class="wkbar">
+      <button class="savebtn" onclick="wikiFetchAndParse(true)" style="flex:0 0 auto;width:auto;margin:0;padding:8px 18px;">🌐 從維基百科抓取最新民調</button>
+      <label class="wkonly"><input type="checkbox" id="wikiOnlyNew" checked onchange="wikiRenderResult()"> 只顯示新民調</label>
+      <span id="wikiStatus" class="wkstatus"></span>
     </div>
-    <textarea id="wikiRaw" placeholder="貼入維基百科頁面原始碼（HTML）..." style="width:100%;height:160px;padding:10px;border:1px solid var(--border2);border-radius:var(--r);background:var(--bg2);color:var(--text);font-size:12px;font-family:monospace;resize:vertical;box-sizing:border-box;"></textarea>
-    <div style="display:flex;gap:10px;margin:12px 0;">
-      <button class="savebtn" onclick="wikiParse()" style="flex:1;">🔍 解析民調</button>
-      <button onclick="document.getElementById('wikiRaw').value='';document.getElementById('wikiResult').innerHTML=''" style="padding:8px 16px;border:1px solid var(--border2);border-radius:var(--r);background:var(--bg2);cursor:pointer;font-size:13px;">清除</button>
-    </div>
+    <details style="margin:4px 0 16px;font-size:13px;color:var(--text2);">
+      <summary style="cursor:pointer;">自動抓取失敗時：手動貼上頁面原始碼</summary>
+      <div style="padding:10px 0;line-height:1.7;">開啟維基百科民調頁面 → 按 ⌘ + Option + U 檢視原始碼 → 全選複製 → 貼到下方 → 按「解析民調」。</div>
+      <textarea id="wikiRaw" placeholder="貼入維基百科頁面原始碼（HTML）..." style="width:100%;height:120px;padding:10px;border:1px solid var(--border2);border-radius:var(--r);background:var(--bg2);color:var(--text);font-size:12px;font-family:monospace;resize:vertical;box-sizing:border-box;"></textarea>
+      <div style="display:flex;gap:10px;margin:10px 0 0;">
+        <button class="savebtn" onclick="wikiParse()" style="flex:1;">🔍 解析民調</button>
+        <button onclick="document.getElementById('wikiRaw').value=''" style="padding:8px 16px;border:1px solid var(--border2);border-radius:var(--r);background:var(--bg2);cursor:pointer;font-size:13px;">清除</button>
+      </div>
+    </details>
     <div id="wikiResult"></div>
   </div>
 </div>
@@ -810,7 +856,7 @@ function useLocal(){
 function loadAll(){
   showLoad('載入資料…');
   var done=0;
-  function check(){ if(++done>=3){ hideLoad(); hideSplash(); renderDash(); } }
+  function check(){ if(++done>=3){ hideLoad(); hideSplash(); renderDash(); if(wikiParsedPolls.length) wikiAfterChange(); else wikiAutoCheck(); } }
 
   // 民調
   db.collection('polls').orderBy('date','asc').get().then(function(snap){
@@ -923,73 +969,230 @@ function cCard(code,polls){
 //  縣市詳情
 // ════════════════════════════════════════
 function showDetail(code){
-  curCode=code; renderDetail(code);
+  curCode=code;
   document.getElementById('vlist').style.display='none';
   document.getElementById('vdetail').style.display='';
+  renderDetail(code);   // 先顯示再畫，趨勢圖才量得到正確寬度
 }
-function makeTrendChart(polls, code){
-  var sorted=polls.slice().sort(function(a,b){ return a.date.localeCompare(b.date); });
-  var parties=[];
-  sorted.forEach(function(p){ p.candidates.forEach(function(cc){ if(parties.indexOf(cc.party)<0) parties.push(cc.party); }); });
-  var main=["國民黨","民進黨","民眾黨","無黨籍","藍白共推"];
-  parties.sort(function(a,b){ var ai=main.indexOf(a),bi=main.indexOf(b); if(ai<0)ai=99; if(bi<0)bi=99; return ai-bi; });
-  // 不限制政黨數，全部顯示
-  var W=560,H=200,PL=44,PR=20,PT=20,PB=40;
-  var IW=W-PL-PR, IH=H-PT-PB;
-  var allR=[];
-  sorted.forEach(function(p){ p.candidates.forEach(function(cc){ if(parties.indexOf(cc.party)>=0) allR.push(cc.rate); }); });
-  var minR=Math.max(0,Math.floor(Math.min.apply(null,allR)/10)*10-5);
-  var maxR=Math.min(100,Math.ceil(Math.max.apply(null,allR)/10)*10+5);
-  var rRange=maxR-minR||1;
-  function xPos(i){ return PL+(i/(sorted.length-1||1))*IW; }
-  function yPos(r){ return PT+(1-(r-minR)/rRange)*IH; }
-  var lines="",dots="";
-  parties.forEach(function(party){
-    var pts=sorted.map(function(p,i){
-      var cc=p.candidates.find(function(x){ return x.party===party; });
-      return cc?{x:xPos(i),y:yPos(cc.rate),r:cc.rate}:null;
-    });
-    var d="";
-    pts.forEach(function(pt){ if(!pt) return; d+=(d===""?"M":"L")+pt.x.toFixed(1)+","+pt.y.toFixed(1); });
-    if(d) lines+='<path d="'+d+'" fill="none" stroke="'+pc(party)+'" stroke-width="2.5" stroke-linejoin="round"/>';
-    pts.forEach(function(pt,i){
-      if(!pt) return;
-      dots+='<circle cx="'+pt.x.toFixed(1)+'" cy="'+pt.y.toFixed(1)+'" r="4" fill="'+pc(party)+'"/>';
-      dots+='<text x="'+pt.x.toFixed(1)+'" y="'+( pt.y-9).toFixed(1)+'" text-anchor="middle" fill="'+pc(party)+'" font-size="10">'+pt.r+'%</text>';
+// ════════════════════════════════════════
+//  民調排序與對決組合
+// ════════════════════════════════════════
+var trendState={};      // 每個縣市目前選的對決組合與時間範圍
+var ELECTION_DAY='2026-11-28';
+function escHtml(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+var escAttr=escHtml;
+function matchupKey(p){ return p.candidates.map(function(c){ return c.name; }).sort().join('－'); }
+// 由新到舊；同一天的依對決組合排，順序固定
+function sortNewest(polls){
+  return polls.slice().sort(function(a,b){ return b.date.localeCompare(a.date) || matchupKey(a).localeCompare(matchupKey(b)); });
+}
+// 在由新到舊的清單裡，找同一組對決的上一筆（較舊的那筆）
+function prevSameMatchup(list,i){
+  var k=matchupKey(list[i]);
+  for(var j=i+1;j<list.length;j++){ if(matchupKey(list[j])===k) return list[j]; }
+  return null;
+}
+function dayNum(d){ var p=d.split('-'); return Date.UTC(+p[0],+p[1]-1,+p[2])/864e5; }
+function matchupOptions(polls){
+  var m={};
+  polls.forEach(function(p){ var k=matchupKey(p); if(!m[k]) m[k]={key:k,n:0,latest:''}; m[k].n++; if(p.date>m[k].latest) m[k].latest=p.date; });
+  return Object.keys(m).map(function(k){ return m[k]; }).sort(function(a,b){ return b.n-a.n || b.latest.localeCompare(a.latest); });
+}
+// 預設對決：最新民調前 120 天內出現最多次的組合（同次數取較新的）
+function defaultMatchup(polls){
+  if(polls.length<2) return '*';
+  var last=dayNum(polls.reduce(function(a,p){ return p.date>a?p.date:a; },''));
+  var recent=polls.filter(function(p){ return last-dayNum(p.date)<=120; });
+  var best=matchupOptions(recent)[0];
+  return best?best.key:'*';
+}
+
+// ════════════════════════════════════════
+//  支持率趨勢圖
+// ════════════════════════════════════════
+var _trendDraws=[], AVG_DAYS=30, GAP_DAYS=75;
+function drawTrend(wrap, polls, st){
+  if(!wrap) return;
+  _trendDraws=_trendDraws.filter(function(d){ return d[0]!==wrap && document.body.contains(d[0]); });
+  _trendDraws.push([wrap,polls,st]);
+  // 容器還沒顯示（寬度為 0）時，等下一個畫面再畫
+  if(!wrap.clientWidth){ if(!wrap._retry){ wrap._retry=1; requestAnimationFrame(function(){ drawTrend(wrap,polls,st); }); } return; }
+  wrap._retry=0;
+  var now=new Date(), today=now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate());
+  var data=polls;
+  if(st.range!=='all'){ var cut=dayNum(today)-(+st.range); data=polls.filter(function(p){ return dayNum(p.date)>=cut; }); }
+  if(data.length<2){
+    wrap.innerHTML=polls.length<2?'':'<div class="tcard"><div class="ccempty">這段期間的民調少於 2 筆，無法畫出趨勢。請改選較長的時間範圍。</div></div>';
+    return;
+  }
+  // ── 依候選人整理數列 ──
+  var byName={};
+  data.forEach(function(p){
+    p.candidates.forEach(function(c){
+      if(!byName[c.name]) byName[c.name]={name:c.name,party:c.party,pts:[]};
+      byName[c.name].pts.push({t:dayNum(p.date),r:Number(c.rate),p:p});
     });
   });
-  var xLabels=sorted.map(function(p,i){
-    var x=xPos(i);
-    return '<text x="'+x.toFixed(1)+'" y="'+( H-PB+14)+'" text-anchor="middle" fill="#484f58" font-size="10">'+p.date.slice(5)+'</text>'+
-           '<text x="'+x.toFixed(1)+'" y="'+( H-PB+24)+'" text-anchor="middle" fill="#484f58" font-size="9">'+p.source.slice(0,4)+'</text>'+
-           '<line x1="'+x.toFixed(1)+'" y1="'+PT+'" x2="'+x.toFixed(1)+'" y2="'+( H-PB)+'" stroke="#21262d" stroke-width="1"/>';
-  }).join("");
-  var yGrid="";
-  for(var r=minR;r<=maxR;r+=10){
-    var y=yPos(r);
-    yGrid+='<line x1="'+PL+'" y1="'+y.toFixed(1)+'" x2="'+( W-PR)+'" y2="'+y.toFixed(1)+'" stroke="#21262d" stroke-width="1"/>'+
-           '<text x="'+( PL-4)+'" y="'+( y+4).toFixed(1)+'" text-anchor="end" fill="#484f58" font-size="10">'+r+'%</text>';
+  var series=Object.keys(byName).map(function(k){ return byName[k]; });
+  series.forEach(function(s){
+    s.pts.sort(function(a,b){ return a.t-b.t; });
+    // 平均線：每個有民調的日期，取該候選人前 30 天內（含當天）所有民調的平均
+    var tdays=[]; s.pts.forEach(function(pt){ if(tdays.indexOf(pt.t)<0) tdays.push(pt.t); });
+    s.avg=tdays.map(function(t){
+      var w=s.pts.filter(function(pt){ return pt.t<=t && pt.t>t-AVG_DAYS; });
+      return {t:t,r:w.reduce(function(a,b){ return a+b.r; },0)/w.length};
+    });
+    s.last=s.avg[s.avg.length-1].r;
+  });
+  var MAXS=6, dropped=0;
+  if(series.length>MAXS){
+    series.sort(function(a,b){ return b.pts.length-a.pts.length || b.last-a.last; });
+    dropped=series.length-MAXS; series=series.slice(0,MAXS);
   }
-  var legend=parties.map(function(party,i){
-    return '<g transform="translate('+( i*90)+',0)">'+
-      '<rect width="14" height="3" y="5" fill="'+pc(party)+'"/>'+
-      '<text x="18" y="12" fill="#8b949e" font-size="11">'+party+'</text></g>';
-  }).join("");
-  return '<div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:16px;overflow-x:auto;">'+
-    '<div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:10px;">支持率趨勢</div>'+
-    '<svg width="'+W+'" height="'+( H+32)+'" xmlns="http://www.w3.org/2000/svg" style="display:block;">'+
-    yGrid+xLabels+lines+dots+
-    '<g transform="translate('+PL+','+( H+10)+'">'+legend+'</g>'+
-    '</svg></div>';
+  series.sort(function(a,b){ return b.last-a.last; });
+  // 同黨多位候選人：顏色相同，用虛線樣式區分（另有名稱標籤）
+  var DASH=['','7 4','2 3','9 3 2 3'], seen={};
+  series.forEach(function(s){ var n=seen[s.party]||0; s.dash=DASH[Math.min(n,DASH.length-1)]; seen[s.party]=n+1; s.color=pc(s.party); });
+
+  // ── 尺寸與比例尺 ──
+  var Wd=Math.max(320, wrap.clientWidth);
+  var narrow=Wd<600;
+  var W=Wd-38, H=narrow?300:400;
+  var PL=38, PR=narrow?92:128, PT=14, PB=30;
+  var IW=W-PL-PR, IH=H-PT-PB;
+  var ts=data.map(function(p){ return dayNum(p.date); });
+  var t0=Math.min.apply(null,ts), t1=Math.max.apply(null,ts);
+  var eDay=dayNum(ELECTION_DAY), showE=eDay>=t1 && eDay-t1<=60;
+  if(showE) t1=eDay;
+  var padT=Math.max(3,(t1-t0)*0.03); t0-=padT; t1+=padT;
+  var rates=[]; series.forEach(function(s){ s.pts.forEach(function(pt){ rates.push(pt.r); }); });
+  var step=(Math.max.apply(null,rates)-Math.min.apply(null,rates))<=24?5:10;
+  var y0=Math.max(0,Math.floor((Math.min.apply(null,rates)-2)/step)*step);
+  var y1=Math.min(100,Math.ceil((Math.max.apply(null,rates)+2)/step)*step);
+  function X(t){ return PL+(t-t0)/(t1-t0||1)*IW; }
+  function Y(r){ return PT+(1-(r-y0)/(y1-y0||1))*IH; }
+
+  var g='';
+  // 橫向格線與 Y 軸
+  for(var r=y0;r<=y1;r+=step){
+    g+='<line class="'+(r===y0?'base':'grid')+'" x1="'+PL+'" x2="'+(PL+IW)+'" y1="'+Y(r).toFixed(1)+'" y2="'+Y(r).toFixed(1)+'"/>'+
+       '<text class="ax" x="'+(PL-6)+'" y="'+(Y(r)+4).toFixed(1)+'" text-anchor="end">'+r+'%</text>';
+  }
+  // X 軸：以月份為刻度
+  // 月份刻度間距：至少 56px，窄螢幕自動改成每 2、3、6 個月一格
+  var pxPerMonth=IW/((t1-t0)/30.44), mStep=[1,2,3,6,12].filter(function(m){ return m*pxPerMonth>=56; })[0]||12;
+  var d0=new Date((t0)*864e5);
+  var cur=new Date(Date.UTC(d0.getUTCFullYear(), d0.getUTCMonth()+1, 1)), first=true;
+  // 刻度對齊到 mStep 的倍數月（例如每 3 個月就落在 1、4、7、10 月）
+  while((cur.getUTCMonth())%mStep!==0) cur=new Date(Date.UTC(cur.getUTCFullYear(), cur.getUTCMonth()+1, 1));
+  while(cur.getTime()/864e5<=t1){
+    var tx=X(cur.getTime()/864e5), mo=cur.getUTCMonth()+1;
+    var lab=(first||mo===1)?(cur.getUTCFullYear()+'/'+mo):(mo+'月');
+    g+='<line class="grid" x1="'+tx.toFixed(1)+'" x2="'+tx.toFixed(1)+'" y1="'+(PT+IH)+'" y2="'+(PT+IH+4)+'"/>'+
+       '<text class="ax" x="'+tx.toFixed(1)+'" y="'+(PT+IH+18)+'" text-anchor="middle">'+lab+'</text>';
+    first=false;
+    cur=new Date(Date.UTC(cur.getUTCFullYear(), cur.getUTCMonth()+mStep, 1));
+  }
+  if(showE){
+    var ex=X(eDay);
+    g+='<line class="elec" x1="'+ex.toFixed(1)+'" x2="'+ex.toFixed(1)+'" y1="'+PT+'" y2="'+(PT+IH)+'"/>'+
+       '<text class="ax" x="'+(ex-4).toFixed(1)+'" y="'+(PT+10)+'" text-anchor="end">投票日 11/28</text>';
+  }
+  // 各家民調的點（淡）＋平均線（實）
+  var dots='', lines='';
+  series.forEach(function(s){
+    s.pts.forEach(function(pt){
+      dots+='<circle cx="'+X(pt.t).toFixed(1)+'" cy="'+Y(pt.r).toFixed(1)+'" r="4" fill="'+s.color+'" fill-opacity=".45" stroke="var(--bg2)" stroke-width="1.5"/>';
+    });
+    // 兩筆民調相隔超過 GAP_DAYS 天就斷線，不硬把空白期連起來
+    var d=s.avg.map(function(a,i){ return ((i&&a.t-s.avg[i-1].t<=GAP_DAYS)?'L':'M')+X(a.t).toFixed(1)+','+Y(a.r).toFixed(1); }).join('');
+    lines+='<path d="'+d+'" fill="none" stroke="'+s.color+'" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"'+(s.dash?' stroke-dasharray="'+s.dash+'"':'')+'/>';
+  });
+  // 線尾標籤：姓名＋最新平均，避免互相重疊
+  var labs=series.map(function(s){ var a=s.avg[s.avg.length-1]; return {s:s,x:X(a.t),y:Y(a.r)}; }).sort(function(a,b){ return a.y-b.y; });
+  for(var i=1;i<labs.length;i++){ if(labs[i].y-labs[i-1].y<30) labs[i].y=labs[i-1].y+30; }
+  var over=labs.length?labs[labs.length-1].y-(PT+IH-10):0;
+  if(over>0) labs.forEach(function(l){ l.y-=over; });
+  var lx=PL+IW+10, endLabels='';
+  labs.forEach(function(l){
+    endLabels+='<line x1="'+(lx-6)+'" x2="'+(lx+8)+'" y1="'+l.y.toFixed(1)+'" y2="'+l.y.toFixed(1)+'" stroke="'+l.s.color+'" stroke-width="2.5"'+(l.s.dash?' stroke-dasharray="'+l.s.dash+'"':'')+'/>'+
+      '<text class="lbl" x="'+(lx+12)+'" y="'+(l.y-2).toFixed(1)+'">'+escHtml(l.s.name)+'</text>'+
+      '<text class="lbl2" x="'+(lx+12)+'" y="'+(l.y+12).toFixed(1)+'">'+l.s.last.toFixed(1)+'%</text>';
+  });
+  var legend=series.map(function(s){
+    return '<span><i class="tkey" style="border-top-color:'+s.color+';'+(s.dash?'border-top-style:dashed;':'')+'"></i>'+escHtml(s.name)+'（'+escHtml(s.party)+'）</span>';
+  }).join('');
+  var title=st.matchup==='*'?'支持率趨勢（全部對決）':'支持率趨勢：'+escHtml(st.matchup);
+  wrap.innerHTML='<div class="tcard">'+
+    '<div class="thead"><div class="ttitle">'+title+'</div><div class="tlegend">'+legend+'</div></div>'+
+    '<svg class="tsvg" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+escAttr(title.replace(/<[^>]+>/g,''))+'，共 '+data.length+' 筆民調">'+
+      g+dots+lines+endLabels+
+      '<line class="xhair" y1="'+PT+'" y2="'+(PT+IH)+'" style="display:none"/>'+
+      '<rect class="thit" x="'+PL+'" y="'+PT+'" width="'+IW+'" height="'+IH+'" fill="transparent"/>'+
+    '</svg>'+
+    '<div class="ttip"></div>'+
+    '<div class="tnote">點：各家民調結果　線：該候選人 30 天內民調的平均（相隔 75 天以上不連線）'+(dropped?'　｜　「全部對決」只畫出現次數最多的 '+MAXS+' 位候選人':'')+(st.matchup==='*'?'　｜　不同對決情境混在一起，建議先選定一組對決':'')+'</div>'+
+  '</div>';
+
+  // ── 滑鼠／觸控：十字線對齊最近的民調日期，提示框列出當天所有民調 ──
+  var byDay={}; data.forEach(function(p){ var t=dayNum(p.date); (byDay[t]=byDay[t]||[]).push(p); });
+  var days=Object.keys(byDay).map(Number).sort(function(a,b){ return a-b; });
+  var svg=wrap.querySelector('svg'), hit=wrap.querySelector('.thit'), xh=wrap.querySelector('.xhair'), tip=wrap.querySelector('.ttip'), card=wrap.querySelector('.tcard');
+  function show(ev){
+    var b=svg.getBoundingClientRect(), sx=(ev.clientX-b.left)*(W/b.width);
+    var best=days[0]; days.forEach(function(d){ if(Math.abs(X(d)-sx)<Math.abs(X(best)-sx)) best=d; });
+    var px=X(best);
+    xh.setAttribute('x1',px); xh.setAttribute('x2',px); xh.style.display='';
+    tip.textContent='';
+    var ps=sortNewest(byDay[best]);
+    var hd=document.createElement('div'); hd.className='td'; hd.textContent=ps[0].date; tip.appendChild(hd);
+    ps.slice(0,4).forEach(function(p){
+      var box=document.createElement('div'); box.className='tp';
+      var src=document.createElement('div'); src.className='ts'; src.textContent=p.source+(p.sponsor?'（委託：'+p.sponsor+'）':'')+(p.sample?'　n='+p.sample:''); box.appendChild(src);
+      p.candidates.slice().sort(function(a,b){ return b.rate-a.rate; }).forEach(function(c){
+        var row=document.createElement('div'); row.className='tr';
+        var k=document.createElement('span'); k.className='tkey'; k.style.borderTopColor=pc(c.party);
+        var v=document.createElement('b'); v.textContent=c.rate+'%';
+        var n=document.createElement('i'); n.textContent=c.name;
+        row.appendChild(k); row.appendChild(v); row.appendChild(n); box.appendChild(row);
+      });
+      tip.appendChild(box);
+    });
+    if(ps.length>4){ var more=document.createElement('div'); more.className='ts'; more.style.marginTop='6px'; more.textContent='另有 '+(ps.length-4)+' 筆，見下方清單'; tip.appendChild(more); }
+    tip.style.display='block';
+    var cb=card.getBoundingClientRect(), left=b.left-cb.left+px*(b.width/W)+14;
+    if(left+tip.offsetWidth>cb.width-8) left=b.left-cb.left+px*(b.width/W)-tip.offsetWidth-14;
+    tip.style.left=Math.max(8,left)+'px';
+    tip.style.top=Math.max(8,ev.clientY-cb.top-tip.offsetHeight/2)+'px';
+  }
+  function hide(){ xh.style.display='none'; tip.style.display='none'; }
+  hit.addEventListener('pointermove',show);
+  hit.addEventListener('pointerdown',show);
+  hit.addEventListener('pointerleave',hide);
 }
+var _trendRT=null;
+window.addEventListener('resize',function(){
+  clearTimeout(_trendRT);
+  _trendRT=setTimeout(function(){
+    _trendDraws.slice().forEach(function(d){ if(document.body.contains(d[0]) && d[0].offsetParent) drawTrend(d[0],d[1],d[2]); });
+  },150);
+});
 function renderDetail(code){
   var name=COUNTIES[code]||code;
-  var polls=(groupBy()[code]||[]).slice().sort(function(a,b){ return a.date.localeCompare(b.date); });
-  var conf=hasConflict(polls);
+  var all=(groupBy()[code]||[]).slice().sort(function(a,b){ return a.date.localeCompare(b.date); });
+  var conf=hasConflict(all);
+  // 對決組合篩選：同時套用在趨勢圖與下方清單
+  var mus=matchupOptions(all);
+  if(!trendState[code]) trendState[code]={matchup:defaultMatchup(all), range:'all'};
+  var st=trendState[code];
+  if(st.matchup!=='*' && !mus.some(function(m){ return m.key===st.matchup; })) st.matchup=defaultMatchup(all);
+  var scoped=st.matchup==='*'?all:all.filter(function(p){ return matchupKey(p)===st.matchup; });
+  var polls=sortNewest(scoped);
   var tlHtml=polls.map(function(p,i){
     var maxR=Math.max.apply(null,p.candidates.map(function(c){ return c.rate; }));
+    var older=prevSameMatchup(polls,i);
     var bars=p.candidates.map(function(c){
-      var prev=i>0?polls[i-1].candidates.find(function(x){ return x.party===c.party||x.name===c.name; }):null;
+      var prev=older?older.candidates.find(function(x){ return x.name===c.name; }):null;
       var dlt='';
       if(prev){ var d=parseFloat((c.rate-prev.rate).toFixed(1)); if(Math.abs(d)>=0.2) dlt='<span class="delta '+(d>0?'d-up':'d-dn')+'">'+(d>0?'▲':'▼')+Math.abs(d)+'</span>'; }
       return '<div class="br"><span class="br-n">'+c.name+'</span><span class="br-p" style="color:'+pc(c.party)+'">'+c.party+'</span><div class="br-t"><div class="br-f" style="width:'+Math.round(c.rate/maxR*100)+'%;background:'+pc(c.party)+'"></div></div><span class="br-r">'+c.rate+'%'+dlt+'</span></div>';
@@ -1004,14 +1207,24 @@ function renderDetail(code){
       (p.note?'<div class="tlnote">'+p.note+'</div>':'')+
       '</div>';
   }).join('');
-  var chartHtml = polls.length>=2 ? makeTrendChart(polls,code) : '';
+  var opts='<option value="*"'+(st.matchup==='*'?' selected':'')+'>全部對決（'+all.length+' 筆）</option>'+
+    mus.map(function(m){ return '<option value="'+escAttr(m.key)+'"'+(m.key===st.matchup?' selected':'')+'>'+escHtml(m.key)+'（'+m.n+' 筆）</option>'; }).join('');
+  var ranges=[['all','全部'],['180','近 6 個月'],['90','近 3 個月']].map(function(r){
+    return '<button class="rbtn'+(st.range===r[0]?' on':'')+'" onclick="setTrendRange(\''+code+'\',\''+r[0]+'\')">'+r[1]+'</button>'; }).join('');
+  var filters=all.length?'<div class="tfilters">'+
+    '<label class="tflabel">對決組合<select class="fsel tfsel" onchange="setTrendMatchup(\''+code+'\',this.value)">'+opts+'</select></label>'+
+    '<div class="rgroup" role="group" aria-label="時間範圍">'+ranges+'</div></div>':'';
   document.getElementById('vdetail').innerHTML=
     '<div class="dh"><button class="backbtn" onclick="renderDash()">← 返回總覽</button>'+
-    '<div><div class="dtitle">'+name+'</div><div class="dsub">'+polls.length+' 筆紀錄</div></div></div>'+
+    '<div><div class="dtitle">'+name+'</div><div class="dsub">'+all.length+' 筆紀錄'+(st.matchup!=='*'?'，目前顯示 '+polls.length+' 筆':'')+'</div></div></div>'+
     (conf?'<div class="confbox">⚠️ <strong>民調衝突預警</strong>：近期不同機構民調呈現相反領先態勢，建議比較各機構調查方式與委託方背景。</div>':'')+
-    chartHtml+
+    filters+
+    '<div id="trendWrap"></div>'+
     '<div class="tl">'+(polls.length?tlHtml:'<div class="ccempty">尚無民調資料</div>')+'</div>';
+  drawTrend(document.getElementById('trendWrap'), scoped, st);
 }
+function setTrendMatchup(code,v){ trendState[code].matchup=v; renderDetail(code); }
+function setTrendRange(code,v){ trendState[code].range=v; renderDetail(code); }
 
 // ════════════════════════════════════════
 //  全國觀察
@@ -4488,11 +4701,13 @@ function genReport(code){
     return '<div style="margin-bottom:12px;"><div style="font-size:11px;color:var(--text3);margin-bottom:6px;">'+label+'</div>'+bars+'</div>';
   }).join('');
 
-  // ── 2. 民調趨勢 ──
-  var pollRows = polls.map(function(p,i){
+  // ── 2. 民調趨勢（由新到舊；變化量與同一組對決的前一筆比較）──
+  var newest = sortNewest(polls);
+  var pollRows = newest.map(function(p,i){
     var qc = p.quality==='good'?'t-good':p.quality==='warn'?'t-warn':'t-bad';
+    var older = prevSameMatchup(newest,i);
     var candStr = p.candidates.map(function(c){
-      var prev = i>0 ? polls[i-1].candidates.find(function(x){ return x.party===c.party; }) : null;
+      var prev = older ? older.candidates.find(function(x){ return x.name===c.name; }) : null;
       var diff = prev ? (c.rate-prev.rate).toFixed(1) : null;
       var dh = diff!==null&&Math.abs(diff)>=0.2 ? '<span class="delta '+(diff>0?'d-up':'d-dn')+'">'+(diff>0?'▲':'▼')+Math.abs(diff)+'</span>' : '';
       return '<span style="color:'+pc(c.party)+';margin-right:8px;">'+c.name+' '+c.rate+'%'+dh+'</span>';
@@ -4611,7 +4826,7 @@ function genReport(code){
     // 2. 民調趨勢
     '<div style="'+sectionStyle+'">'+
     '<div style="'+titleStyle+'">二、民調趨勢（共 '+polls.length+' 筆）</div>'+
-    (polls.length>=2 ? makeTrendChart(polls,code) : '')+
+    '<div id="anaTrend"></div>'+
     '<div style="margin-top:12px;">'+pollRows+'</div>'+
     '</div>'+
 
@@ -4641,6 +4856,9 @@ function genReport(code){
     '</div>';
 
   document.getElementById('analysisReport').innerHTML = report;
+  // 趨勢圖用最近主要的對決組合，避免不同情境混在同一張圖
+  var am=defaultMatchup(polls);
+  drawTrend(document.getElementById('anaTrend'), am==='*'?polls:polls.filter(function(p){ return matchupKey(p)===am; }), {matchup:am, range:'all'});
 }
 
 
@@ -4865,73 +5083,184 @@ function wikiParseHTML(html){
 var wikiParsedPolls = [];
 var wikiChecked = {};
 
+// ── 「已看過」清單：匯入或略過過的維基民調，以內容比對鍵記錄，之後不再列為新民調 ──
+// 存在 Firestore meta/wiki_seen（跨裝置共用）；寫入失敗時退回本機瀏覽器暫存
+var WIKI_PAGE='2026年中華民國直轄市長及縣市長選舉民意調查';
+var wikiSeen={}, wikiSeenReady=false, wikiFetched=null; // wikiFetched: {html, revid, ts, at}
+function wikiSeenRef(){ return db.collection('meta').doc('wiki_seen'); }
+function wikiLocalSeen(){ try{ return JSON.parse(localStorage.getItem('wikiSeenLocal')||'[]'); }catch(e){ return []; } }
+function wikiLoadSeen(){
+  wikiLocalSeen().forEach(function(k){ wikiSeen[k]=true; });
+  if(!db) return Promise.resolve();
+  return wikiSeenRef().get().then(function(s){
+    ((s.exists&&s.data().keys)||[]).forEach(function(k){ wikiSeen[k]=true; });
+    wikiSeenReady=true;
+  }).catch(function(e){ console.warn('[wiki] 讀取已看過清單失敗',e); wikiSeenReady=true; });
+}
+function wikiMarkSeen(polls){
+  var keys=polls.map(pollContentKey).filter(function(k){ return !wikiSeen[k]; });
+  if(!keys.length) return Promise.resolve();
+  keys.forEach(function(k){ wikiSeen[k]=true; });
+  if(!db||localMode) return Promise.resolve();
+  var FV=firebase.firestore.FieldValue;
+  // arrayUnion 一次最多帶入的數量有限，分批寫入
+  var chunks=[]; for(var i=0;i<keys.length;i+=200) chunks.push(keys.slice(i,i+200));
+  return chunks.reduce(function(pr,ch){
+    return pr.then(function(){ return wikiSeenRef().set({keys:FV.arrayUnion.apply(FV,ch),updatedAt:FV.serverTimestamp()},{merge:true}); });
+  },Promise.resolve()).catch(function(e){
+    console.warn('[wiki] 寫入已看過清單失敗，改存在本機',e);
+    try{ localStorage.setItem('wikiSeenLocal',JSON.stringify(Object.keys(wikiSeen))); }catch(e2){}
+    toast('「已看過」紀錄無法存到資料庫（'+e.message+'），暫存在這台電腦的瀏覽器','warn');
+  });
+}
+
+// ── 讀取維基百科（API 支援跨網域讀取，不需要貼原始碼）──
+function wikiFetchHTML(){
+  var u='https://zh.wikipedia.org/w/api.php?action=parse&page='+encodeURIComponent(WIKI_PAGE)+
+        '&prop=text%7Crevid&variant=zh-tw&format=json&formatversion=2&origin=*';
+  return fetch(u).then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); }).then(function(j){
+    if(j.error) throw new Error(j.error.info||j.error.code);
+    return {html:j.parse.text, revid:j.parse.revid};
+  }).then(function(res){
+    // 取得該版本的編輯時間，顯示「維基最後更新」
+    return fetch('https://zh.wikipedia.org/w/api.php?action=query&prop=revisions&rvprop=timestamp&revids='+res.revid+'&format=json&formatversion=2&origin=*')
+      .then(function(r){ return r.json(); })
+      .then(function(j){ try{ res.ts=j.query.pages[0].revisions[0].timestamp; }catch(e){} return res; })
+      .catch(function(){ return res; });
+  });
+}
+function fmtTs(iso){
+  if(!iso) return '';
+  var d=new Date(iso); return (d.getMonth()+1)+'/'+d.getDate()+' '+pad(d.getHours())+':'+pad(d.getMinutes());
+}
+
+// ── 把解析結果分類：已在資料庫／已看過／數字有更新／新民調 ──
+// 維基上同一機構、同一天、同一組候選人有時會列好幾列（不同問法或加權），
+// 這些「同日多組數字」共用同一個基本 ID，需另外編號，避免互相覆蓋
+var wikiIdCount={};
+function wikiCountIds(){ wikiIdCount={}; wikiParsedPolls.forEach(function(p){ var k=wikiMakeId(p); wikiIdCount[k]=(wikiIdCount[k]||0)+1; }); }
+function rateSuffix(p){
+  return p.candidates.slice().sort(function(a,b){ return a.name<b.name?-1:a.name>b.name?1:0; }).map(function(c){ return Number(c.rate); }).join('-').replace(/\./g,'p');
+}
+// 實際寫入用的文件 ID：只有一列時用基本 ID；同日多組數字時，與資料庫內容相同的那列沿用基本 ID，其餘加上數字後綴
+function wikiDocId(p){
+  var base=wikiMakeId(p);
+  if((wikiIdCount[base]||1)<=1) return base;
+  var d=allPolls.find(function(e){ return e.id===base; });
+  if(d && d.candidates && pollContentKey(d)===pollContentKey(p)) return base;
+  return base+'_'+rateSuffix(p);
+}
+function wikiClassify(){
+  wikiCountIds();
+  var have={}, ids={};
+  allPolls.forEach(function(e){ if(e.candidates){ have[pollContentKey(e)]=true; ids[e.id]=true; } });
+  wikiParsedPolls.forEach(function(p){
+    var k=pollContentKey(p), multi=(wikiIdCount[wikiMakeId(p)]||1)>1;
+    p._exists=!!have[k];
+    p._seen=!p._exists && !!wikiSeen[k];
+    p._new=!p._exists && !p._seen;
+    p._variant=p._new && multi;                               // 同日另一組數字
+    p._upd=p._new && !multi && !!ids[wikiMakeId(p)];          // 同一筆民調，維基上的數字改過
+  });
+  wikiChecked={};
+  wikiParsedPolls.forEach(function(p,i){ wikiChecked[i]=p._new; });
+}
+function wikiNewCount(){ return wikiParsedPolls.filter(function(p){ return p._new; }).length; }
+
+// 自動抓取＋解析。force=false 時，10 分鐘內抓過就沿用上次結果
+function wikiFetchAndParse(force){
+  var st=document.getElementById('wikiStatus');
+  var fresh=wikiFetched && (Date.now()-wikiFetched.at<10*60*1000);
+  var job;
+  if(fresh && !force){ job=Promise.resolve(wikiFetched); }
+  else {
+    if(st) st.textContent='讀取維基百科中…';
+    job=wikiFetchHTML().then(function(r){ r.at=Date.now(); wikiFetched=r; return r; });
+  }
+  return Promise.all([job, wikiSeenReady?null:wikiLoadSeen()]).then(function(arr){
+    var r=arr[0];
+    wikiParsedPolls=wikiParseHTML(r.html);
+    wikiClassify();
+    if(st) st.textContent='維基最後更新：'+(fmtTs(r.ts)||'—')+'　｜　解析 '+wikiParsedPolls.length+' 筆，新民調 '+wikiNewCount()+' 筆';
+    wikiRenderResult(); wikiRenderBanner();
+  }).catch(function(e){
+    if(st) st.textContent='';
+    toast('讀取維基百科失敗：'+e.message+'。可改用下方「手動貼上頁面原始碼」','err');
+  });
+}
+// 登入後自動檢查（訪客模式不檢查）
+function wikiAutoCheck(){
+  if(guestMode||localMode||!currentUser) return;
+  wikiFetchAndParse(false);
+}
+function wikiRenderBanner(){
+  var el=document.getElementById('wikiBanner'); if(!el) return;
+  var n=wikiNewCount();
+  if(guestMode||!n){ el.style.display='none'; return; }
+  el.innerHTML='<span>📥 維基百科有 <b>'+n+' 筆新民調</b>待確認'+(wikiFetched&&wikiFetched.ts?'（維基最後更新 '+fmtTs(wikiFetched.ts)+'）':'')+'</span>'+
+    '<button onclick="goPage(\'wiki\',document.querySelector(\'.wiki-import-btn\'))">前往確認</button>';
+  el.style.display='';
+}
+
+// 手動貼上原始碼（自動抓取失敗時的備案）
 function wikiParse(){
   var raw = document.getElementById('wikiRaw').value.trim();
   if(!raw){ toast('請貼入維基百科頁面原始碼','err'); return; }
-  var res = document.getElementById('wikiResult');
-  res.innerHTML = '<div style="color:var(--text2);padding:16px 0;">解析中…</div>';
-  setTimeout(function(){
-    try{
-      var parser2=new DOMParser();
-      var doc2=parser2.parseFromString(raw,'text/html');
-      var dbgH2=doc2.querySelectorAll('.mw-heading h2, h2').length;
-      var dbgTbl=doc2.querySelectorAll('table.wikitable').length;
-      var dbgAbbr=doc2.querySelectorAll('abbr[title]').length;
-      console.log('[Wiki Debug] h2:'+dbgH2+' wikitables:'+dbgTbl+' abbr:'+dbgAbbr);
-      wikiParsedPolls = wikiParseHTML(raw);
-      wikiChecked = {};
-      // 資料庫裡已有同內容的民調 → 預設不勾選
-      var have={};
-      allPolls.forEach(function(e){ if(e.candidates) have[pollContentKey(e)]=true; });
-      wikiParsedPolls.forEach(function(p,i){ p._exists=!!have[pollContentKey(p)]; wikiChecked[i]=!p._exists; });
+  try{
+    wikiParsedPolls = wikiParseHTML(raw);
+    (wikiSeenReady?Promise.resolve():wikiLoadSeen()).then(function(){
+      wikiClassify();
       if(!wikiParsedPolls.length){
-        res.innerHTML='<div style="color:#e85c5c;padding:12px 0;font-size:13px;">⚠️ 未解析到資料。<br>診斷：找到 '+dbgH2+' 個縣市標題、'+dbgTbl+' 個民調表格、'+dbgAbbr+' 個黨名標記。<br>請開啟開發工具（F12）查看 Console 取得詳細資訊。</div>';
+        document.getElementById('wikiResult').innerHTML='<div style="color:var(--bad);padding:12px 0;font-size:13px;">⚠️ 未解析到資料，請確認貼入的是維基百科頁面的完整 HTML 原始碼。</div>';
         return;
       }
-      wikiRenderResult();
-    }catch(e){
-      res.innerHTML = '<div style="color:#e85c5c;padding:16px 0;">解析失敗：'+e.message+'<br>'+e.stack+'</div>';
-    }
-  },50);
+      var st=document.getElementById('wikiStatus'); if(st) st.textContent='手動解析 '+wikiParsedPolls.length+' 筆，新民調 '+wikiNewCount()+' 筆';
+      wikiRenderResult(); wikiRenderBanner();
+    });
+  }catch(e){
+    document.getElementById('wikiResult').innerHTML = '<div style="color:var(--bad);padding:16px 0;">解析失敗：'+escHtml(e.message)+'</div>';
+  }
 }
 
 function wikiRenderResult(){
   var res = document.getElementById('wikiResult');
   var polls = wikiParsedPolls;
-  if(!polls.length){
-    res.innerHTML = '<div style="color:var(--text3);padding:16px 0;">⚠️ 未解析到任何民調資料。請確認貼入的是維基百科頁面的完整 HTML 原始碼。</div>';
+  if(!polls.length){ res.innerHTML=''; return; }
+  var onlyNew = document.getElementById('wikiOnlyNew') ? document.getElementById('wikiOnlyNew').checked : true;
+  var nNew=wikiNewCount(), nSeen=polls.filter(function(p){ return p._seen; }).length, nIn=polls.filter(function(p){ return p._exists; }).length;
+  var shown=polls.map(function(p,i){ return {p:p,i:i}; }).filter(function(x){ return !onlyNew || x.p._new; });
+  var html = '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">'
+    +'<div style="font-size:13px;color:var(--text2);"><b style="font-size:14px;color:var(--text);">新民調 '+nNew+' 筆</b>　已在資料庫 '+nIn+'　已看過 '+nSeen+'</div>'
+    +'<div style="display:flex;gap:6px;flex-wrap:wrap;">'
+    +'<button class="wkbtn" onclick="wikiSelectAll(true)">全選</button>'
+    +'<button class="wkbtn" onclick="wikiSelectAll(false)">全不選</button>'
+    +'<button class="wkbtn savebtn" onclick="wikiSkip()" style="width:auto;margin:0;background:var(--bg2);color:var(--text);">略過選取項目</button>'
+    +'<button class="savebtn" onclick="wikiImport()" style="width:auto;margin:0;padding:6px 18px;">💾 匯入選取項目</button>'
+    +'</div></div>';
+  if(nNew) html+='<div style="font-size:12px;color:var(--text3);margin:-4px 0 12px;">匯入或略過後都會記為「已看過」，下次不再列出。舊民調不想收錄的話，可按 <a href="#" onclick="wikiMarkAllSeen();return false;" style="color:var(--text2);">全部標記為已看過</a>。</div>';
+  if(!shown.length){
+    res.innerHTML = html+'<div class="ccempty">✅ 沒有新民調。維基上的民調都已在資料庫或已看過。取消勾選「只顯示新民調」可查看全部。</div>';
     return;
   }
   var byCounty = {};
-  polls.forEach(function(p,i){
-    var k=p.countyCode;
-    if(!byCounty[k]) byCounty[k]=[];
-    byCounty[k].push({p:p,i:i});
-  });
-  var html = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">'
-    +'<div style="font-size:14px;font-weight:700;">共解析 '+polls.length+' 筆民調</div>'
-    +'<div style="display:flex;gap:8px;">'
-    +'<button onclick="wikiSelectAll(true)" style="padding:4px 10px;border:1px solid var(--border2);border-radius:var(--r);background:var(--bg2);cursor:pointer;font-size:12px;">全選</button>'
-    +'<button onclick="wikiSelectAll(false)" style="padding:4px 10px;border:1px solid var(--border2);border-radius:var(--r);background:var(--bg2);cursor:pointer;font-size:12px;">全不選</button>'
-    +'<button class="savebtn" onclick="wikiImport()" style="padding:6px 18px;">💾 匯入選取項目</button>'
-    +'</div></div>';
+  shown.forEach(function(x){ (byCounty[x.p.countyCode]=byCounty[x.p.countyCode]||[]).push(x); });
   COUNTY_ORDER.forEach(function(code){
     if(!byCounty[code]) return;
+    var items=byCounty[code].sort(function(a,b){ return b.p.date.localeCompare(a.p.date); });
     html += '<div style="margin-bottom:16px;">'
-      +'<div style="font-size:13px;font-weight:700;color:var(--text2);margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid var(--border);">'+COUNTIES[code]+'（'+byCounty[code].length+' 筆）</div>';
-    byCounty[code].forEach(function(item){
+      +'<div style="font-size:13px;font-weight:700;color:var(--text2);margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid var(--border);">'+COUNTIES[code]+'（'+items.length+' 筆）</div>';
+    items.forEach(function(item){
       var p=item.p, i=item.i;
       var checked=wikiChecked[i]?'checked':'';
+      var tag=p._exists?'<span class="wktag wk-old">已在資料庫</span>':p._seen?'<span class="wktag wk-old">已看過</span>':p._upd?'<span class="wktag wk-upd">數字有更新（匯入會取代舊數字）</span>':p._variant?'<span class="wktag wk-new">新｜同日另一組數字</span>':'<span class="wktag wk-new">新</span>';
       var candStr=p.candidates.map(function(c){
-        return '<span style="color:'+pc(c.party)+';font-weight:600;">'+c.name+'</span> '+c.rate+'%';
+        return '<span style="color:'+pc(c.party)+';font-weight:600;">'+escHtml(c.name)+'</span> '+c.rate+'%';
       }).join('　');
       html += '<label style="display:flex;align-items:flex-start;gap:10px;padding:8px 10px;border:1px solid var(--border);border-radius:var(--r);margin-bottom:6px;cursor:pointer;background:var(--bg2);">'
         +'<input type="checkbox" '+checked+' style="margin-top:2px;flex-shrink:0;" onchange="wikiChecked['+i+']=this.checked">'
         +'<div style="flex:1;">'
-        +'<div style="display:flex;gap:10px;font-size:12px;color:var(--text3);margin-bottom:3px;">'
-        +'<span>'+p.date+'</span><span>'+p.source+(p.sponsor?'（委託：'+p.sponsor+'）':'')+'</span>'
-        +(p.scenario?'<span style="color:var(--text2);">'+p.scenario+'</span>':'')
-        +(p._exists?'<span style="color:var(--warn);">已在資料庫</span>':'')
+        +'<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;font-size:12px;color:var(--text3);margin-bottom:3px;">'
+        +'<span>'+p.date+'</span><span>'+escHtml(p.source)+(p.sponsor?'（委託：'+escHtml(p.sponsor)+'）':'')+'</span>'+tag
         +'</div>'
         +'<div style="font-size:13px;">'+candStr+'</div>'
         +'</div>'
@@ -4943,8 +5272,22 @@ function wikiRenderResult(){
 }
 
 function wikiSelectAll(val){
-  wikiParsedPolls.forEach(function(_,i){ wikiChecked[i]=val; });
-  document.querySelectorAll('#wikiResult input[type=checkbox]').forEach(function(cb){ cb.checked=val; });
+  var onlyNew=document.getElementById('wikiOnlyNew').checked;
+  wikiParsedPolls.forEach(function(p,i){ if(!onlyNew||p._new) wikiChecked[i]=val; });
+  wikiRenderResult();
+}
+function wikiSelected(){ return wikiParsedPolls.filter(function(_,i){ return wikiChecked[i]; }); }
+function wikiAfterChange(){ wikiClassify(); wikiRenderResult(); wikiRenderBanner(); var st=document.getElementById('wikiStatus'); if(st&&wikiFetched) st.textContent='維基最後更新：'+(fmtTs(wikiFetched.ts)||'—')+'　｜　解析 '+wikiParsedPolls.length+' 筆，新民調 '+wikiNewCount()+' 筆'; }
+function wikiSkip(){
+  var sel=wikiSelected().filter(function(p){ return !p._exists; });
+  if(!sel.length){ toast('請先勾選要略過的民調','err'); return; }
+  wikiMarkSeen(sel).then(function(){ toast('已略過 '+sel.length+' 筆，之後不再列為新民調','ok'); wikiAfterChange(); });
+}
+function wikiMarkAllSeen(){
+  var rest=wikiParsedPolls.filter(function(p){ return p._new; });
+  if(!rest.length){ toast('沒有需要標記的民調','info'); return; }
+  if(!confirm('把目前 '+rest.length+' 筆新民調全部標記為「已看過」？\n\n它們不會匯入資料庫，之後也不再列為新民調。\n（想收錄的請先勾選並匯入）')) return;
+  wikiMarkSeen(rest).then(function(){ toast('已標記 '+rest.length+' 筆為已看過','ok'); wikiAfterChange(); });
 }
 
 function wikiMakeId(p){
@@ -4966,12 +5309,12 @@ function wikiImport(){
   var skipped=0;
   toImport=toImport.filter(function(p){
     var other=existingByKey[pollContentKey(p)];
-    if(other && other!==wikiMakeId(p)){ skipped++; return false; }
+    if(other && other!==wikiDocId(p)){ skipped++; return false; }
     return true;
   });
   if(!toImport.length){ toast('勾選的 '+skipped+' 筆都已存在，未寫入','info'); return; }
   showLoad('匯入中（'+toImport.length+' 筆）…');
-  var refs=toImport.map(function(p){ return db.collection('polls').doc(wikiMakeId(p)); });
+  var refs=toImport.map(function(p){ return db.collection('polls').doc(wikiDocId(p)); });
   Promise.all(refs.map(function(r){ return r.get(); })).then(function(snaps){
     var batch=db.batch();
     var newCount=0, overCount=0;
@@ -4993,6 +5336,7 @@ function wikiImport(){
   }).then(function(r){
     hideLoad();
     toast('新增 '+r[0]+' 筆、更新 '+r[1]+' 筆'+(skipped?'、跳過已存在 '+skipped+' 筆':''),'ok');
+    wikiMarkSeen(toImport);
     loadAll();
     wikiParsedPolls.forEach(function(_,i){ if(wikiChecked[i]) wikiChecked[i]=false; });
     wikiRenderResult();
