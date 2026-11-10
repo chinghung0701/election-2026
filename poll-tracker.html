@@ -116,6 +116,7 @@ nav{display:flex;gap:2px;}
 .tsvg .lbl2{fill:var(--text2);font-size:11px;}
 .tsvg .xhair{stroke:var(--text3);stroke-width:1;}
 .tnote{font-size:11px;color:var(--text3);margin-top:6px;}
+.tlhead{font-size:14px;font-weight:700;margin:4px 0 10px;}
 .ttip{position:absolute;pointer-events:none;background:var(--bg2);border:1px solid var(--border2);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.12);padding:8px 10px;font-size:12px;min-width:170px;max-width:260px;z-index:5;display:none;}
 .ttip .td{font-weight:700;margin-bottom:4px;}
 .ttip .tp{margin-top:6px;}
@@ -1186,13 +1187,13 @@ function renderDetail(code){
   var name=COUNTIES[code]||code;
   var all=(groupBy()[code]||[]).slice().sort(function(a,b){ return a.date.localeCompare(b.date); });
   var conf=hasConflict(all);
-  // 對決組合篩選：同時套用在趨勢圖與下方清單
+  // 對決組合只套用在趨勢圖（同一張圖混不同對決會亂跳）；下方清單永遠顯示全部民調
   var mus=matchupOptions(all);
   if(!trendState[code]) trendState[code]={matchup:defaultMatchup(all), range:'all'};
   var st=trendState[code];
   if(st.matchup!=='*' && !mus.some(function(m){ return m.key===st.matchup; })) st.matchup=defaultMatchup(all);
   var scoped=st.matchup==='*'?all:all.filter(function(p){ return matchupKey(p)===st.matchup; });
-  var polls=sortNewest(scoped);
+  var polls=sortNewest(all);
   var tlHtml=polls.map(function(p,i){
     var maxR=Math.max.apply(null,p.candidates.map(function(c){ return c.rate; }));
     var older=prevSameMatchup(polls,i);
@@ -1217,14 +1218,15 @@ function renderDetail(code){
   var ranges=[['all','全部'],['180','近 6 個月'],['90','近 3 個月']].map(function(r){
     return '<button class="rbtn'+(st.range===r[0]?' on':'')+'" onclick="setTrendRange(\''+code+'\',\''+r[0]+'\')">'+r[1]+'</button>'; }).join('');
   var filters=all.length?'<div class="tfilters">'+
-    '<label class="tflabel">對決組合<select class="fsel tfsel" onchange="setTrendMatchup(\''+code+'\',this.value)">'+opts+'</select></label>'+
+    '<label class="tflabel">趨勢圖對決組合<select class="fsel tfsel" onchange="setTrendMatchup(\''+code+'\',this.value)">'+opts+'</select></label>'+
     '<div class="rgroup" role="group" aria-label="時間範圍">'+ranges+'</div></div>':'';
   document.getElementById('vdetail').innerHTML=
     '<div class="dh"><button class="backbtn" onclick="renderDash()">← 返回總覽</button>'+
-    '<div><div class="dtitle">'+name+'</div><div class="dsub">'+all.length+' 筆紀錄'+(st.matchup!=='*'?'，目前顯示 '+polls.length+' 筆':'')+'</div></div></div>'+
+    '<div><div class="dtitle">'+name+'</div><div class="dsub">'+all.length+' 筆紀錄</div></div></div>'+
     (conf?'<div class="confbox">⚠️ <strong>民調衝突預警</strong>：近期不同機構民調呈現相反領先態勢，建議比較各機構調查方式與委託方背景。</div>':'')+
     filters+
     '<div id="trendWrap"></div>'+
+    (polls.length?'<div class="tlhead">全部民調（'+polls.length+' 筆，由新到舊）</div>':'')+
     '<div class="tl">'+(polls.length?tlHtml:'<div class="ccempty">尚無民調資料</div>')+'</div>';
   drawTrend(document.getElementById('trendWrap'), scoped, st);
 }
